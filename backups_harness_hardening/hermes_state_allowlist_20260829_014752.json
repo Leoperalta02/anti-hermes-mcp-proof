@@ -1,0 +1,25 @@
+{
+  "auto_publish_enabled": true,
+  "allowed_pubkeys": [
+    "16dac8fc4fbbc6d0c42eaec2fd46e77af1f86ac6268e31d8da7a4d372095a314",
+    "467866fc6339b3ba8acb4a7e0ab3146e77b5160725a3f2fa3439ada18e2e0b24",
+    "bcc3e4bcb9ed35bb45c765a61e5aa2082ed09404e2297f376d96dba06f66b842",
+    "2f7188798fe95455d8375b3f54fe777e2cade67c3ff9694aaaea4a82b8c7b507"
+  ],
+  "audit_metadata": {
+    "version": "1.0.0",
+    "description": "Authoritative Cryptographic Pubkey Allowlist for Buzz ACP Fallback Publish Guard",
+    "created_at": "2026-08-29",
+    "allowed_identities": [
+      "Hermes (16dac8fc...)",
+      "Fizz (467866fc...)",
+      "Honey (bcc3e4bc...)",
+      "Pollen (2f718879...)"
+    ],
+    "denied_by_default": [
+      "Atlas (9570cdcc...)",
+      "Aura (2546c665...)",
+      "All other unidentified or rotated keys not explicitly listed above"
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "tenant_sofia_lanz",
+    "name": "Sofia Lanz",
+    "company_name": "Final Claim (Demo Prospect)",
+    "vertical": "FL_NO_FAULT_ACCIDENT",
+    "phone_number": "786-461-0049",
+    "subdomain_slug": "sofia",
+    "languages": [
+      "es",
+      "en"
+    ],
+    "tagline": "Despu\u00e9s de un Accidente, Estoy Aqu\u00ed Para Ayudarte",
+    "headshot_path": "assets/clients/sofia_headshot.png",
+    "flyer_path": "assets/clients/sofia_flyer.png",
+    "buzz_channel": "#client-sofia-lanz",
+    "vapi_assistant_id": null,
+    "google_drive_folder": null,
+    "custom_colors": {
+      "primary": "#d4af37",
+      "secondary": "#0c1524"
+    },
+    "status": "DEMO_PROSPECT",
+    "created_at": "2026-08-28T11:00:00Z"
+  },
+  {
+    "id": "tenant_toki_grullon",
+    "name": "John 'Toki' Grullon",
+    "company_name": "The No Fault Group (Demo Prospect)",
+    "vertical": "FL_NO_FAULT_ACCIDENT",
+    "phone_number": "786-683-4523",
+    "subdomain_slug": "toki",
+    "languages": [
+      "en",
+      "es"
+    ],
+    "tagline": "After an Accident I Can Help You Get the Attention You Deserve",
+    "headshot_path": "assets/clients/toki_headshot.png",
+    "flyer_path": "assets/clients/toki_flyer.png",
+    "buzz_channel": "#client-toki-grullon",
+    "vapi_assistant_id": null,
+    "google_drive_folder": null,
+    "custom_colors": {
+      "primary": "#06b6d4",
+      "secondary": "#0a111e"
+    },
+    "status": "DEMO_PROSPECT",
+    "created_at": "2026-08-28T11:05:00Z"
+  },
+  {
+    "id": "tenant_priscilla_vance",
+    "name": "Priscilla Vance",
+    "company_name": "Vance Luxury Properties",
+    "vertical": "LUXURY_REAL_ESTATE",
+    "phone_number": "305-555-0199",
+    "subdomain_slug": "vance",
+    "languages": [
+      "en"
+    ],
+    "tagline": "Curated Ultra-Luxury Real Estate & Private Estates",
+    "headshot_path": "assets/hermes.png",
+    "flyer_path": null,
+    "buzz_channel": "#client-vance-luxury",
+    "vapi_assistant_id": null,
+    "google_drive_folder": null,
+    "custom_colors": {
+      "primary": "#d4af37",
+      "secondary": "#050608"
+    },
+    "status": "ACTIVE",
+    "created_at": "2026-08-28T11:10:00Z"
+  }
+]

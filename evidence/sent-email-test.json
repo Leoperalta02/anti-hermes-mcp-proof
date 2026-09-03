@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-08-20T23:55:04.994166",
+  "recipient": "leo.peralta02@gmail.com",
+  "subject": "Leo OS Sandbox Morning Brief Test",
+  "message_id": "1a022753dc7950c3",
+  "thread_id": "1a022753dc7950c3",
+  "label_ids": [
+    "UNREAD",
+    "SENT",
+    "INBOX"
+  ],
+  "scopes": [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/calendar.readonly",
+    "https://www.googleapis.com/auth/gmail.send"
+  ]
+}

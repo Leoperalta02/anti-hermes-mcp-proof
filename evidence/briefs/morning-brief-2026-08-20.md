@@ -1,0 +1,33 @@
+# Leo OS Daily Morning Brief — 2026-08-20
+
+**Generated At:** 2026-08-20 23:45:25 (Eastern Time)
+**Status:** DRAFT / REVIEW ONLY (Non-sent)
+**Security Boundary:** Local Sandbox & Read-Only Google Workspace
+
+---
+
+## 1. Today Calendar Schedule (Read-Only)
+- **2026-08-21T16:30:00-04:00:** HQ pending-action and automation audit (confirmed)
+- **2026-08-24T08:00:00-04:00:** Review Program Watch exceptions and Rosy draft (confirmed)
+- **2026-08-24T08:30:00-04:00:** Review and approve Rosy's Market Monday draft (confirmed)
+- **2026-08-28T16:30:00-04:00:** HQ pending-action and automation audit (confirmed)
+- **2026-08-31T08:00:00-04:00:** Review Program Watch exceptions and Rosy draft (confirmed)
+
+## 2. Recent Inbox Snapshot (Read-Only)
+- **Indeed <donotreply@match.indeed.com>:** Destination Manager TRAVEL REQUIRED at Diamond Tours, Inc. in Fort Myers, FL and 2 more new jobs (Fri, 21 Aug 2026 03:06:06 +0000)
+- **Indeed <donotreply@match.indeed.com>:** Systems Administrator - Local Candidates Only @ Greenwire LLC (Fri, 21 Aug 2026 03:05:35 +0000)
+- **Side Hustle Secrets <Contact@thesidehustledaily.com>:** You probably forgot about this (Thu, 20 Aug 2026 21:39:46 -0500)
+- **Experian Alerts <support@s.usa.experian.com>:** Heads up Leovigildo! You have new alerts on your Experian credit file (Thu, 20 Aug 2026 19:28:46 -0600)
+- **Google Antigravity <antigravity-noreply@google.com>:** Get started with Google Antigravity (Thu, 20 Aug 2026 18:18:50 -0700)
+
+## 3. Local Leo OS Sandbox Status
+- **Profile:** `leo-manager-sandbox` (Status: Operational (Read-Only))
+- **Total Recorded Delegations:** 8
+- **Local Model Route:** `qwen3.5:9b via ollama (127.0.0.1:11434)`
+- **Recent Tasks:**
+  * `deleg_898b56b8` [completed]: Inspect available tools to understand my capabilities for creating files and reports in the Leo OS w
+  * `deleg_8ef5cc69` [completed]: Prepare a summary of the Q4 Revenue Memo. The memo contents were not provided. Do not invent, infer,
+  * `deleg_0b90c03b` [completed]: Prepare a three-sentence summary of the Q4 Revenue Memo. The memo's contents have not been provided.
+
+---
+*End of Morning Brief — Preserved locally for operator review.*

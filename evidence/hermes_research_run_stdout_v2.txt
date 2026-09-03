@@ -1,0 +1,62 @@
+Query: You are the Leo OS Research Analyst operating under Hermes.
+
+Produce a comprehensive, rigorous research report evaluating Remote Support 
+Software suitable for a small AI-assisted IT support business.
+
+Investigate at minimum:
+1. TeamViewer
+2. AnyDesk
+3. Splashtop
+4. Zoho Assist
+5. ConnectWise ScreenConnect
+
+For each software platform, determine and report using authoritative/vendor 
+facts:
+- On-demand remote support capability (ad-hoc / reboot-and-reconnect)
+- Unattended access capability (endpoints, deployment, groups)
+- MFA and security controls (2FA/MFA, SSO, encryption, access permissions)
+- Session recording (cloud / local, format, enforcement)
+- Audit and session logging (retention, exports, event detail)
+- API availability (REST API, endpoints, documentation availability)
+- Webhook / automation capability (triggers, alerts, integration hooks)
+- Current public pricing (tiers, per-technician / per-endpoint costs, or mark 
+as NOT VERIFIED if unavailable)
+- Suitability analysis for an AI-assisted IT support workflow (integrations, 
+automation potential, constraints)
+
+Evidence & Operational Rules:
+- Verify each product exists before discussing it.
+- Mark any unavailable or non-public fact explicitly as NOT VERIFIED.
+- Clearly distinguish verified facts from inference or recommendation.
+- Provide clear source references or official documentation links where 
+applicable.
+- Avoid inventing features, pricing, APIs, or certifications.
+- Maintain source-bounded discipline: do not execute destructive actions, 
+account creations, or external purchases.
+
+Format your output with clear markdown headings, comparative tables, evidence 
+sections, and a synthesized conclusion for Atlas and Leo review.
+
+[2;3mInitializing agent...[0m
+[38;2;255;191;0m────────────────────────────────────────[0m
+
+❌ Ollama runtime context is too small for Hermes tool use
+[38;2;255;215;0m ─[0m[38;2;255;215;0m [0m[1;38;2;255;215;0m ⚕ Hermes [0m[38;2;255;215;0m [0m[38;2;255;215;0m────────────────────────────────────────────────────────────────[0m[38;2;255;215;0m─ [0m
+[38;2;255;215;0m [0m[38;2;255;248;220m                                                                              [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mOllama loaded qwen3.5:9b with only 32,768 tokens of runtime context, but [0m[38;2;255;248;220m     [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mHermes needs at least 64,000 tokens for reliable tool use.[0m[38;2;255;248;220m                    [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220m                                                                              [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mIncrease the Ollama context for this model and restart/reload the model before[0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mtrying again. A known-good starting point is 65,536 tokens. In Hermes config, [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mset model.ollama_num_ctx: 65536 (and model.context_length: 65536 if you also [0m[38;2;255;248;220m [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220moverride the displayed model context). If you manage the model through an [0m[38;2;255;248;220m    [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220mOllama Modelfile, set PARAMETER num_ctx 65536 there instead.[0m[38;2;255;248;220m                  [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m [0m[38;2;255;248;220m                                                                              [0m[38;2;255;215;0m [0m
+[38;2;255;215;0m ────────────────────────────────────────────────────────────────────────────── [0m
+
+Resume this session with:
+  hermes --resume 20260821_153043_7ff2d8
+
+Session:        20260821_153043_7ff2d8
+Duration:       7s
+Messages:       2 (1 user, 0 tool calls)

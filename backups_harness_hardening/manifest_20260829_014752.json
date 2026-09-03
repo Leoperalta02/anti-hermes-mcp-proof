@@ -1,0 +1,27 @@
+{
+  "C:\\Users\\leope\\AppData\\Roaming\\xyz.block.buzz.app\\agents\\managed-agents.json": {
+    "backup_file": "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\backups_harness_hardening\\managed-agents_20260829_014752.json",
+    "sha256": "e9051b8fcb063663fe02803298b2f440bb38bd85031afcdea9c51a457392fe43",
+    "size": 36931
+  },
+  "C:\\Users\\leope\\AppData\\Roaming\\xyz.block.buzz.app\\custom_harnesses\\hermes-agent.json": {
+    "backup_file": "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\backups_harness_hardening\\hermes-agent_20260829_014752.json",
+    "sha256": "cce592b7a9479670c7b9bb4aa0705eb326dd914e475248e0c7bd9dccf355b4d5",
+    "size": 160
+  },
+  "C:\\LEO-LAB-ANTIGRAVITY\\hermes-agent\\acp_adapter\\server.py": {
+    "backup_file": "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\backups_harness_hardening\\server_20260829_014752.py",
+    "sha256": "b3ccd9ce0b4095ad3535c7bf4380709a297dd9b2adc61164265c8658e5c53470",
+    "size": 125121
+  },
+  "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\config\\auto_publish_allowlist.json": {
+    "backup_file": "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\backups_harness_hardening\\auto_publish_allowlist_20260829_014752.json",
+    "sha256": "2b31c53469aba6d110d1dcc6a79a2da50ddbe620352332e6e9deeddd980bb364",
+    "size": 852
+  },
+  "C:\\LEO-LAB-ANTIGRAVITY\\hermes-state\\auto_publish_allowlist.json": {
+    "backup_file": "c:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\backups_harness_hardening\\hermes_state_allowlist_20260829_014752.json",
+    "sha256": "2b31c53469aba6d110d1dcc6a79a2da50ddbe620352332e6e9deeddd980bb364",
+    "size": 852
+  }
+}

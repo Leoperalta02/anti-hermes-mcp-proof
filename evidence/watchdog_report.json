@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-08-26T14:23:02.089262",
+  "overall_status": "HEALTHY",
+  "components": {
+    "core_modules": {
+      "escalation_engine": "OK",
+      "state_sync_engine": "OK",
+      "server": "OK",
+      "hermes_sandbox_server": "OK",
+      "gpu_bridge": "OK"
+    },
+    "training_dojo_nikki": {
+      "status": "OK",
+      "playbook_bytes": 6701,
+      "e2e_test": "PASSED"
+    },
+    "hermes_agent_cli": {
+      "status": "OK",
+      "path": "C:\\LEO-LAB-ANTIGRAVITY\\hermes-agent\\bin\\hermes.exe"
+    },
+    "web_endpoints": {
+      "index_html": "OK",
+      "server_py": "OK",
+      "live_listener": "ONLINE (code 200)"
+    },
+    "pending_escalations": 2,
+    "workspace_sync": "SYNCHRONIZED"
+  }
+}

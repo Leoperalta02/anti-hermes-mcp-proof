@@ -1,0 +1,9 @@
+{
+  "id": "hermes-agent",
+  "label": "Hermes Agent",
+  "command": "hermes-acp",
+  "args": [],
+  "env": {},
+  "installInstructionsUrl": "",
+  "installHint": ""
+}

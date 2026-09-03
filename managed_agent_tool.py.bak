@@ -1,0 +1,108 @@
+"""Tool for sending structured, authenticated messages to named Buzz managed agents."""
+
+import json
+import logging
+from typing import Any, Dict, Optional
+
+from tools.registry import registry
+
+logger = logging.getLogger(__name__)
+
+MANAGED_AGENT_TOOL_SCHEMA = {
+    "name": "send_managed_agent",
+    "description": (
+        "Send an authenticated message to another real Buzz managed agent via the Buzz supervisor. "
+        "The supervisor attaches the recipient's real Nostr p-tag, native thread context, signs it "
+        "with your verified Buzz identity, and publishes it to the channel. The recipient agent will "
+        "wake up and process your request over the network. "
+        "CRITICAL: Always use this tool when communicating with or delegating tasks to named agents. "
+        "Never leave target_agent or content empty. Never use delegate_task or local subagents for named agents."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "target_agent": {
+                "type": "string",
+                "description": (
+                    "The exact name of the target managed agent (example: 'Pollen', 'Fizz', 'Honey'). "
+                    "Required, must never be empty or whitespace. Note: setting this tool argument is NOT "
+                    "a channel @mention; it is the internal routing recipient for the supervisor."
+                ),
+            },
+            "content": {
+                "type": "string",
+                "description": "The message or task content to send to the target agent. Required, must never be empty.",
+            },
+        },
+        "required": ["target_agent", "content"],
+    },
+}
+
+def send_managed_agent(raw_args: Any) -> str:
+    """Send structured message to another managed agent via the supervisor's ACP extension."""
+    logger.info("send_managed_agent received raw_args (type=%s): %r", type(raw_args).__name__, raw_args)
+
+    parsed_args: dict = {}
+    if isinstance(raw_args, str):
+        try:
+            loaded = json.loads(raw_args)
+            if isinstance(loaded, dict):
+                parsed_args = loaded
+        except Exception as e:
+            logger.warning("Failed to json.loads raw_args string: %s", e)
+    elif isinstance(raw_args, dict):
+        parsed_args = raw_args
+
+    target_raw = parsed_args.get("target_agent")
+    content_raw = parsed_args.get("content")
+
+    target_clean = str(target_raw or "").strip()
+    content_clean = str(content_raw or "").strip()
+
+    if not target_clean:
+        err_msg = f"Error: target_agent parameter is required and cannot be empty or whitespace. (Received: {raw_args!r})"
+        logger.warning(err_msg)
+        return err_msg
+
+    if not content_clean:
+        err_msg = f"Error: content parameter is required and cannot be empty or whitespace. (Received: {raw_args!r})"
+        logger.warning(err_msg)
+        return err_msg
+
+    from acp_adapter.server import get_acp_requester
+    
+    requester = get_acp_requester()
+    if not requester:
+        return "Error: ACP connection not active or supervisor communication is unavailable."
+
+    try:
+        payload = {
+            "target_agent": target_clean,
+            "content": content_clean,
+        }
+        logger.info("send_managed_agent dispatching wire request: %r", payload)
+        res = requester("_buzz/send_managed_agent", payload)
+        if isinstance(res, dict) and "error" in res:
+            err_msg = res["error"].get("message", str(res["error"]))
+            return f"Relay error sending to {target_clean}: {err_msg}"
+        
+        event_id = res.get("delegation_event_id") or res.get("event_id", "unknown") if isinstance(res, dict) else "unknown"
+        return (
+            f"Arguments sent: {json.dumps(payload)}\n"
+            f"Delegation Event ID: {event_id}\n"
+            f"Status: Message published successfully to {target_clean} via relay. Await {target_clean}'s response event."
+        )
+    except Exception as e:
+        logger.exception("send_managed_agent failed")
+        return f"Relay exception communicating with supervisor for target {target_clean}: {e}"
+
+def _handler(args: Any, **kw) -> str:
+    return send_managed_agent(raw_args=args)
+
+registry.register(
+    name="send_managed_agent",
+    toolset="buzz_ipc",
+    schema=MANAGED_AGENT_TOOL_SCHEMA,
+    handler=_handler,
+    emoji="📡",
+)

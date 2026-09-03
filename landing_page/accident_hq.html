@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Claims AI | Asistente de Voz y Sistema de Captación 24/7 para Agentes de Accidentes y No-Fault en Florida</title>
+  <meta name="description" content="La plataforma de IA bilingüe (Español/Inglés) para agentes de No-Fault y accidentes en Florida. Captación 24/7, regla de los 14 días de PIP y despacho a clínicas y abogados.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root {
+      --bg-primary: #060911;
+      --bg-secondary: #0c1322;
+      --bg-card: rgba(15, 23, 42, 0.8);
+      --border-subtle: rgba(212, 175, 55, 0.18);
+      --border-glow: rgba(212, 175, 55, 0.45);
+      --gold-primary: #d4af37;
+      --gold-gradient: linear-gradient(135deg, #fae596 0%, #d4af37 50%, #997514 100%);
+      --red-alert: #ef4444;
+      --cyan-neon: #06b6d4;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --success: #10b981;
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-luxury: 0 15px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(212, 175, 55, 0.12);
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.04) 0%, transparent 50%),
+        linear-gradient(to bottom, #060911, #0a0f1d);
+      min-height: 100vh;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+    /* Glass Panel */
+    .glass-panel {
+      background: var(--bg-card);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-luxury);
+      transition: var(--transition);
+    }
+    .glass-panel:hover { border-color: var(--border-glow); }
+
+    /* Typography */
+    h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 800; letter-spacing: -0.02em; }
+    .gold-gradient-text {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(6, 9, 17, 0.88);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-brand { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
+    .brand-crest {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--gold-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-family: var(--font-heading);
+      color: #060911;
+      font-size: 1.3rem;
+    }
+    .brand-title { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; }
+    .brand-sub { font-size: 0.7rem; color: var(--gold-primary); letter-spacing: 0.15em; display: block; }
+
+    /* Language Switcher Button */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 3px;
+      cursor: pointer;
+    }
+    .lang-btn {
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .lang-btn.active {
+      background: var(--gold-gradient);
+      color: #060911;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Buttons */
+    .btn-gold {
+      background: var(--gold-gradient);
+      color: #060911;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      padding: 0.85rem 1.85rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+      transition: var(--transition);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5); }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      padding: 0.85rem 1.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-outline:hover { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(212, 175, 55, 0.05); }
+
+    /* Hero */
+    .hero { padding-top: 9.5rem; padding-bottom: 5rem; text-align: center; }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1.25rem;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 9999px;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hero-title { font-size: 3.75rem; line-height: 1.1; max-width: 980px; margin: 0 auto 1.5rem auto; }
+    .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 780px; margin: 0 auto 2.5rem auto; line-height: 1.7; }
+
+    /* Hero Metrics */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .metric-box { padding: 1.75rem 1rem; text-align: center; }
+    .metric-val { font-size: 2.25rem; font-weight: 900; font-family: var(--font-heading); color: var(--gold-primary); margin-bottom: 0.25rem; }
+    .metric-lbl { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; }
+
+    /* Sections */
+    .section { padding: 5rem 0; }
+    .section-header { text-align: center; max-width: 750px; margin: 0 auto 3.5rem auto; }
+    .section-tag { color: var(--gold-primary); font-size: 0.85rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+    .section-title { font-size: 2.6rem; margin-bottom: 0.75rem; }
+
+    /* Voice Demo Box */
+    .voice-demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .demo-card { padding: 2.5rem; }
+    .waveform-box {
+      background: rgba(8, 13, 26, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .wave-bars { display: flex; justify-content: center; gap: 4px; height: 50px; align-items: center; margin-bottom: 1rem; }
+    .wbar { width: 4px; height: 16px; background: var(--gold-gradient); border-radius: 9999px; }
+
+    /* Onboarding Wizard */
+    .onboarding-card { max-width: 820px; margin: 0 auto; padding: 3rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-label { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
+    .form-input {
+      background: rgba(8, 13, 26, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--gold-primary); }
+
+    /* Success Card */
+    .success-panel { text-align: center; padding: 2.5rem; display: none; }
+    .success-panel.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Footer */
+    .footer { border-top: 1px solid var(--border-subtle); padding: 4rem 0 2rem 0; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+
+    @media (max-width: 900px) {
+      .hero-title { font-size: 2.75rem; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .voice-demo-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="#" class="nav-brand">
+      <div class="brand-crest">A</div>
+      <div>
+        <span class="brand-title">Apex Claims AI</span>
+        <span class="brand-sub">Florida No-Fault & Accident Engine</span>
+      </div>
+    </a>
+
+    <!-- Bilingual Toggle -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-lang-es">🇪🇸 Español</button>
+      <button class="lang-btn" id="btn-lang-en">🇺🇸 English</button>
+    </div>
+
+    <div>
+      <a href="#onboarding" class="btn-gold" id="nav-btn">Desplegar IA en 60s</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-pill" id="hero-pill">
+        <span>🚨 Sistema de Captación 24/7 para Agentes de Accidentes y No-Fault en Florida</span>
+      </div>
+
+      <h1 class="hero-title" id="hero-title">
+        Nunca Más Pierda un Caso de Accidente por <span class="gold-gradient-text">No Contestar el Teléfono</span>
+      </h1>
+
+      <p class="hero-subtitle" id="hero-subtitle">
+        Asistente de voz con Inteligencia Artificial bilingüe (Español/Inglés) que responde en <strong>menos de 2 segundos</strong>, realiza el triaje de emergencia, protege la <strong>regla de los 14 días de PIP ($10,000 en beneficios)</strong> y despacha el caso a su teléfono inmediatamente.
+      </p>
+
+      <div class="ahq-hero-cta-row">
+        <a href="#onboarding" class="btn-gold" id="hero-cta-1">
+          <span>⚡ Activar Mi Asistente IA (60 Segundos)</span>
+        </a>
+        <a href="#demo" class="btn-outline" id="hero-cta-2">
+          <span>🎙️ Escuchar Demostración en Vivo</span>
+        </a>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="glass-panel metric-box">
+          <div class="metric-val">&lt; 2s</div>
+          <div class="metric-lbl" id="m1">Respuesta Inmediata 24/7</div>
+        </div>
+        <div class="glass-panel metric-box">
+          <div class="metric-val">14 Días</div>
+          <div class="metric-lbl" id="m2">Protección de Plazo PIP Florida</div>
+        </div>
+        <div class="glass-panel metric-box">
+          <div class="metric-val">100%</div>
+          <div class="metric-lbl" id="m3">Bilingüe (Español & Inglés)</div>
+        </div>
+        <div class="glass-panel metric-box">
+          <div class="metric-val">+$45K+</div>
+          <div class="metric-lbl" id="m4">Ingresos Extra por Casos Rescatados</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Voice AI Demo Section -->
+  <section class="section" id="demo">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" id="demo-tag">Tecnología de Voz en Tiempo Real</span>
+        <h2 class="section-title" id="demo-title">Escuche a su <span class="gold-gradient-text">Asistente de Voz IA</span> en Acción</h2>
+        <p class="ahq-section-desc" id="demo-desc">
+          Vea cómo la IA atiende a una víctima de accidente a las 2:00 AM, verifica lesiones y asegura la información del conductor.
+        </p>
+      </div>
+
+      <div class="voice-demo-grid">
+        <!-- Spanish Call Demo -->
+        <div class="glass-panel demo-card">
+          <div class="ahq-demo-header">
+            <h3 class="ahq-demo-card-title">🇪🇸 Triaje de Accidente en Español</h3>
+            <span class="ahq-demo-badge-es">● Luna AI</span>
+          </div>
+
+          <div class="waveform-box">
+            <div class="wave-bars">
+              <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
+              <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
+            </div>
+            <div class="ahq-wave-quote-es">
+              "Hola, gracias por llamar a Final Claim. Mi nombre es Luna. ¿Se encuentra usted en un lugar seguro?"
+            </div>
+            <p class="ahq-wave-sub">
+              Pregunta por lesiones, reporte policial y recuerda la regla de los 14 días para asegurar la cobertura médica de $10,000.
+            </p>
+          </div>
+
+          <button class="btn-gold btn-gold-demo" onclick="alert('Simulación de llamada de voz en español activada!')">
+            <span>🔊 Reproducir Grabación de Demostración</span>
+          </button>
+        </div>
+
+        <!-- English Call Demo -->
+        <div class="glass-panel demo-card">
+          <div class="ahq-demo-header">
+            <h3 class="ahq-demo-card-title">🇺🇸 Florida PIP Intake in English</h3>
+            <span class="ahq-demo-badge-en">● Luna AI</span>
+          </div>
+
+          <div class="waveform-box">
+            <div class="wave-bars">
+              <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
+              <div class="wbar"></div><div class="wbar"></div><div class="wbar"></div>
+            </div>
+            <div class="ahq-wave-quote-en">
+              "Hello, thank you for calling The No Fault Group. I'm Luna. Are you and your passengers safe?"
+            </div>
+            <p class="ahq-wave-sub">
+              Captures caller name, vehicle damage, towing status, and dispatches clinic evaluation instantly.
+            </p>
+          </div>
+
+          <button class="btn-outline btn-gold-demo" onclick="alert('English voice demo simulation active!')">
+            <span>🔊 Play English Demo Audio</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 60-Second Onboarding Wizard -->
+  <section class="section" id="onboarding">
+    <div class="container">
+      <div class="glass-panel onboarding-card">
+        <div class="section-header ahq-onboard-header">
+          <span class="section-tag" id="onboard-tag">Despliegue Rápido</span>
+          <h2 class="section-title" id="onboard-title">Active su <span class="gold-gradient-text">Sistema de Captación de Accidentes</span></h2>
+          <p class="ahq-section-desc" id="onboard-desc">
+            Complete el formulario o envíenos sus fotos por mensaje de texto. Su página y asistente estarán listos en 5 minutos.
+          </p>
+        </div>
+
+        <form id="agent-signup-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" id="lbl-name">Nombre y Apellido</label>
+              <input type="text" class="form-input" id="inp-name" placeholder="Ej: Sofia Lanz o John Grullon" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-phone">Teléfono Directo (Para Despacho)</label>
+              <input type="tel" class="form-input" id="inp-phone" placeholder="Ej: (786) 461-0049" required>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" id="lbl-company">Nombre de Empresa o Grupo</label>
+              <input type="text" class="form-input" id="inp-company" placeholder="Ej: Final Claim / The No Fault Group" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lbl-city">Ciudad / Condado en Florida</label>
+              <input type="text" class="form-input" id="inp-city" placeholder="Ej: Miami-Dade, Broward, Orlando" required>
+            </div>
+          </div>
+
+          <div class="ahq-bonus-box">
+            <div class="ahq-bonus-title" id="txt-bonus">
+              📱 Opción de Onboarding por Mensaje de Texto (SMS / iMessage):
+            </div>
+            <div class="ahq-bonus-sub" id="txt-bonus-sub">
+              ¿Prefiere no llenar formularios? Envíe su foto y flyer por texto a nuestro equipo y Hermes generará su página automáticamente.
+            </div>
+          </div>
+
+          <button type="submit" class="btn-gold btn-gold-full" id="btn-submit">
+            <span>🚀 Desplegar Mi Asistente IA 24/7</span>
+          </button>
+        </form>
+
+        <!-- Success Result -->
+        <div class="success-panel" id="signup-success">
+          <div class="ahq-success-icon">🎉</div>
+          <h3 class="ahq-success-title" id="succ-title">¡Sistema de Captación Desplegado con Éxito!</h3>
+          <p class="ahq-success-desc" id="succ-desc">
+            Hermes y Fizz han provisionado su asistente de voz bilingüe y su página web dedicada.
+          </p>
+
+          <div class="glass-panel ahq-success-panel-inner">
+            <div class="ahq-success-url-label" id="succ-url-lbl">Enlace de su Página de Accidentes:</div>
+            <a href="#" target="_blank" class="ahq-success-url-link" id="client-preview-link">
+              https://sofia.apexclaimsai.com
+            </a>
+            <div class="ahq-success-status">
+              ● Asistente Telefónico 24/7 Activo &bull; Triaje Bilingüe de 14 Días PIP
+            </div>
+          </div>
+
+          <button type="button" class="btn-gold" onclick="document.getElementById('signup-success').classList.remove('active'); document.getElementById('agent-signup-form').reset();">
+            <span>Onboard Otro Agente</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="ahq-footer-brand">APEX CLAIMS AI &bull; PLATAFORMA DE CAPTACIÓN BILINGÜE EN FLORIDA</p>
+      <p class="ahq-footer-sub">
+        Arquitectura desarrollada por Leo Peralta en red descentralizada Buzz Nostr. Despacho automatizado de evaluación médica bajo el estatuto de PIP de Florida.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Bilingual Dictionary
+    const content = {
+      es: {
+        navBtn: "Desplegar IA en 60s",
+        heroPill: "🚨 Sistema de Captación 24/7 para Agentes de Accidentes y No-Fault en Florida",
+        heroTitle: "Nunca Más Pierda un Caso de Accidente por <span class='gold-gradient-text'>No Contestar el Teléfono</span>",
+        heroSubtitle: "Asistente de voz con Inteligencia Artificial bilingüe (Español/Inglés) que responde en <strong>menos de 2 segundos</strong>, realiza el triaje de emergencia, protege la <strong>regla de los 14 días de PIP ($10,000 en beneficios)</strong> y despacha el caso a su teléfono inmediatamente.",
+        cta1: "⚡ Activar Mi Asistente IA (60 Segundos)",
+        cta2: "🎙️ Escuchar Demostración en Vivo",
+        m1: "Respuesta Inmediata 24/7",
+        m2: "Protección de Plazo PIP Florida",
+        m3: "100% Bilingüe (Español & Inglés)",
+        m4: "+$45K+ Ingresos Extra por Casos Rescatados",
+        demoTag: "Tecnología de Voz en Tiempo Real",
+        demoTitle: "Escuche a su <span class='gold-gradient-text'>Asistente de Voz IA</span> en Acción",
+        demoDesc: "Vea cómo la IA atiende a una víctima de accidente a las 2:00 AM, verifica lesiones y asegura la información del conductor.",
+        onboardTag: "Despliegue Rápido",
+        onboardTitle: "Active su <span class='gold-gradient-text'>Sistema de Captación de Accidentes</span>",
+        onboardDesc: "Complete el formulario o envíenos sus fotos por mensaje de texto. Su página y asistente estarán listos en 5 minutos.",
+        lblName: "Nombre y Apellido",
+        lblPhone: "Teléfono Directo (Para Despacho)",
+        lblCompany: "Nombre de Empresa o Grupo",
+        lblCity: "Ciudad / Condado en Florida",
+        txtBonus: "📱 Opción de Onboarding por Mensaje de Texto (SMS / iMessage):",
+        txtBonusSub: "¿Prefiere no llenar formularios? Envíe su foto y flyer por texto a nuestro equipo y Hermes generará su página automáticamente.",
+        btnSubmit: "🚀 Desplegar Mi Asistente IA 24/7"
+      },
+      en: {
+        navBtn: "Deploy AI in 60s",
+        heroPill: "🚨 24/7 Intake Engine for Florida No-Fault & Car Accident Agents",
+        heroTitle: "Never Lose an Accident Client Again Due to <span class='gold-gradient-text'>A Missed Call</span>",
+        heroSubtitle: "Bilingual (Spanish/English) AI Voice Concierge that answers in <strong>under 2 seconds</strong>, performs emergency triage, preserves the <strong>Florida 14-Day PIP medical deadline ($10,000 benefits)</strong>, and dispatches the case to your phone instantly.",
+        cta1: "⚡ Deploy My AI Concierge (60 Seconds)",
+        cta2: "🎙️ Listen to Live Demo",
+        m1: "Instant 24/7 Response",
+        m2: "Florida 14-Day PIP Compliance",
+        m3: "100% Bilingual (Spanish & English)",
+        m4: "+$45K+ Extra Revenue from Saved Leads",
+        demoTag: "Real-Time Voice AI Tech",
+        demoTitle: "Hear Your <span class='gold-gradient-text'>AI Voice Concierge</span> in Action",
+        demoDesc: "See how the AI answers an accident victim at 2:00 AM, verifies injuries, and captures all driver information flawlessly.",
+        onboardTag: "Fast Deployment",
+        onboardTitle: "Deploy Your <span class='gold-gradient-text'>Accident Intake Engine</span>",
+        onboardDesc: "Fill out the form or text us your photos. Your dedicated page and voice assistant will be live in 5 minutes.",
+        lblName: "Full Name",
+        lblPhone: "Direct Cell Phone (For Dispatches)",
+        lblCompany: "Company / Group Name",
+        lblCity: "City / County in Florida",
+        txtBonus: "📱 Text / iMessage Onboarding Option:",
+        txtBonusSub: "Prefer texting? Text your headshot and flyer directly to our team and Hermes will generate your landing page automatically.",
+        btnSubmit: "🚀 Deploy My 24/7 AI Voice Intake"
+      }
+    };
+
+    let currentLang = 'es';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const dict = content[lang];
+      document.getElementById('nav-btn').textContent = dict.navBtn;
+      document.getElementById('hero-pill').innerHTML = `<span>${dict.heroPill}</span>`;
+      document.getElementById('hero-title').innerHTML = dict.heroTitle;
+      document.getElementById('hero-subtitle').innerHTML = dict.heroSubtitle;
+      document.getElementById('hero-cta-1').innerHTML = `<span>${dict.cta1}</span>`;
+      document.getElementById('hero-cta-2').innerHTML = `<span>${dict.cta2}</span>`;
+      document.getElementById('m1').textContent = dict.m1;
+      document.getElementById('m2').textContent = dict.m2;
+      document.getElementById('m3').textContent = dict.m3;
+      document.getElementById('m4').textContent = dict.m4;
+      document.getElementById('demo-tag').textContent = dict.demoTag;
+      document.getElementById('demo-title').innerHTML = dict.demoTitle;
+      document.getElementById('demo-desc').textContent = dict.demoDesc;
+      document.getElementById('onboard-tag').textContent = dict.onboardTag;
+      document.getElementById('onboard-title').innerHTML = dict.onboardTitle;
+      document.getElementById('onboard-desc').textContent = dict.onboardDesc;
+      document.getElementById('lbl-name').textContent = dict.lblName;
+      document.getElementById('lbl-phone').textContent = dict.lblPhone;
+      document.getElementById('lbl-company').textContent = dict.lblCompany;
+      document.getElementById('lbl-city').textContent = dict.lblCity;
+      document.getElementById('txt-bonus').textContent = dict.txtBonus;
+      document.getElementById('txt-bonus-sub').textContent = dict.txtBonusSub;
+      document.getElementById('btn-submit').innerHTML = `<span>${dict.btnSubmit}</span>`;
+
+      document.getElementById('btn-lang-es').classList.toggle('active', lang === 'es');
+      document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+    }
+
+    document.getElementById('btn-lang-es').addEventListener('click', () => setLanguage('es'));
+    document.getElementById('btn-lang-en').addEventListener('click', () => setLanguage('en'));
+
+    // Onboarding Form Submit
+    document.getElementById('agent-signup-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('inp-name').value.trim();
+      const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'agente';
+      const previewUrl = `http://localhost:8085/sofia/`;
+      
+      const submitBtn = document.getElementById('btn-submit');
+      submitBtn.innerHTML = '<span>⚡ Provisionando Asistente IA con Hermes y Fizz...</span>';
+      submitBtn.disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('agent-signup-form').style.display = 'none';
+        const successPanel = document.getElementById('signup-success');
+        document.getElementById('client-preview-link').textContent = `https://${slug}.apexclaimsai.com`;
+        document.getElementById('client-preview-link').href = previewUrl;
+        successPanel.classList.add('active');
+      }, 1200);
+    });
+  </script>
+</body>
+</html>

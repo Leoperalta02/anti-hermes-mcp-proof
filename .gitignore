@@ -1,0 +1,25 @@
+# Secrets & Security Protection (Strict Isolation)
+vault_backup/
+local_vault/
+*secrets*
+*secret*.json
+*.token
+*.nsec
+*.key
+*.pem
+*oauth_token*.json
+
+# System & OS
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.log
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Local Scratch & Temp
+scratch/

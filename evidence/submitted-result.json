@@ -1,0 +1,7 @@
+{
+  "assignment_id": "MCP-PROOF-001",
+  "status": "completed",
+  "answer": 31,
+  "evidence": "Arithmetic verification: 12 + 19 = 31 performed under sandbox isolation.",
+  "verified_at_destination": "C:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\evidence\\submitted-result.json"
+}

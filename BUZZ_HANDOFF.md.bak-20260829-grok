@@ -1,0 +1,57 @@
+# BUZZ & ALIEN AGENTS ARCHITECTURE HANDOFF
+
+**Last Updated:** August 29, 2026 — 11:08 AM EDT  
+**Current Milestone:** Structured Managed-Agent IPC Implemented & Audited by Grok (Pre-Canary)
+
+---
+
+## 1. Multi-Agent & Tooling Roster (Maker-Checker & Failover Matrix)
+* **Anti (Antigravity / Gemini):** Primary Builder / Systems Operator & MSVC Compiler Lead.
+* **Atlas (ChatGPT / Codex):** Independent Maker-Checker, Architecture & Safety Reviewer, Failover Implementation Engine.
+* **Grok (Cursor Pro / Grok Bot):** Independent 3rd Reviewer, Red-Team / Adversarial Sanity Checker (Active Auditor).
+* **Cursor Pro:** Active backup / reviewer IDE environment.
+* **Continuity Rule:** [BUZZ_HANDOFF.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/BUZZ_HANDOFF.md) is the universal single source of truth across all environments.
+
+---
+
+## 2. Environment & Paths
+* **Primary Workspace / Repo:** `c:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof`
+* **Buzz Source Tree:** `C:\LEO-LAB-ANTIGRAVITY\buzz-src`
+* **Hermes Agent Tree:** `C:\LEO-LAB-ANTIGRAVITY\hermes-agent`
+* **Test Binaries Directory:** `C:\LEO-LAB-ANTIGRAVITY\buzz-test`
+* **Active Managed Agents Config:** `%APPDATA%\xyz.block.buzz.app\agents\managed-agents.json`
+* **Agent Log Directory:** `%APPDATA%\xyz.block.buzz.app\agents\logs`
+
+---
+
+## 3. Active Binaries & Hashes (Verified by Grok Audit)
+* **Production Binary (`buzz-acp.exe`):** `C:\Users\leope\AppData\Local\Buzz\buzz-acp.exe`  
+  *SHA256 (Verified):* `95CDAAD04FAD8B2CAB1DF2BEA4D779B9C3963DAAB76DE57E78BF118DEA431D8C`
+* **Active Canary Test Binary (`buzz-acp-fallback-test.exe`):** `C:\LEO-LAB-ANTIGRAVITY\buzz-test\buzz-acp-fallback-test.exe`  
+  *SHA256 (Verified):* `16A235D3A81D95BB35B3667EBBD1FD2F7332BCDEB703AA24C80BFDB4F2987712`  
+  *Build Features:* `--features fallback-publish`
+
+---
+
+## 4. Current Routing State
+* **Hermes:** Routed to `C:\LEO-LAB-ANTIGRAVITY\buzz-test\buzz-acp-fallback-test.exe`
+* **Pollen:** Routed to `C:\LEO-LAB-ANTIGRAVITY\buzz-test\buzz-acp-fallback-test.exe`
+* **Fizz, Honey, Atlas, Aura:** Untouched (routed to production `buzz-acp`)
+
+---
+
+## 5. Grok Red-Team Audit Notes (11:06 AM)
+1. **Production Hash Corrected:** Updated production `buzz-acp.exe` hash from stale placeholder to verified `95CDAAD0...`.
+2. **Duplicate Row Audit in `managed-agents.json`:** Verified that name lookup ignores empty-pubkey legacy stubs and correctly hits live keyed entries.
+3. **Pollen Inbound Allowlist:** Sibling communication is authorized via `author_allowed` / NIP-OA auth tags.
+4. **Execution Strategy:** Grok recommends running the initial canary validation in a dedicated test channel before running in `Alienware-hq`.
+
+---
+
+## 6. Single Next Approved Action
+Run the initial live Hermes → Pollen delegation canary test (either in a test channel or `Alienware-hq` per Leo's direction):
+- Prompt Hermes to delegate to Pollen using the structured tool.
+- Verify Hermes publishes delegation event with Pollen `p` tag.
+- Verify real Pollen process wakes up and executes.
+- Verify real Pollen replies via structured send with Hermes `p` tag.
+- Verify real Hermes wakes up and summarizes for Leo.

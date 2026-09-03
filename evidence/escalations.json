@@ -1,0 +1,20 @@
+[
+  {
+    "id": "esc_20260826_135420_06ae",
+    "timestamp": "2026-08-26T13:54:20.537882",
+    "source": "Rosie CoPilot",
+    "user_prompt": "Find sales comps for 10450 Stoneybrook",
+    "raw_response": "I cannot access MLS databases directly.",
+    "trigger_pattern": "cannot access",
+    "status": "PENDING_ANTI_RESOLUTION"
+  },
+  {
+    "id": "esc_20260826_135425_5ab9",
+    "timestamp": "2026-08-26T13:54:25.847211",
+    "source": "Rosie CoPilot",
+    "user_prompt": "Find sales comps for 10450 Stoneybrook",
+    "raw_response": "I cannot access MLS databases directly.",
+    "trigger_pattern": "cannot access",
+    "status": "PENDING_ANTI_RESOLUTION"
+  }
+]

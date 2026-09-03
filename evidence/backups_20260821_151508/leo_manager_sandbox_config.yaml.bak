@@ -1,0 +1,57 @@
+database:
+  journal_mode: wal
+runtime:
+  nofile_soft_limit: 4096
+model:
+  default: qwen3.5:9b
+  provider: ollama
+  base_url: http://127.0.0.1:11434/v1
+auxiliary:
+  free_only: true
+  title_generation:
+    enabled: false
+    provider: main
+memory:
+  memory_enabled: true
+  user_profile_enabled: false
+  memory_char_limit: 2200
+  user_char_limit: 0
+session_reset:
+  mode: none
+  idle_minutes: 1440
+  at_hour: 4
+agent:
+  max_turns: 12
+  verbose: false
+  reasoning_effort: medium
+  tool_use_enforcement: true
+  task_completion_guidance: false
+  parallel_tool_call_guidance: false
+  coding_context: "off"
+tools:
+  tool_search:
+    enabled: "on"
+    defer_builtin_tools: true
+    always_visible_tools:
+      - delegate_task
+      - write_file
+      - read_file
+    listing: "off"
+delegation:
+  max_concurrent_children: 1
+  max_spawn_depth: 1
+  orchestrator_enabled: false
+  subagent_auto_approve: false
+  max_iterations: 4
+  child_timeout_seconds: 90
+display:
+  compact: false
+  tool_progress: all
+  show_reasoning: false
+  streaming: true
+telemetry:
+  shared_metrics:
+    enabled: false
+plugins:
+  enabled: []
+_config_version: 37

@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-08-26T14:23:02.337528",
+  "sync_status": "SYNCHRONIZED",
+  "antigravity_2_0_active": true,
+  "git_state": {
+    "is_repo": false,
+    "branch": "unknown",
+    "latest_commit": "none",
+    "modified_files": []
+  },
+  "recent_modifications": [
+    {
+      "path": "real-estate-web\\index.html",
+      "mtime": 1787768572.055892,
+      "last_modified": "2026-08-26T14:22:52.055892"
+    },
+    {
+      "path": "evidence\\watchdog_report.json",
+      "mtime": 1787768369.474051,
+      "last_modified": "2026-08-26T14:19:29.474051"
+    },
+    {
+      "path": "evidence\\workspace_sync.json",
+      "mtime": 1787768369.472546,
+      "last_modified": "2026-08-26T14:19:29.472546"
+    },
+    {
+      "path": "hq_watchdog.py",
+      "mtime": 1787768363.924203,
+      "last_modified": "2026-08-26T14:19:23.924203"
+    },
+    {
+      "path": "real-estate-web\\server.py",
+      "mtime": 1787768341.058792,
+      "last_modified": "2026-08-26T14:19:01.058792"
+    },
+    {
+      "path": "server.py",
+      "mtime": 1787767429.3680687,
+      "last_modified": "2026-08-26T14:03:49.368069"
+    },
+    {
+      "path": "state_sync_engine.py",
+      "mtime": 1787767419.1822467,
+      "last_modified": "2026-08-26T14:03:39.182247"
+    },
+    {
+      "path": "leo_hq_telegram_bot.py",
+      "mtime": 1787766880.1576793,
+      "last_modified": "2026-08-26T13:54:40.157679"
+    },
+    {
+      "path": "telegram_bot.py",
+      "mtime": 1787766872.0993662,
+      "last_modified": "2026-08-26T13:54:32.099366"
+    },
+    {
+      "path": "evidence\\escalations.json",
+      "mtime": 1787766865.8482845,
+      "last_modified": "2026-08-26T13:54:25.848284"
+    },
+    {
+      "path": "escalation_engine.py",
+      "mtime": 1787766862.2294674,
+      "last_modified": "2026-08-26T13:54:22.229467"
+    },
+    {
+      "path": "gpu_bridge.py",
+      "mtime": 1787676971.0545313,
+      "last_modified": "2026-08-25T12:56:11.054531"
+    },
+    {
+      "path": "NIKKI_CONVERSION_PLAYBOOK.md",
+      "mtime": 1787670270.5938773,
+      "last_modified": "2026-08-25T11:04:30.593877"
+    },
+    {
+      "path": "PROJECT_BLUEPRINT_NETWORK_SECURITY_MSP.md",
+      "mtime": 1787461369.3708737,
+      "last_modified": "2026-08-23T01:02:49.370874"
+    },
+    {
+      "path": "PROJECT_BLUEPRINT_AI_HIGHLEVEL.md",
+      "mtime": 1787461189.6913097,
+      "last_modified": "2026-08-23T00:59:49.691310"
+    }
+  ],
+  "hermes_sandbox_last_active": "2026-08-21T00:08:42.827893"
+}

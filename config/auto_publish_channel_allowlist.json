@@ -1,0 +1,18 @@
+{
+  "auto_publish_enabled": true,
+  "allowed_channel_uuids": [
+    "991626c1-64e7-4e78-954e-72808920e715"
+  ],
+  "audit_metadata": {
+    "version": "1.0.0",
+    "description": "Explicit Channel UUID Allowlist for ACP Fallback Publish Guard",
+    "created_at": "2026-08-29",
+    "allowed_channels": [
+      "Alienware-hq (991626c1-64e7-4e78-954e-72808920e715)"
+    ],
+    "denied_by_default": [
+      "Leo-private-hq",
+      "All unlisted or private channels"
+    ]
+  }
+}

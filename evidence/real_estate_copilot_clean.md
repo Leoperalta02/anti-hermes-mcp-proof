@@ -1,0 +1,190 @@
+───────────────────────────────────────────────────────────────────╮[0m
+[38;2;255;248;220m🏡 Gulf Point Real Estate AI Copilot — Property Analysis[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mProperty Overview[0m
+[38;2;255;248;220mDetail: Address[0m
+[38;2;255;248;220mValue: 10450 Stoneybrook Golf Dr, Estero, FL 33928[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mDetail: Bedrooms[0m
+[38;2;255;248;220mValue: 3[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mDetail: Bathrooms[0m
+[38;2;255;248;220mValue: 2[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mDetail: Square Footage[0m
+[38;2;255;248;220mValue: 2,150 sq ft[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mDetail: Type[0m
+[38;2;255;248;220mValue: Single Family Home[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mDetail: Key Features[0m
+[38;2;255;248;220mValue: Screened lanai + heated pool, lake view, updated kitchen (quartz), new[0m
+[38;2;255;248;220m  2024 roof, 2-car garage, gated community[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m📊 1. Comparative Valuation & Listing Price Range[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mMarket Context Note[0m
+[38;2;255;248;220mAs an AI copilot, I don't have real-time MLS/Zillow data access. The following is a strategic estimate based on Estero's current market patterns (as of mid-2024):[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mMetric: Estero avg price/sqft[0m
+[38;2;255;248;220mEstimate: $285–$365 /sqft[0m
+[38;2;255;248;220mNotes: Varies by submarket & condition[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mMetric: Baseline valuation[0m
+[38;2;255;248;220mEstimate: $612,750 – $784,750[0m
+[38;2;255;248;220mNotes: 2,150 sq ft × market range[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mMetric: Premium adjustments[0m
+[38;2;255;248;220mEstimate: +$30K–$50K[0m
+[38;2;255;248;220mNotes: Heated pool, lake view, new roof (2024), updated kitchen[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mMetric: Gating/Community premium[0m
+[38;2;255;248;220mEstimate: +$25K–$40K[0m
+[38;2;255;248;220mNotes: Gated Stoneybrook benefits[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m➤ Suggested Listing Price Range: $680,000 – $790,000[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mTier: Conservative[0m
+[38;2;255;248;220mPrice: $680K–$725K[0m
+[38;2;255;248;220mStrategy: Quick sale, motivated seller[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mTier: Market-Realistic[0m
+[38;2;255;248;220mPrice: $730K–$775K[0m
+[38;2;255;248;220mStrategy: Balanced offer, competitive positioning[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mTier: Premium[0m
+[38;2;255;248;220mPrice: $780K–$795K[0m
+[38;2;255;248;220mStrategy: Highlight unique: lake view + new roof + resort pool amenity[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🏡 2. MLS Public Description (Ready to Paste)[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mLUXURY GATED LIFESTYLE — LAKE VIEW ESTATE IN STONEYBROOK![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mWelcome to this exquisite 3 bedroom, 2 bathroom single-family home in the prestigious Stoneybrook golf community at just over 2,150 sq ft. This stunning property boasts a private heated screened lanai pool that transforms outdoor living into a year-round resort experience.[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m✨ KEY UPDATES & FEATURES:[0m
+[38;2;255;248;220m• BRAND-NEW 2024 Roof — peace of mind you won't find everywhere![0m
+[38;2;255;248;220m• Designer Updated Kitchen with premium quartz countertops[0m
+[38;2;255;248;220m• Open-concept floor plan perfect for families or entertaining[0m
+[38;2;255;248;220m• Expansive lakeside views from the screened lanai/pool area[0m
+[38;2;255;248;220m• Spacious 2-car garage — ample storage space inside & out[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🏡 PROPERTY HIGHLIGHTS:[0m
+[38;2;255;248;220m• Gated community security with low, affordable HOA fees[0m
+[38;2;255;248;220m• Prime Estero location near Miromar Outlets & FGCU campus[0m
+[38;2;255;248;220m• Walk to golf course or enjoy sunset over the lake right here![0m
+[38;2;255;248;220m• Recently upgraded interiors ready for move-in ease[0m
+[38;2;255;248;220m• Fresh paint & fresh landscaping — just what you've been waiting for![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🌊 LOCATION PERKS:[0m
+[38;2;255;248;220mEstero's coastal charm with direct access to top-rated schools, pristine beaches, and vibrant local dining. Stoneybrook is gated, peaceful, and perfect for those seeking the Florida lifestyle without oceanfront prices.[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m💰 ASKING PRICE: $XXX,XXX (Listing Agent TBD)[0m
+[38;2;255;248;220m📷 Virtual Tours available upon request[0m
+[38;2;255;248;220m📝 Contact your MLS team to schedule viewing today![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m#EsteroRealEstate #StonebrookGolfCommunity #HeatedPoolHome #LakeViewLiving #FloridaLifestyle[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m📱 3. Instagram & Facebook 'Just Listed' Marketing Post[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🎯 Instagram Version (Vertical Friendly)[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🌊 JUST LISTED IN STONEYBROOK! 🏡✨[0m
+[38;2;255;248;220m📍 10450 Stoneybrook Golf Dr, Estero, FL[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mNEW TO MARKET — LAKE VIEW WITH RESORT-STYLE POOL! 💙♨️[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m✅ 3 Beds • 2 Baths • 2,150 sq ft[0m
+[38;2;255;248;220m✅ HEATED SCREENED POOL & LANEI[0m
+[38;2;255;248;220m✅ BRAND NEW 2024 ROOF — MOVE-IN READY![0m
+[38;2;255;248;220m✅ UPDATED KITCHEN w/ QUARTZ COUNTERTOPS[0m
+[38;2;255;248;220m✅ GATED COMMUNITY • LOW HOA[0m
+[38;2;255;248;220m✅ CLOSE TO MIROMAR OUTLETS & FGCU[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m☀️ Enjoy sunset views from your pool while the golf course is steps away. Fresh paint, fresh upgrades, and a location you can't beat. This lake view lifestyle won't last long![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🏡 PERFECT FOR: • Active Adults • Empty Nesters • Golf Lovers • Water Enthusiasts[0m
+[38;2;255;248;220m🌴 ESTERO'S GOLF COMMUNITY — SECURE & PEACEFUL[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m📲 DM for pricing + private tour info![0m
+[38;2;255;248;220m👇 TAP LINK IN BIO to schedule![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m#EsteroRealtor #EsteroRealEstate #StoneybrookGolfCommunity #EsteroFlorida #JustListed2024 #HeatedPoolHome • #LakeViewEstate • FloridaLiving #GatedHOA #NewListingEstero #EsteroHomes #LuxuryEstero #GulfPointEstero #SouthWestFlorida • #FloridaRealestate #RealEstateListing • EsteroFL[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m📘 Facebook Version (Longer, Community-Focused)[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🌊 NEW LISTING ALERT! 🏡💙[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mJUST LISTED in prestigious Stoneybrook Golf Community — Estero, FL![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mAddress: 10450 Stoneybrook Golf Dr, Estero, FL 33928[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mThis stunning 3 bed / 2 bath single-family home sits at just over 2,150 sq ft and offers TRUE lake view living at its finest. The screened lanai with HEATED POOL transforms your backyard into a year-round Florida vacation! 🔥💦[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m★ FRESH UPDATES:[0m
+[38;2;255;248;220m✦ BRAND NEW 2024 ROOF — you can't find this everywhere! ✨[0m
+[38;2;255;248;220m✦ Designer kitchen + quartz countertops in an open floor plan[0m
+[38;2;255;248;220m✦ Screened pool & lanai with lake views[0m
+[38;2;255;248;220m✦ Fresh paint, landscaping, and clean condition[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m★ COMMUNITY BENEFITS:[0m
+[38;2;255;248;220m✦ Gated for security[0m
+[38;2;255;248;220m✦ Quiet, golf-focused neighborhood[0m
+[38;2;255;248;220m✦ Low HOA fees[0m
+[38;2;255;248;220m✦ Walking distance to golf course + amenities[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m★ LOCATION PLUS:[0m
+[38;2;255;248;220m✦ Minutes from Miromar Outlets (shopping & dining!)[0m
+[38;2;255;248;220m✦ Close to FGCU campus[0m
+[38;2;255;248;220m✦ Direct access to Estero beaches & top-rated schools[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m💡 ASKING: $XXX,XXX (Contact for details)[0m
+[38;2;255;248;220m📸 Photos & virtual tour available upon request![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m👉 READY TO MOVE HOME? Message us today to schedule your private showing! We're proud to serve the Estero community and welcome you to see this one![0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m#Estero • EsteroRealtor • StoneybrookGolfCommunity #EsteroFL • FloridaLiving • RealEstate #JustListed • NewListing[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m✅ Recommended Next Steps[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mAction: Verify current comps via Zillow/Realtor.com[0m
+[38;2;255;248;220mTool/Skill: dogfood, arxiv (research)[0m
+[38;2;255;248;220mOwner: Agent[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mAction: Schedule open house slots[0m
+[38;2;255;248;220mTool/Skill: session-librarian[0m
+[38;2;255;248;220mOwner: Listing Agent[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mAction: Create video walkthrough/manim script if requested[0m
+[38;2;255;248;220mTool/Skill: manim-video, p5js[0m
+[38;2;255;248;220mOwner: Digital Asset Team[0m
+[38;2;255;248;220m────────────────────────────────────────[0m
+[38;2;255;248;220mAction: Prepare agent bio sheet for buyer lead handouts[0m
+[38;2;255;248;220mTool/Skill: notion, google-workspace[0m
+[38;2;255;248;220mOwner: Marketing Coordinator[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220mNeed adjustments? Ask me to:[0m
+[38;2;255;248;220m- 🎨 Generate property flyer mockups via sketch or design-md[0m
+[38;2;255;248;220m- 📊 Research recent Estero comps deeper via arxiv/research tools[0m
+[38;2;255;248;220m- ✍️ Rewrite MLS copy with different tone (luxury vs. affordability focus)[0m
+[38;2;255;248;220m[0m
+[38;2;255;248;220m🌊 Gulf Point Real Estate — We Make It Beautiful.[0m
+[1;38;2;255;215;0m╰──────────────────────────────────────────────────────────────────────────────╯[0m

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-08-20T23:38:44.908022",
+  "scopes_verified": [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/calendar.readonly"
+  ],
+  "inbox_sample_count": 5,
+  "inbox_sample": [
+    {
+      "id": "1a022487147a7567",
+      "from": "Indeed <donotreply@match.indeed.com>",
+      "subject": "Destination Manager TRAVEL REQUIRED at Diamond Tours, Inc. in Fort Myers, FL and 2 more new jobs",
+      "date": "Fri, 21 Aug 2026 03:06:06 +0000",
+      "snippet": "Hi Leovigildo \u201cLeo\u201d, It looks like your background could be a match for this Destination Manager TRAVEL REQUIRED role. Please submit a quick application if you have any interest or explore more jobs"
+    },
+    {
+      "id": "1a02247f5cc22f0d",
+      "from": "Indeed <donotreply@match.indeed.com>",
+      "subject": "Systems Administrator - Local Candidates Only @ Greenwire LLC",
+      "date": "Fri, 21 Aug 2026 03:05:35 +0000",
+      "snippet": "$50,\u200c000 - $70,\u200c000 a year. Hi Leovigildo \u201cLeo\u201d, Your IT operations management experience could be a strong match for this Systems Administrator role at Greenwire LLC. If you&#39;re interested in a"
+    },
+    {
+      "id": "1a022324f3ee8dbd",
+      "from": "Side Hustle Secrets <Contact@thesidehustledaily.com>",
+      "subject": "You probably forgot about this",
+      "date": "Thu, 20 Aug 2026 21:39:46 -0500",
+      "snippet": "This is one of those things that&#39;s easy to overlook. You signed up, made solid progress, and then stopped just before the final confirmation. Nothing has expired, and nothing needs to be repeated."
+    },
+    {
+      "id": "1a021ef52924a001",
+      "from": "Experian Alerts <support@s.usa.experian.com>",
+      "subject": "Heads up Leovigildo! You have new alerts on your Experian credit file",
+      "date": "Thu, 20 Aug 2026 19:28:46 -0600",
+      "snippet": "Sign in to see what&#39;s changed. Experian header logo Experian header logo Unread notifications Sign in Leovigildo, check out your recent Experian credit file updates Decrease in Credit Limit View"
+    },
+    {
+      "id": "1a021e6381b96610",
+      "from": "Google Antigravity <antigravity-noreply@google.com>",
+      "subject": "Get started with Google Antigravity",
+      "date": "Thu, 20 Aug 2026 18:18:50 -0700",
+      "snippet": "Welcome to Google Antigravity! Google Antigravity is the platform built for the era of agentic development. Co-optimized with Gemini, Antigravity brings the frontier of model intelligence directly into"
+    }
+  ],
+  "calendar_sample_count": 5,
+  "calendar_sample": [
+    {
+      "id": "1kaqlncce0gk5ihb64hqccpgv0_20260821T203000Z",
+      "summary": "HQ pending-action and automation audit",
+      "start": "2026-08-21T16:30:00-04:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "a7fck3ar859i7uc90um7jqfn6s_20260824T120000Z",
+      "summary": "Review Program Watch exceptions and Rosy draft",
+      "start": "2026-08-24T08:00:00-04:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "qf850sko6fmf577s3tvbc9saco_20260824T123000Z",
+      "summary": "Review and approve Rosy's Market Monday draft",
+      "start": "2026-08-24T08:30:00-04:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "1kaqlncce0gk5ihb64hqccpgv0_20260828T203000Z",
+      "summary": "HQ pending-action and automation audit",
+      "start": "2026-08-28T16:30:00-04:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "a7fck3ar859i7uc90um7jqfn6s_20260831T120000Z",
+      "summary": "Review Program Watch exceptions and Rosy draft",
+      "start": "2026-08-31T08:00:00-04:00",
+      "status": "confirmed"
+    }
+  ]
+}

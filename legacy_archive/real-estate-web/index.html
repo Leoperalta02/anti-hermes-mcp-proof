@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Buzz AI Security MSP">
+  <meta name="theme-color" content="#090d16">
+  <title>BUZZ AI / ALIEN SECURITY MSP • Cyber Security Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --sidebar-bg: #0d1322;
+      --card-bg: rgba(18, 26, 43, 0.75);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --primary-blue: #3b82f6;
+      --faith-green: #10b981;
+      --amber-accent: #f59e0b;
+      --red-accent: #ef4444;
+      --drawer-bg: #0b101d;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+
+    /* Left Sidebar */
+    aside.left-sidebar {
+      width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--card-border);
+      display: flex; flex-direction: column; flex-shrink: 0; z-index: 20;
+    }
+    .brand-header {
+      padding: 16px 18px; border-bottom: 1px solid var(--card-border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #3b82f6);
+      display: flex; align-items: center; justify-content: center; font-size: 19px;
+    }
+    .brand-title h2 { font-size: 13.5px; font-weight: 800; letter-spacing: -0.2px; color: #fff; }
+    .brand-title p { font-size: 9.5px; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .fleet-section-title {
+      padding: 14px 18px 6px 18px; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .agent-list { display: flex; flex-direction: column; gap: 4px; padding: 6px 10px; flex: 1; overflow-y: auto; }
+    .agent-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px;
+      cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+    }
+    .agent-item:hover { background: rgba(255, 255, 255, 0.04); }
+    .agent-item.active { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.12); }
+    .agent-icon {
+      width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+    }
+    .agent-info h3 { font-size: 12px; font-weight: 700; color: #f1f5f9; }
+    .agent-info p { font-size: 9.5px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 145px; }
+
+    .user-footer {
+      padding: 12px 16px; border-top: 1px solid var(--card-border); background: rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 10px; font-size: 11px; color: #64748b;
+    }
+    .user-avatar { width: 26px; height: 26px; border-radius: 8px; background: #1e293b; color: #10b981; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; }
+
+    /* Main Command Workspace */
+    main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-dark); }
+    
+    header.command-header {
+      background: rgba(13, 19, 34, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--card-border);
+      padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .agent-status-tag {
+      padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .top-nav-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .nav-tab-btn {
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); color: var(--text-muted);
+      padding: 7px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .nav-tab-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+    .nav-tab-btn.active { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: rgba(255, 255, 255, 0.25); }
+
+    .header-badges { display: flex; align-items: center; gap: 8px; }
+    .drawer-toggle-btn {
+      background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7;
+      padding: 6px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .drawer-toggle-btn:hover { background: rgba(16, 185, 129, 0.35); }
+
+    /* Content Area */
+    .content-viewport { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 16px; -webkit-overflow-scrolling: touch; }
+    
+    .message-card {
+      background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 16px; animation: fadeIn 0.25s ease; max-width: 95%; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .message-card.user { align-self: flex-end; background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(30, 64, 175, 0.3) 100%); border-color: rgba(59, 130, 246, 0.35); }
+    .message-card.assistant { align-self: flex-start; width: 100%; max-width: 100%; }
+    .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 11.5px; color: var(--text-muted); }
+    .msg-author { font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px; }
+    .msg-body { font-size: 14px; line-height: 1.65; color: #e2e8f0; }
+
+    /* Command Input Bar */
+    .command-input-bar {
+      background: rgba(13, 19, 34, 0.95); border-top: 1px solid var(--card-border);
+      padding: 12px 16px max(16px, env(safe-area-inset-bottom)) 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .input-textarea {
+      flex: 1; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); color: #fff;
+      border-radius: 12px; padding: 12px 14px; font-size: 15px; outline: none; resize: none; min-height: 44px; max-height: 120px;
+    }
+    .input-textarea:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .submit-btn {
+      width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669);
+      border: none; color: #fff; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* RIGHT SIDE PANEL: BUZZ RESPONSE DRAWER (agent_drawer_visible: true) */
+    aside.buzzi-drawer {
+      width: 370px; background: var(--drawer-bg); border-left: 1px solid var(--card-border);
+      display: flex; flex-direction: column; flex-shrink: 0; z-index: 15; transition: transform 0.3s ease;
+    }
+    aside.buzzi-drawer.hidden { display: none; }
+
+    .drawer-header {
+      padding: 14px 16px; border-bottom: 1px solid var(--card-border); background: rgba(13, 19, 34, 0.9);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .drawer-title h3 { font-size: 13px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 6px; }
+    .drawer-title p { font-size: 10px; color: #64748b; margin-top: 2px; }
+    .drawer-status-chip {
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .drawer-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+    .drawer-card {
+      background: rgba(18, 26, 43, 0.6); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px;
+    }
+    .drawer-card-title {
+      font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .provenance-card {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #38bdf8; background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 10px; white-space: pre-wrap; line-height: 1.4;
+    }
+
+    .event-stream-container {
+      display: flex; flex-direction: column; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    }
+    .event-step-item {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 10px;
+      animation: fadeIn 0.2s ease;
+    }
+    .step-badge {
+      display: inline-block; font-size: 9.5px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-right: 6px;
+    }
+    .step-INIT { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .step-ANALYSIS { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .step-EXECUTION { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .step-CONTENT { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; }
+
+    .vault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; }
+    .vault-item {
+      background: rgba(255, 255, 255, 0.03); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .vault-ok { color: #34d399; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- Left Sidebar -->
+  <aside class="left-sidebar">
+    <div class="brand-header">
+      <div class="brand-logo">🛡️</div>
+      <div class="brand-title">
+        <h2>BUZZ AI SECURITY</h2>
+        <p>Cyber Security MSP</p>
+      </div>
+    </div>
+
+    <div class="fleet-section-title">
+      <span>CYBERSECURITY WORKFORCE</span>
+    </div>
+
+    <div class="agent-list">
+      <div class="agent-item active" onclick="selectAgent('bodyguard', this)">
+        <div class="agent-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🛡️</div>
+        <div class="agent-info">
+          <h3>Buzz Guard Bodyguard</h3>
+          <p>Personal Pre-Screener & Shield</p>
+        </div>
+      </div>
+
+      <div class="agent-item" onclick="selectAgent('jit', this)">
+        <div class="agent-icon" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">🔍</div>
+        <div class="agent-info">
+          <h3>Jit AppSec Reviewer</h3>
+          <p>PR Code Vulnerability Scanner</p>
+        </div>
+      </div>
+
+      <div class="agent-item" onclick="selectAgent('patcher', this)">
+        <div class="agent-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🛠️</div>
+        <div class="agent-info">
+          <h3>DevSecOps Patcher</h3>
+          <p>Auto-Remediation & Patching</p>
+        </div>
+      </div>
+
+      <div class="agent-item" onclick="selectAgent('sera', this)">
+        <div class="agent-icon" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">🚨</div>
+        <div class="agent-info">
+          <h3>Sera SOC Triager</h3>
+          <p>Autonomous Incident Dispatcher</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-footer">
+      <div class="user-avatar">LP</div>
+      <span>Leo Peralta • 159.223.183.138</span>
+    </div>
+  </aside>
+
+  <!-- Main Viewport -->
+  <main>
+    <header class="command-header">
+      <div class="header-left">
+        <div id="agent-status-badge" class="agent-status-tag" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+          <div class="status-dot"></div>
+          <span id="agent-title-display">Buzz Guard Bodyguard</span>
+        </div>
+
+        <div class="top-nav-tabs" id="nav-tabs-container">
+          <button class="nav-tab-btn active" onclick="selectTab('bodyguard', this)">🛡️ Personal Bodyguard (Green Shield)</button>
+          <button class="nav-tab-btn" onclick="selectTab('appsec', this)">🔍 Jit AppSec PR Review</button>
+          <button class="nav-tab-btn" onclick="selectTab('patcher', this)">🛠️ DevSecOps Patching</button>
+          <button class="nav-tab-btn" onclick="selectTab('soc', this)">🚨 Sera Autonomous SOC</button>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <button class="drawer-toggle-btn" onclick="toggleDrawer()">📱 Buzz Telemetry Drawer</button>
+      </div>
+    </header>
+
+    <div class="content-viewport" id="chat-container">
+      <!-- Dynamic Workspace Content Injected Here -->
+    </div>
+
+    <div class="command-input-bar">
+      <textarea id="user-input" class="input-textarea" placeholder="Paste email, link, PR diff snippet, or service log..." rows="1" onkeydown="handleKey(event)"></textarea>
+      <button class="submit-btn" onclick="sendMessage()">➔</button>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDE PANEL: BUZZ RESPONSE DRAWER (agent_drawer_visible: true) -->
+  <aside class="buzzi-drawer" id="buzzi-response-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <h3>📱 BUZZ RESPONSE DRAWER</h3>
+        <p>Live Security Telemetry & Provenance</p>
+      </div>
+      <div class="drawer-status-chip">DRAWER ACTIVE</div>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Security Provenance Card -->
+      <div class="drawer-card">
+        <div class="drawer-card-title">
+          <span>🛡️ Security Provenance</span>
+          <span style="font-size:9px; color:#34d399;">TIER-1 VERIFIED</span>
+        </div>
+        <div class="provenance-card" id="drawer-provenance-box">
+🛡️ [SURFACE: Buzz AI Security Workspace | TIER: TIER-1 WORKER]
+⚙️ [ROLE: Buzz Guard Lead | ENGINE: Gemini Flash | SESSION: #BUZZ-INIT]
+────────────────────────────────────────
+        </div>
+      </div>
+
+      <!-- Live Event Stream Log -->
+      <div class="drawer-card">
+        <div class="drawer-card-title">
+          <span>⚡ Live Event Telemetry Stream</span>
+          <span style="font-size:9px; color:#60a5fa;">SSE stream_events=true</span>
+        </div>
+        <div class="event-stream-container" id="drawer-event-stream">
+          <div class="event-step-item">
+            <span class="step-badge step-INIT">READY</span> Buzz Security Response Drawer active and listening.
+          </div>
+        </div>
+      </div>
+
+      <!-- Vault Integration Status -->
+      <div class="drawer-card">
+        <div class="drawer-card-title">
+          <span>🔒 Vault Backup Attachment</span>
+        </div>
+        <div class="vault-grid" id="drawer-vault-grid">
+          <div class="vault-item"><span>OAuth Token</span> <span class="vault-ok">OK</span></div>
+          <div class="vault-item"><span>API Secrets</span> <span class="vault-ok">OK</span></div>
+          <div class="vault-item"><span>Jit Engine</span> <span class="vault-ok">OK</span></div>
+          <div class="vault-item"><span>Sera SOC</span> <span class="vault-ok">OK</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    let currentAgent = 'bodyguard';
+    let currentChannel = 'bodyguard';
+
+    function toggleDrawer() {
+      const drawer = document.getElementById('buzzi-response-drawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function selectAgent(agentId, elem) {
+      currentAgent = agentId;
+      document.querySelectorAll('.agent-item').forEach(e => e.classList.remove('active'));
+      if (elem) elem.classList.add('active');
+
+      const titleDisplay = document.getElementById('agent-title-display');
+      if (agentId === 'bodyguard') titleDisplay.innerText = 'Buzz Guard Bodyguard';
+      else if (agentId === 'jit') titleDisplay.innerText = 'Jit AppSec Reviewer';
+      else if (agentId === 'patcher') titleDisplay.innerText = 'DevSecOps Patcher';
+      else if (agentId === 'sera') titleDisplay.innerText = 'Sera SOC Triager';
+
+      loadWelcomeCard();
+    }
+
+    function selectTab(tabId, btnElem) {
+      currentChannel = tabId;
+      if (btnElem) {
+        document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+        btnElem.classList.add('active');
+      }
+    }
+
+    function loadWelcomeCard() {
+      const container = document.getElementById('chat-container');
+      container.innerHTML = '';
+      appendMessage('Buzz Guard Bodyguard', `
+        <h3>Welcome to Buzz AI Cyber Security MSP Workspace 🛡️</h3>
+        <p>Your <strong>Personal AI Bodyguard</strong> & <strong>Specialist Security Workforce</strong> are 100% active.</p>
+        <ul>
+          <li><strong>🛡️ Bodyguard Pre-Screening:</strong> Scans incoming emails & links, attaching a <strong>Green Shield (Verified Safe)</strong> badge before you open them.</li>
+          <li><strong>🔍 Jit AppSec PR Reviewer:</strong> Automatically inspects Pull Requests for SAST/SCA flaws & secrets.</li>
+          <li><strong>🛠️ DevSecOps Auto-Patcher:</strong> Generates fix patches for vulnerable packages and Docker/IaC files.</li>
+          <li><strong>🚨 Sera Autonomous SOC:</strong> Monitors deployment logs and triages incident alerts.</li>
+        </ul>
+      `, 'assistant');
+    }
+
+    function appendMessage(author, content, type) {
+      const container = document.getElementById('chat-container');
+      const card = document.createElement('div');
+      card.className = `message-card ${type}`;
+
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let renderedHtml = type === 'assistant' ? marked.parse(content) : escapeHtml(content);
+
+      card.innerHTML = `
+        <div class="msg-header">
+          <span class="msg-author">${type === 'user' ? '👤 ' + author : '🛡️ ' + author}</span>
+          <span>${now}</span>
+        </div>
+        <div class="msg-body">${renderedHtml}</div>
+      `;
+      container.appendChild(card);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function addDrawerEventStep(step, message) {
+      const streamContainer = document.getElementById('drawer-event-stream');
+      const item = document.createElement('div');
+      item.className = 'event-step-item';
+      item.innerHTML = `<span class="step-badge step-${step}">${step}</span> ${escapeHtml(message)}`;
+      streamContainer.appendChild(item);
+      streamContainer.scrollTop = streamContainer.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = '';
+      appendMessage('Operator', text, 'user');
+
+      document.getElementById('drawer-event-stream').innerHTML = '';
+      addDrawerEventStep('INIT', `Connecting to Buzz SSE stream for prompt: "${text.substring(0, 25)}..."`);
+
+      const sseUrl = `/api/buzz/stream?query=${encodeURIComponent(text)}&category=${encodeURIComponent(currentChannel)}`;
+      const evtSource = new EventSource(sseUrl);
+
+      evtSource.onmessage = function(e) {
+        try {
+          const data = JSON.parse(e.data);
+          
+          if (data.event === 'drawer_step') {
+            addDrawerEventStep(data.step, data.message);
+          } else if (data.event === 'provenance') {
+            if (data.banner) {
+              document.getElementById('drawer-provenance-box').innerText = data.banner;
+            }
+          } else if (data.event === 'content') {
+            appendMessage('Buzz Security CoPilot', data.content, 'assistant');
+            addDrawerEventStep('CONTENT', 'Security payload & Green Shield badge delivered to workspace.');
+          } else if (data.event === 'done') {
+            addDrawerEventStep('DONE', 'Buzz Security inspection finished clean.');
+            evtSource.close();
+          }
+        } catch (err) {
+          console.error("SSE Parse Error:", err);
+        }
+      };
+
+      evtSource.onerror = function(err) {
+        console.error("SSE Connection Error:", err);
+        addDrawerEventStep('ERROR', 'SSE stream error — executing POST fallback.');
+        evtSource.close();
+        
+        fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: text, channel: currentChannel })
+        }).then(res => res.json()).then(data => {
+          appendMessage('Buzz Security CoPilot', data.response, 'assistant');
+        });
+      };
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    loadWelcomeCard();
+  </script>
+</body>
+</html>

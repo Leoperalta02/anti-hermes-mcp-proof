@@ -1,0 +1,17 @@
+{
+  "acp_version": "1.0",
+  "gateway_type": "native_hermes_gateway",
+  "harness": "Hermes",
+  "connection": {
+    "host": "159.223.183.138",
+    "port": 443,
+    "protocol": "wss",
+    "nostr_relay": "wss://relay.damus.io"
+  },
+  "agent_config": {
+    "model_tier": "Opus 5",
+    "memory_persistence": "enabled",
+    "cron_jobs": "24/7_background_active"
+  },
+  "instructions": "Copy this payload into your local Buzz client when selecting the Hermes Harness to connect directly to your DigitalOcean VPS Gateway."
+}
