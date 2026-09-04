@@ -2198,6 +2198,10 @@
     loadScript('fsbo', null);
     loadInboundLeads();
     renderListingIntakeQueue();
+    if (window.location.hash === '#listings') {
+      const listingsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => (t.getAttribute('onclick') || '').includes("'listings'"));
+      switchPanel('listings', listingsTab || null);
+    }
   </script>
 </body>
 </html>
