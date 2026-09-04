@@ -11,9 +11,11 @@
 |------|--------|----------|
 | A1 Gateway supervision | **PASS** | WMI-detached daemon; Scheduled Task `Hermes_Gateway`; PID **37056** |
 | A2 Electron git path fix | **PASS** | `allowUnsafeCustomBinary: true` in `git-review-ops.ts`; Desktop active |
-| A3 SQLite Lease Guardian | **PASS** | `apex_core/lease_guardian.py` daemon PID **32880**; 27/27 tests |
-| A4 72h uptime watch | **IN PROGRESS** | Clock started; do not mark green until 72h clean `gateway.log` |
-| A5 Telegram polling | **PASS** | Sticky polling active per Anti report |
+| A3 SQLite Lease Guardian | **PASS** | `apex_core/lease_guardian.py` daemon PID **4284**; 28/28 tests |
+| A4 72h uptime watch | **IN PROGRESS** | 12h+ clean; no unclean exits on gateway |
+| A5 Telegram polling | **PASS** | Sticky polling active; 8am standup delivered to Telegram |
+| A6 Aura Storage & Inbox Sentinel | **PASS** | WMI-detached daemon PID **7756**; 15-min heartbeat; Samsung Drive `D:\Email_Archives` |
+
 
 **Commit:** `053aee7` on `github/main` (lease guardian + HERMES_STATUS)
 
