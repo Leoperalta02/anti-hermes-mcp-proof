@@ -1,6 +1,16 @@
 # Alienware Terminal Runbook (Anti Dark Fallback)
 
-Run these on the Alienware host in **PowerShell** from the repo root.
+**Prefer the unified CLI** (same commands on cloud or Alienware):
+
+```powershell
+python -m apex_core.apex_cli host      # am I on Alienware or cloud?
+python -m apex_core.apex_cli status    # gates + posture
+python -m apex_core.apex_cli dev       # start dev stack
+python -m apex_core.apex_cli brief provision
+python -m apex_core.apex_cli governance   # Alienware only
+```
+
+Run on the **Alienware host** in **PowerShell** from the repo root.
 
 ## 1. Pull latest
 
