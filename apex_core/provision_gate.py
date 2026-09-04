@@ -4,7 +4,7 @@ Fail-closed gate before tenant skeleton provisioning or live onboarding.
 
 Live provision requires:
   1. Leo decision matching APPROVE PROVISION (not DRYRUN)
-  2. APEX_A4_WATCH_COMPLETE=1 (72h gateway watch complete)
+  2. A4 watch complete (evidence/operator_gates.json or APEX_A4_WATCH_COMPLETE=1)
 
 Dry-run provision requires:
   Leo decision matching APPROVE PROVISION DRYRUN
@@ -12,7 +12,6 @@ Dry-run provision requires:
 
 from __future__ import annotations
 
-import os
 import re
 from typing import Any, Dict, Optional
 
@@ -30,8 +29,11 @@ DEFAULT_CLAIMS: Dict[str, bool] = {
 }
 
 
+from apex_core.operator_gates import is_a4_watch_complete as _operator_a4_complete
+
+
 def is_a4_watch_complete() -> bool:
-    return os.getenv("APEX_A4_WATCH_COMPLETE", "").strip().lower() in {"1", "true", "yes", "on"}
+    return _operator_a4_complete()
 
 
 def normalize_decision(decision: Optional[str]) -> str:
@@ -94,7 +96,7 @@ def evaluate_provision_gate(
                     "gate_mode": "LIVE_BLOCKED_A4",
                     "reason": (
                         "Leo approval recorded but A4 72h gateway watch incomplete "
-                        "(set APEX_A4_WATCH_COMPLETE=1 when Anti confirms)"
+                        "(record lift in evidence/operator_gates.json or set APEX_A4_WATCH_COMPLETE=1)"
                     ),
                 }
             )

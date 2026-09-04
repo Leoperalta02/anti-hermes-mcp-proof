@@ -24,6 +24,11 @@ class TestProvisionExecutor(unittest.TestCase):
         self.briefs_dir = self.temp_dir / "briefs"
         self.briefs_dir.mkdir()
         self._a4_backup = os.environ.pop("APEX_A4_WATCH_COMPLETE", None)
+        os.environ["APEX_OPERATOR_GATES_FILE"] = str(self.temp_dir / "operator_gates.json")
+        (self.temp_dir / "operator_gates.json").write_text(
+            json.dumps({"version": 1, "gates": {"a4_watch_complete": False}, "history": []}),
+            encoding="utf-8",
+        )
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir, ignore_errors=True)
@@ -31,6 +36,7 @@ class TestProvisionExecutor(unittest.TestCase):
             os.environ.pop("APEX_A4_WATCH_COMPLETE", None)
         else:
             os.environ["APEX_A4_WATCH_COMPLETE"] = self._a4_backup
+        os.environ.pop("APEX_OPERATOR_GATES_FILE", None)
 
     def _sample_brief(self, leo_decision=None):
         return {

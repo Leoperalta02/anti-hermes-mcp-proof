@@ -34,8 +34,11 @@ def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+from apex_core.operator_gates import is_telegram_live_enabled
+
+
 def is_live_dispatch_enabled() -> bool:
-    return os.getenv("APEX_TELEGRAM_LIVE", "").strip().lower() in {"1", "true", "yes", "on"}
+    return is_telegram_live_enabled()
 
 
 def parse_chat_id(target: str) -> str:

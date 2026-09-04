@@ -117,6 +117,16 @@ Audit synchronized and approved by Anti IDE.
 
 **Deferred to Anti:** Realtor mobile PWA / portal nav fix at ≤680px (Leo directive Sep 04).
 
+## Operator Gate Lift — Sep 04, 2026 (Leo Peralta)
+
+Recorded in `evidence/operator_gates.json`:
+- `a4_watch_complete`: **true**
+- `live_provision_enabled`: **true**
+- `telegram_live_enabled`: **true**
+- `#Alienware-hq` HOLD: **unchanged (still active)**
+
+Live `APPROVE PROVISION` now passes gate check. Telegram live send still requires `APEX_TELEGRAM_BOT_TOKEN` on Alienware.
+
 ## Cursor Implementation — provision executor (pending commit)
 
 **Gated Provision Executor (§6.5 & §8)**

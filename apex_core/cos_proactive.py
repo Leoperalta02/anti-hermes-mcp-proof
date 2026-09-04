@@ -220,7 +220,12 @@ class StatusTelemetryReader:
 
         t.cursor_queue = "See CURSOR_REVIEW.md for latest audit verdict"
         if re.search(r"all provisions are approved", anti, re.I):
-            t.leo_decisions_needed.append("Awaiting A4 72h completion before first live APPROVE PROVISION")
+            from apex_core.operator_gates import is_live_provision_enabled
+
+            if not is_live_provision_enabled():
+                t.leo_decisions_needed.append("Awaiting A4 72h completion before first live APPROVE PROVISION")
+            else:
+                t.leo_decisions_needed.append("Live provision gate OPEN — await first APPROVE PROVISION brief")
 
         pytest = re.search(r"(\d+/\d+)\s+PASS", anti + hermes)
         if not pytest:

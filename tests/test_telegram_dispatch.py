@@ -25,6 +25,12 @@ from apex_core.telegram_dispatch import (
 class TestTelegramDispatch(unittest.TestCase):
     def setUp(self):
         self.temp_dir = Path(tempfile.mkdtemp(prefix="apex_tg_dispatch_"))
+        self.gates_file = self.temp_dir / "operator_gates.json"
+        self.gates_file.write_text(
+            json.dumps({"version": 1, "gates": {"telegram_live_enabled": False}, "history": []}),
+            encoding="utf-8",
+        )
+        os.environ["APEX_OPERATOR_GATES_FILE"] = str(self.gates_file)
         self.alert = {
             "channel": "telegram:8349762599",
             "brief_id": "20260904-rosie",
@@ -38,6 +44,7 @@ class TestTelegramDispatch(unittest.TestCase):
         self._env_backup = {
             "APEX_TELEGRAM_LIVE": os.environ.pop("APEX_TELEGRAM_LIVE", None),
             "APEX_TELEGRAM_BOT_TOKEN": os.environ.pop("APEX_TELEGRAM_BOT_TOKEN", None),
+            "APEX_OPERATOR_GATES_FILE": os.environ.get("APEX_OPERATOR_GATES_FILE"),
         }
 
     def tearDown(self):
@@ -57,12 +64,20 @@ class TestTelegramDispatch(unittest.TestCase):
         self.assertTrue((self.temp_dir / "telegram_dispatch_latest.json").exists())
 
     def test_live_blocked_without_token(self):
+        self.gates_file.write_text(
+            json.dumps({"version": 1, "gates": {"telegram_live_enabled": True}, "history": []}),
+            encoding="utf-8",
+        )
         os.environ["APEX_TELEGRAM_LIVE"] = "1"
         result = dispatch_telegram_alert(self.alert, evidence_dir=self.temp_dir)
         self.assertEqual(result["dispatch_status"], "LIVE_BLOCKED_NO_TOKEN")
         self.assertFalse(result["live_sent"])
 
     def test_live_send_when_gated(self):
+        self.gates_file.write_text(
+            json.dumps({"version": 1, "gates": {"telegram_live_enabled": True}, "history": []}),
+            encoding="utf-8",
+        )
         os.environ["APEX_TELEGRAM_LIVE"] = "1"
         os.environ["APEX_TELEGRAM_BOT_TOKEN"] = "test-token"
 
@@ -96,9 +111,20 @@ class TestBriefWatcherDispatchIntegration(unittest.TestCase):
         self.evidence_dir = self.temp_dir / "evidence"
         self.briefs_dir.mkdir()
         self.evidence_dir.mkdir()
+        self._gates_backup = os.environ.get("APEX_OPERATOR_GATES_FILE")
+        gates_file = self.temp_dir / "operator_gates.json"
+        gates_file.write_text(
+            json.dumps({"version": 1, "gates": {"telegram_live_enabled": False}, "history": []}),
+            encoding="utf-8",
+        )
+        os.environ["APEX_OPERATOR_GATES_FILE"] = str(gates_file)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir, ignore_errors=True)
+        if self._gates_backup is None:
+            os.environ.pop("APEX_OPERATOR_GATES_FILE", None)
+        else:
+            os.environ["APEX_OPERATOR_GATES_FILE"] = self._gates_backup
 
     def test_triage_includes_dispatch_record(self):
         from apex_core.brief_watcher import BriefWatcher
