@@ -62,3 +62,11 @@
 
 7. **Test Suite Verification:**
    - `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors in 0.51s).
+
+8. **CoS Proactive Stack (P1–P5 `COS_PROACTIVE_SOP.md` §10):**
+   - `apex_core/cos_proactive.py` — standup composer (8am/6pm ET), gateway health probe preamble, telemetry reader, proactive reply composer.
+   - P2 prompt block: §2 principle + §9 rubric wired (`COS_PROACTIVE_PROMPT_BLOCK`).
+   - P4: Gateway DOWN → alert-first standup (skips body sections per §4).
+   - P5: Parses `ANTI_STATUS.md` + `HERMES_STATUS.md` into structured standup bullets.
+   - Staged output: `evidence/cos_standup_latest.json` (§12 false-claims enforced).
+   - Verified: `tests/test_cos_proactive.py` → **14/14 PASS**.

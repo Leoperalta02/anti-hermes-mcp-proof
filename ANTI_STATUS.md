@@ -34,15 +34,17 @@ Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_O
 | W4 | Tenant skeleton under `hermes-state/profiles/real-estate-copilot/` | `tenant_skeleton_manager.py`; Rosie tenant & SOUL.md synced | **PASS** |
 | W5 | Internal delegation sandbox | `delegation_sandbox.py`; multi-agent dry-run §9 passes; `send_managed_agent` sandbox guard | **PASS** |
 
-### CoS (`COS_PROACTIVE_SOP.md` §10)
+### CoS (`COS_PROACTIVE_SOP.md` §10) — P1–P5 WIRED ✅
 
-| # | Task | Verify |
-| --- | --- | --- |
-| P1 | Cron 8am + 6pm standup | Leo receives template |
-| P2 | System prompt: §2 principle + §9 rubric | "hey" → standup, not echo |
-| P3 | Folder watch: `onboarding-briefs/` | New file → 5 min alert |
-| P4 | Gateway health probe in cron preamble | DOWN → alert first |
-| P5 | Read `ANTI_STATUS.md` + `HERMES_STATUS.md` for standup | Matches live state |
+| # | Task | Verify | Status |
+| --- | --- | --- | --- |
+| P1 | Cron 8am + 6pm standup template | `apex_core/cos_proactive.py` → §4 format | **PASS** |
+| P2 | System prompt §2 + §9 rubric | `COS_PROACTIVE_PROMPT_BLOCK`; "hey" → standup | **PASS** |
+| P3 | Folder watch: `onboarding-briefs/` | Covered by W1 `brief_watcher.py` | **PASS** (via W1) |
+| P4 | Gateway health probe preamble | `GatewayHealthProbe`; DOWN → alert-first | **PASS** |
+| P5 | Read `ANTI_STATUS.md` + `HERMES_STATUS.md` | `StatusTelemetryReader` → standup bullets | **PASS** |
+
+Verified via `tests/test_cos_proactive.py` (14/14 PASS).
 
 ---
 
