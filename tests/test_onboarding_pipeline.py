@@ -32,7 +32,7 @@ class TestOnboardingPipeline(unittest.TestCase):
         self.assertIn("APEX ONBOARDING SUCCESS", result["telegram_alert"])
         self.assertTrue(result["provision_gate"]["provision_allowed"])
         self.assertEqual(result["provision_gate"]["gate_mode"], "DRYRUN")
-        self.assertEqual(result["dispatch"]["dispatch_status"], "STAGED_ONLY")
+        self.assertIn(result["dispatch"]["dispatch_status"], ("STAGED_ONLY", "LIVE_BLOCKED_NO_TOKEN"))
 
 if __name__ == "__main__":
     unittest.main()

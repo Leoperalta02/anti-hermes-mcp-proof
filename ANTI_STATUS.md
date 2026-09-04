@@ -1,7 +1,23 @@
 # Anti Status — Hermes / Rosie Ops
 
-**Updated:** 2026-09-04 (Cursor sync after Anti Phase A report + GitHub push)  
-**Executive gate:** Leo **APPROVE SOPs** recorded.
+**Updated:** 2026-09-04 8:34 PM UTC  
+**Anti host:** **DARK / UNAVAILABLE** — Alienware IDE not responding  
+**Fallback:** Cursor cloud agent covering code + docs until Anti returns
+
+---
+
+## Anti Dark — Contingency (Leo / Cursor)
+
+| Was Anti's lane | Blocked on Alienware? | Cursor fallback |
+| --- | --- | --- |
+| A4 72h gateway watch | Yes — needs local PID supervision | Leo: check gateway PID 37056 + Lease Guardian manually |
+| `update_managed_agent_tool_governance.py` | Yes — writes to `hermes-agent/tools/` | Leo runs after pull, or wait for Anti |
+| `APEX_TELEGRAM_BOT_TOKEN` on host | Yes | Leo sets env on Alienware gateway shell |
+| Mobile portal nav ≤680px | No — code in repo | **Cursor picked up** — hamburger drawer in `fast_site_builder.py` |
+| Anti audits (`CURSOR_REVIEW.md`) | Partial | Cursor self-records; Leo signs when Anti returns |
+| First live `--provision-approved` | Needs Alienware briefs dir | Leo can run on Alienware after pull |
+
+**Executive gate:** Leo **APPROVE PROVISION** + operator gates open — see `evidence/operator_gates.json`.
 
 ---
 
@@ -87,9 +103,9 @@ Verified via `tests/test_cos_proactive.py` (14/14 PASS).
 
 ---
 
-## HOLD (unchanged)
+## HOLD (updated Sep 04)
 
-- `#Alienware-hq` — HOLD
+- `#Alienware-hq` — **LIFTED in evidence** (`operator_gates.json`); Anti must re-run governance patch on host
 - Buzz / Nostr relay — retired
 - Vapi production webhooks — HOLD until Leo separate gate
 

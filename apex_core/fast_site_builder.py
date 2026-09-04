@@ -2700,6 +2700,48 @@ class FastSiteBuilder:
     }}
     .btn-sm:hover {{ background: var(--text-primary); color: #000; }}
 
+    /* Mobile nav drawer (≤680px) */
+    .nav-menu-btn {{
+      display: none;
+      font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.75rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: rgba(255,255,255,0.06); color: var(--text-primary);
+      cursor: pointer;
+    }}
+    .nav-drawer-backdrop {{
+      display: none; position: fixed; inset: 0; z-index: 250;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+    }}
+    .nav-drawer-backdrop.open {{ display: block; }}
+    .nav-drawer {{
+      position: fixed; top: 0; right: 0; z-index: 260;
+      width: min(88vw, 320px); height: 100vh;
+      background: rgba(10,10,13,0.98);
+      border-left: 1px solid var(--hairline);
+      transform: translateX(100%); transition: transform 0.25s ease;
+      padding: 1rem 1rem 2rem 1rem; overflow-y: auto;
+    }}
+    .nav-drawer.open {{ transform: translateX(0); }}
+    .nav-drawer-head {{
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--hairline);
+    }}
+    .nav-drawer-title {{ font-size: 0.85rem; font-weight: 600; color: var(--gold-accent); }}
+    .nav-drawer-close {{
+      border: 1px solid var(--hairline); background: transparent; color: var(--text-primary);
+      border-radius: var(--pill); padding: 0.25rem 0.65rem; cursor: pointer; font-size: 0.75rem;
+    }}
+    .nav-drawer-tabs {{ display: flex; flex-direction: column; gap: 0.35rem; }}
+    .nav-drawer-tabs .nav-tab {{
+      width: 100%; text-align: left; padding: 0.65rem 0.85rem;
+      border-radius: 12px; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--hairline);
+    }}
+    .nav-drawer-tabs .nav-tab.active {{
+      background: rgba(229,200,144,0.12); border-color: var(--hairline-gold); color: var(--gold-accent);
+    }}
+
     /* ── LAYOUT SHELL ── */
     .os-shell {{
       max-width: 1400px; margin: 0 auto;
@@ -3270,7 +3312,11 @@ class FastSiteBuilder:
     }}
     @media (max-width: 680px) {{
       .kpi-bar {{ grid-template-columns: repeat(2, 1fr); }}
+      .nav-inner {{ padding: 0 1rem; }}
       .nav-tabs {{ display: none; }}
+      .nav-menu-btn {{ display: inline-flex; align-items: center; gap: 0.35rem; }}
+      .nav-right .live-dot {{ display: none; }}
+      .brand .badge {{ display: none; }}
     }}
   </style>
 </head>
@@ -3297,11 +3343,30 @@ class FastSiteBuilder:
       </div>
 
       <div class="nav-right">
+        <button type="button" class="nav-menu-btn" id="nav-menu-btn" onclick="toggleNavDrawer(true)" aria-label="Open navigation menu">☰ Menu</button>
         <div class="live-dot"><span class="pulse-dot"></span>Fleet Active</div>
         <a href="index.html" class="btn-sm" target="_blank">Front Door ↗</a>
       </div>
     </div>
   </header>
+
+  <div class="nav-drawer-backdrop" id="nav-drawer-backdrop" onclick="toggleNavDrawer(false)"></div>
+  <aside class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title">Workspace</span>
+      <button type="button" class="nav-drawer-close" onclick="toggleNavDrawer(false)">Close</button>
+    </div>
+    <div class="nav-drawer-tabs">
+      <button class="nav-tab active" onclick="switchPanelMobile('dashboard', this)">Dashboard</button>
+      <button class="nav-tab" onclick="switchPanelMobile('pipeline', this)">Pipeline</button>
+      <button class="nav-tab" onclick="switchPanelMobile('netsheets', this)">Net Sheets</button>
+      <button class="nav-tab" onclick="switchPanelMobile('cma', this)">CMA</button>
+      <button class="nav-tab" onclick="switchPanelMobile('prospects', this)">FSBO / Expired</button>
+      <button class="nav-tab" onclick="switchPanelMobile('listings', this)">Listings</button>
+      <button class="nav-tab" onclick="switchPanelMobile('playbook', this)">Playbook</button>
+      <button class="nav-tab" onclick="switchPanelMobile('transactions', this)">Transactions</button>
+    </div>
+  </aside>
 
   <div class="os-shell">
 
@@ -4058,12 +4123,38 @@ class FastSiteBuilder:
     const ADVISOR_NAME = {json.dumps(t.name)};
 
     // ── PANEL SWITCHER ──
+    function toggleNavDrawer(open) {{
+      const drawer = document.getElementById('nav-drawer');
+      const backdrop = document.getElementById('nav-drawer-backdrop');
+      if (!drawer || !backdrop) return;
+      drawer.classList.toggle('open', !!open);
+      backdrop.classList.toggle('open', !!open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }}
+
+    function syncNavTabActive(name) {{
+      document.querySelectorAll('.nav-tabs .nav-tab, .nav-drawer-tabs .nav-tab').forEach(tab => {{
+        const onclick = tab.getAttribute('onclick') || '';
+        const isMatch = onclick.includes("'" + name + "'");
+        tab.classList.toggle('active', isMatch);
+      }});
+    }}
+
     function switchPanel(name, btn) {{
       document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.getElementById('panel-' + name).classList.add('active');
-      if (btn) btn.classList.add('active');
+      if (btn) {{
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+      }} else {{
+        syncNavTabActive(name);
+      }}
+      toggleNavDrawer(false);
       if (name === 'playbook') loadScript('{first_script_key}', document.querySelector('.script-item'));
+    }}
+
+    function switchPanelMobile(name, btn) {{
+      switchPanel(name, btn);
     }}
 
     // ── PIPE SWITCHER ──
