@@ -156,4 +156,9 @@ python apex_core/fast_site_builder.py
    - Added `STAGE:DEFER` classification and configurable Telegram routing (`APEX_TELEGRAM_TARGET` env var / constructor override).
    - Audited by Cursor Pro (`f043f1a` on `354b095`): **STAGED PASS**.
    - Verified via `tests/test_brief_watcher.py` (6/6 tests pass) and full Alienware test suite (41/41 tests pass).
-5. [ ] **Hermes CoS Triage Integration (W3)**: Wire triage evaluator into active Chief of Staff profile.
+5. [x] **Hermes CoS Triage Integration (W3)**:
+   - Defined canonical CoS Triage Prompt Block (`COS_TRIAGE_PROMPT_BLOCK`) implementing §6 5-point checklist (Acknowledge, Validate, Classify, Surface, Gate) and §2/§9 proactive operating invariants.
+   - Synchronized prompt block into active Chief of Staff profile: `C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\anti-cos\SOUL.md`.
+   - Created `apex_core/cos_triage_evaluator.py` supporting direct brief evaluation, 5-point checklist verification, and staged alert consumption from `evidence/brief_telegram_alert.json` with strict §12 false-claims assertions.
+   - Verified via `tests/test_cos_triage_evaluator.py` (8/8 tests pass) and full Alienware test suite (49/49 tests pass).
+6. [ ] **Hermes Tenant Skeleton under `hermes-state/profiles/real-estate-copilot/` (W4)**: Verify directory + SOUL loaded for sovereign realtor co-pilot execution.
