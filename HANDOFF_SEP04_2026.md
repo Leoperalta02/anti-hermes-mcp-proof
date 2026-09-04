@@ -97,7 +97,8 @@ python apex_core/fast_site_builder.py
 
 ## 4. Verification Evidence & Artifacts
 
-- **Browser Subagent Recording**: `file:///C:/Users/leope/.gemini/antigravity-ide/brain/4dd23541-a562-436c-8b23-887ee47fe6b6/verify_frontdoor_fixes_1788540731184.webp`
+- **Browser Subagent Recording (Lead Flow)**: `file:///C:/Users/leope/.gemini/antigravity-ide/brain/4dd23541-a562-436c-8b23-887ee47fe6b6/verify_lead_flow_1788542064253.webp`
+- **Browser Subagent Recording (CRM Tracker)**: `file:///C:/Users/leope/.gemini/antigravity-ide/brain/4dd23541-a562-436c-8b23-887ee47fe6b6/verify_crm_tracker_1788542952320.webp`
 - **Pill Widget & Dot Pulse**: `concierge_launcher_pill_1788540763006.png`
 - **Chat Window Opened**: `concierge_chat_open_1788540775234.png`
 - **Chat Benchmark Response**: `concierge_chip_response_1788540789998.png`
@@ -107,7 +108,9 @@ python apex_core/fast_site_builder.py
 - **Lead Flow Staged in Dashboard**: `dashboard_staged_lead_1788542128332.png`
 - **Lead Flow Staged in Buyer Pipeline**: `buyer_pipeline_kanban_1788542171861.png`
 - **Copilot Inbound Dossier Alert**: `copilot_inbound_alert_1788542179361.png`
-- **Node.js JS Syntax Verification**: 100% clean parsing across all landing pages and portals.
+- **CRM Dossier Email Thread Timeline**: `dossier_email_thread_1788542995236.png`
+- **CRM Dispatched Email Logged to Timeline**: `dossier_email_dispatched_1788543015352.png`
+- **Node.js JS Syntax Verification**: 100% clean parsing across all landing pages and portals for all 4 tenants (`rosie`, `vance`, `sofia`, `toki`).
 
 ---
 
@@ -117,12 +120,19 @@ python apex_core/fast_site_builder.py
 - [x] **Single Writer Integrity**: Anti IDE authored all template logic in `apex_core/fast_site_builder.py`.
 - [x] **Hold Preserved**: HOLD remains active on `#Alienware-hq`.
 - [x] **Tenant Agnostic Coaching**: Nikki coaching scripts cleanly abstracted under `coaching_source` tenant parameter.
+- [x] **Quote & Character Safety**: Escaped advisor names safely via JSON/const encoding (`ADVISOR_NAME`) to guarantee zero syntax breaks on names with quotes.
 
 ---
 
-## 6. Recommended Next Actions (Next Session)
+## 6. Roadmap Status
 
 1. [x] **Lead Flow Integration**: Wired front-door CMA inquiry submission (`index.html` dossier form) to write entries directly into the portal's CRM / Buyer pipeline (`portal.html`) and notify Copilot.
-2. [ ] **Email / CRM Synchronization**: Build out the inbound/outbound email tracker (Rosie wishlist item #1).
+2. [x] **Email / CRM Synchronization (Rosie Wishlist Item #1)**:
+   - Frosted-glass CRM Dossier Modal with threaded timeline.
+   - Quick Reply Composer with 4 AI templates (Keystone CMA, VIP Showing, Pre-Approval Milestone, Closing Update).
+   - Auto-logging to timeline + Copilot ledger + Mailto dispatch.
+   - Private agent notes + quick-date follow-up scheduler.
+   - Category filtering bar (`All`, `🔥 Hot Leads`, `👤 Buyers`, `🏡 Sellers`, `🚪 FSBO`, `💌 Sphere`).
 3. [ ] **External Coaching Injection**: Create `office_playbook.json` to allow Rosie's brokerage to update scripts without editing Python code.
 4. [ ] **Hermes Telegram Alert Hook (W1)**: Wire folder-watcher to ping Telegram on new incoming briefs.
+

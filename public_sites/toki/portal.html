@@ -487,6 +487,148 @@
       color: var(--text-secondary); font-size: 0.75rem;
     }
 
+    /* ── CRM CLIENT DOSSIER & EMAIL TRACKER MODAL ── */
+    .crm-modal-backdrop {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .crm-modal-backdrop.open {
+      opacity: 1; pointer-events: auto;
+    }
+    .crm-modal-card {
+      background: rgba(16, 16, 22, 0.98);
+      border: 1px solid rgba(229, 200, 144, 0.35);
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.95), 0 0 30px rgba(229, 200, 144, 0.15);
+      width: 100%; max-width: 860px;
+      max-height: 90vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(15px) scale(0.98);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .crm-modal-backdrop.open .crm-modal-card {
+      transform: translateY(0) scale(1);
+    }
+    .crm-modal-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--hairline);
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .crm-header-profile { display: flex; align-items: center; gap: 1rem; }
+    .crm-header-avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem;
+      border: 2px solid var(--gold-accent);
+      background: rgba(229, 200, 144, 0.15); color: #fff;
+    }
+    .crm-header-name { font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .crm-header-meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .crm-close-btn {
+      background: transparent; border: none; color: var(--text-secondary);
+      font-size: 1.3rem; cursor: pointer; padding: 0.3rem 0.6rem; border-radius: 8px;
+    }
+    .crm-close-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+    
+    .crm-tabs {
+      display: flex; gap: 0.4rem; padding: 0.75rem 1.75rem;
+      border-bottom: 1px solid var(--hairline);
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .crm-tab {
+      font-size: 0.82rem; font-weight: 500; padding: 0.4rem 1rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: transparent; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .crm-tab.active {
+      background: rgba(255, 255, 255, 0.12); color: var(--text-primary);
+      border-color: var(--gold-accent);
+    }
+    .crm-body {
+      flex: 1; overflow-y: auto; padding: 1.5rem 1.75rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .crm-tab-content { display: none; }
+    .crm-tab-content.active { display: block; }
+
+    .thread-msg {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 1rem 1.25rem;
+      margin-bottom: 0.85rem;
+    }
+    .thread-msg.system {
+      border-left: 3px solid var(--gold-accent);
+      background: rgba(229, 200, 144, 0.04);
+    }
+    .thread-msg.sent {
+      border-left: 3px solid var(--blue);
+    }
+    .thread-msg.received {
+      border-left: 3px solid var(--success);
+    }
+    .thread-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .thread-sender { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .thread-sender.system { color: var(--gold-accent); }
+    .thread-sender.sent { color: var(--blue); }
+    .thread-sender.received { color: var(--success); }
+    .thread-time { font-size: 0.72rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+    .thread-subject { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--text-primary); }
+    .thread-body { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; white-space: pre-line; }
+    
+    .crm-field { margin-bottom: 1rem; }
+    .crm-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.35rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .crm-input {
+      width: 100%; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--hairline); border-radius: 10px;
+      padding: 0.65rem 0.85rem; color: #fff; font-size: 0.85rem;
+      outline: none; font-family: inherit;
+    }
+    .crm-input:focus { border-color: var(--gold-accent); }
+    .crm-textarea {
+      width: 100%; height: 130px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--hairline); border-radius: 10px;
+      padding: 0.75rem 0.85rem; color: #fff; font-size: 0.85rem;
+      outline: none; font-family: inherit; resize: vertical; line-height: 1.5;
+    }
+    .crm-textarea:focus { border-color: var(--gold-accent); }
+    .template-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+    .tmpl-chip {
+      font-size: 0.72rem; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline); border-radius: var(--pill);
+      padding: 0.3rem 0.65rem; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tmpl-chip:hover { color: #fff; border-color: var(--gold-accent); background: rgba(229, 200, 144, 0.1); }
+
+    .crm-filter-bar {
+      display: flex; gap: 0.4rem; margin: 0.8rem 0 1.25rem 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .crm-filter-chip {
+      font-size: 0.75rem; font-weight: 500; padding: 0.32rem 0.8rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: transparent; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.2s ease; white-space: nowrap;
+    }
+    .crm-filter-chip.active, .crm-filter-chip:hover {
+      background: var(--gold-dim); border-color: var(--hairline-gold);
+      color: var(--text-primary);
+    }
+
     @media (max-width: 1100px) {
       .kpi-bar { grid-template-columns: repeat(3, 1fr); }
       .workspace-grid, .net-grid, .cma-grid { grid-template-columns: 1fr; }
@@ -578,63 +720,78 @@
             </div>
           </div>
 
+          <!-- CRM CATEGORY FILTER BAR -->
+          <div class="crm-filter-bar">
+            <button class="crm-filter-chip active" onclick="filterCrmQueue('ALL', this)">All Contacts</button>
+            <button class="crm-filter-chip" onclick="filterCrmQueue('HOT', this)">🔥 Hot Leads</button>
+            <button class="crm-filter-chip" onclick="filterCrmQueue('BUYER', this)">👤 Buyers</button>
+            <button class="crm-filter-chip" onclick="filterCrmQueue('SELLER', this)">🏡 Sellers</button>
+            <button class="crm-filter-chip" onclick="filterCrmQueue('FSBO', this)">🚪 FSBO</button>
+            <button class="crm-filter-chip" onclick="filterCrmQueue('SPHERE', this)">💌 Sphere</button>
+          </div>
+
           <div id="contact-rows-container">
-          <div class="contact-row">
+          <div class="contact-row" data-category="BUYER" data-heat="HOT" data-client-id="maria_rodriguez">
             <div class="contact-avatar av-hot">MR</div>
             <div class="contact-info">
-              <div class="contact-name">Maria Rodriguez <span class="heat-badge heat-hot">HOT</span></div>
-              <div class="contact-meta">Buyer — Pre-approved $680K • Last contact: 3 days ago • Showing: Bella Terra</div>
+              <div class="contact-name">Maria Rodriguez <span class="heat-badge heat-hot">HOT BUYER</span></div>
+              <div class="contact-meta">Buyer — Pre-approved $680K • Showing: Bella Terra • Next: Tomorrow</div>
             </div>
             <div class="contact-actions">
-              <button class="btn-action primary" onclick="logAction(this,'Called Maria')">📞 Call</button>
+              <button class="btn-action primary" onclick="openClientDossier('maria_rodriguez')">💬 Dossier & Emails</button>
+              <a href="tel:2395550144" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'Called Maria')">📞 Call</a>
               <button class="btn-action" onclick="logAction(this,'SMS Drafted')">✉ Text</button>
             </div>
           </div>
 
-          <div class="contact-row">
+          <div class="contact-row" data-category="SELLER" data-heat="HOT" data-client-id="walsh_couple">
             <div class="contact-avatar av-hot">DW</div>
             <div class="contact-info">
-              <div class="contact-name">David & Karen Walsh <span class="heat-badge heat-hot">HOT</span></div>
-              <div class="contact-meta">Seller — 22001 West Bay Blvd • CMA delivered yesterday, no response</div>
+              <div class="contact-name">David & Karen Walsh <span class="heat-badge heat-hot">HOT SELLER</span></div>
+              <div class="contact-meta">Seller — 22001 West Bay Blvd ($1.89M) • Keystone CMA sent • Follow-up today</div>
             </div>
             <div class="contact-actions">
-              <button class="btn-action primary" onclick="logAction(this,'Called Walsh')">📞 Call</button>
+              <button class="btn-action primary" onclick="openClientDossier('walsh_couple')">💬 Dossier & Emails</button>
+              <a href="tel:2395550189" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'Called Walsh')">📞 Call</a>
               <button class="btn-action" onclick="logAction(this,'Email Drafted')">✉ Email</button>
             </div>
           </div>
 
-          <div class="contact-row">
+          <div class="contact-row" data-category="BUYER" data-heat="WARM" data-client-id="jennifer_liu">
             <div class="contact-avatar av-warm">JL</div>
             <div class="contact-info">
-              <div class="contact-name">Jennifer Liu <span class="heat-badge heat-warm">WARM</span></div>
-              <div class="contact-meta">Referral Lead — Relocating from Chicago • Follow-up due today</div>
+              <div class="contact-name">Jennifer Liu <span class="heat-badge heat-warm">WARM BUYER</span></div>
+              <div class="contact-meta">Referral Lead — Chicago Relocation • Budget $650K • Follow-up due today</div>
             </div>
             <div class="contact-actions">
-              <button class="btn-action primary" onclick="logAction(this,'Called Liu')">📞 Call</button>
+              <button class="btn-action primary" onclick="openClientDossier('jennifer_liu')">💬 Dossier & Emails</button>
+              <a href="tel:3125550177" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'Called Liu')">📞 Call</a>
               <button class="btn-action" onclick="logAction(this,'Snoozed 3 days')">⏰ Snooze</button>
             </div>
           </div>
 
-          <div class="contact-row">
+          <div class="contact-row" data-category="FSBO" data-heat="WARM" data-client-id="thomas_cruz">
             <div class="contact-avatar av-warm">TC</div>
             <div class="contact-info">
-              <div class="contact-name">Thomas Cruz <span class="heat-badge heat-warm">WARM</span></div>
-              <div class="contact-meta">FSBO — 3812 Stoneybrook • Owner not listed with agent yet</div>
+              <div class="contact-name">Thomas Cruz <span class="heat-badge heat-warm">FSBO PROSPECT</span></div>
+              <div class="contact-meta">FSBO — 3812 Stoneybrook (~$525K) • Owner not listed with agent yet</div>
             </div>
             <div class="contact-actions">
-              <button class="btn-action primary" onclick="logAction(this,'Called Cruz')">📞 Call</button>
-              <button class="btn-action" onclick="logAction(this,'Door knock logged')">🚪 Door Knock</button>
+              <button class="btn-action primary" onclick="openClientDossier('thomas_cruz')">💬 Dossier & Emails</button>
+              <a href="tel:2395550133" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'Called Cruz')">📞 Call</a>
+              <button class="btn-action" onclick="logAction(this,'Door knock logged')">🚪 Knock</button>
             </div>
           </div>
 
-          <div class="contact-row">
+          <div class="contact-row" data-category="SPHERE" data-heat="COLD" data-client-id="nguyen_family">
             <div class="contact-avatar av-cold">BP</div>
             <div class="contact-info">
-              <div class="contact-name">Beth & Paul Nguyen <span class="heat-badge heat-cold">COLD</span></div>
-              <div class="contact-meta">Sphere — Past clients 2022 • Anniversary check-in (3 yr)</div>
+              <div class="contact-name">Beth & Paul Nguyen <span class="heat-badge heat-cold">SPHERE CLIENT</span></div>
+              <div class="contact-meta">Sphere — Past clients 2022 • Annual Home Equity check-in (3 yr)</div>
             </div>
             <div class="contact-actions">
-              <button class="btn-action" onclick="logAction(this,'Texted Nguyen')">✉ Text</button>
+              <button class="btn-action primary" onclick="openClientDossier('nguyen_family')">💬 Dossier & Emails</button>
+              <a href="tel:2395550199" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'Texted Nguyen')">✉ Text</a>
               <button class="btn-action" onclick="logAction(this,'Moved to nurture')">💌 Nurture</button>
             </div>
           </div>
@@ -1091,6 +1248,100 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════
+         CRM CLIENT DOSSIER & CONVERSATION TRACKER MODAL
+    ═══════════════════════════════════════════════ -->
+    <div id="crm-modal" class="crm-modal-backdrop" onclick="if(event.target===this)closeCrmModal()">
+      <div class="crm-modal-card">
+        <div class="crm-modal-header">
+          <div class="crm-header-profile">
+            <div class="crm-header-avatar" id="crm-modal-avatar">MR</div>
+            <div>
+              <div class="crm-header-name">
+                <span id="crm-modal-name">Maria Rodriguez</span>
+                <span class="heat-badge heat-hot" id="crm-modal-badge">HOT BUYER</span>
+              </div>
+              <div class="crm-header-meta">
+                <span id="crm-modal-phone">📞 (239) 555-0144</span>
+                <span id="crm-modal-email">✉️ maria.rodriguez@privateclient.com</span>
+                <span id="crm-modal-interest">📍 Estero • Bella Terra</span>
+              </div>
+            </div>
+          </div>
+          <button class="crm-close-btn" onclick="closeCrmModal()">✕</button>
+        </div>
+
+        <div class="crm-tabs">
+          <button class="crm-tab active" onclick="switchCrmTab('thread', this)">✉️ Conversation & Email Thread</button>
+          <button class="crm-tab" onclick="switchCrmTab('compose', this)">✍️ Compose Reply</button>
+          <button class="crm-tab" onclick="switchCrmTab('notes', this)">📝 Private Notes & Next Follow-Up</button>
+        </div>
+
+        <div class="crm-body">
+          <!-- TAB 1: THREAD TIMELINE -->
+          <div id="crm-tab-thread" class="crm-tab-content active">
+            <div id="crm-thread-list">
+              <!-- Thread items injected dynamically -->
+            </div>
+          </div>
+
+          <!-- TAB 2: COMPOSE REPLY -->
+          <div id="crm-tab-compose" class="crm-tab-content">
+            <div class="crm-field">
+              <div class="crm-label">Quick AI Response Templates (Staged for Sign-Off)</div>
+              <div class="template-chips">
+                <span class="tmpl-chip" onclick="applyEmailTemplate('cma')">📐 Send Keystone CMA Summary</span>
+                <span class="tmpl-chip" onclick="applyEmailTemplate('showing')">🏡 Tour & Walkthrough Invitation</span>
+                <span class="tmpl-chip" onclick="applyEmailTemplate('preapproval')">📋 Request Pre-Approval Update</span>
+                <span class="tmpl-chip" onclick="applyEmailTemplate('closing')">✍️ Contract & Escrow Milestone Check</span>
+              </div>
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Subject</label>
+              <input type="text" class="crm-input" id="crm-reply-subject" placeholder="Subject...">
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Message Body</label>
+              <textarea class="crm-textarea" id="crm-reply-body" placeholder="Write response..."></textarea>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+              <div style="font-size:0.75rem; color:var(--text-secondary);">
+                🛡️ <em>Human-in-the-Loop: Logged to client CRM timeline and prepared for dispatch.</em>
+              </div>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="btn-sm" onclick="openMailtoClient()">External Mail Client ↗</button>
+                <button class="btn-approve" style="padding:0.55rem 1.25rem;" onclick="sendCrmReply()">✓ Log & Dispatch Message</button>
+              </div>
+            </div>
+            <div id="crm-reply-feedback" style="display:none; color:var(--success); font-size:0.82rem; margin-top:0.75rem; font-weight:600;">
+              ✓ Message logged to client conversation ledger and Copilot updated.
+            </div>
+          </div>
+
+          <!-- TAB 3: NOTES & FOLLOW-UP -->
+          <div id="crm-tab-notes" class="crm-tab-content">
+            <div class="crm-field">
+              <label class="crm-label">Next Scheduled Follow-Up</label>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="date" class="crm-input" id="crm-next-date" style="max-width:200px;">
+                <button class="btn-sm" onclick="setQuickDate(1)">Tomorrow</button>
+                <button class="btn-sm" onclick="setQuickDate(3)">In 3 Days</button>
+                <button class="btn-sm" onclick="setQuickDate(7)">Next Week</button>
+              </div>
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Private Agent Notes (Confidential)</label>
+              <textarea class="crm-textarea" id="crm-notes-text" style="height:140px;" placeholder="Add private client intel (preferred showing times, family criteria, 1031 exchange deadlines)..."></textarea>
+            </div>
+            <button class="btn-approve" onclick="saveCrmNotes()">✓ Save Notes & Reminder</button>
+            <div id="crm-notes-feedback" style="display:none; color:var(--success); font-size:0.82rem; margin-top:0.75rem; font-weight:600;">
+              ✓ Client notes & follow-up schedule saved.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /os-shell -->
 
   <footer class="portal-footer">
@@ -1099,6 +1350,8 @@
   </footer>
 
   <script>
+    const ADVISOR_NAME = "John 'Toki' Grullon";
+
     // ── PANEL SWITCHER ──
     function switchPanel(name, btn) {
       document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'));
@@ -1292,7 +1545,7 @@
         const q = val.toLowerCase();
         let reply;
         if (q.includes('gci') || q.includes('pipeline')) reply = "Current pipeline value: <strong>$14.2M</strong>. At 2% average net commission: projected GCI = <strong>$284,000</strong>. Top opportunity: Walsh listing at $1.89M = ~$52K GCI.";
-        else if (q.includes('sms') || q.includes('maria')) reply = '<em>Draft SMS — Maria Rodriguez:</em><br>"Hi Maria! This is John 'Toki' Grullon. Just wanted to follow up on our Bella Terra conversation — I have 2 new listings that just hit the market today that match exactly what you are looking for. Can we chat this afternoon?"';
+        else if (q.includes('sms') || q.includes('maria')) reply = '<em>Draft SMS — Maria Rodriguez:</em><br>"Hi Maria! This is ' + ADVISOR_NAME + '. Just wanted to follow up on our Bella Terra conversation — I have 2 new listings that just hit the market today that match exactly what you are looking for. Can we chat this afternoon?"';
         else if (q.includes('cma') || q.includes('sqft')) reply = "Keystone benchmark: Bella Terra at <strong>$310/sqft</strong> + $80K adjustments = <strong>$848,800</strong> recommended list. Zillow Zestimate delta: +$286,400 in seller favor.";
         else if (q.includes('today') || q.includes('queue')) reply = "Today's priority actions:<br>1. 🔴 Call Maria Rodriguez (Buyer — 3 days cold)<br>2. 🔴 Call Walsh couple (Seller — CMA delivered, no reply)<br>3. 🟡 Approve Keystone CMA in queue<br>4. 🟡 Follow up Jennifer Liu<br>5. 🟢 Annual check-in Beth & Paul Nguyen";
         else reply = "Understood. Logged directive to the Apex fleet. All actions stage in your queue for final sign-off — nothing leaves without your approval.";
@@ -1418,6 +1671,370 @@
       if (e.key === LEADS_KEY) loadInboundLeads();
     });
     setInterval(loadInboundLeads, 3000);
+
+    // ── CRM CLIENT DOSSIERS & EMAIL CONVERSATION TRACKER ──
+    const CRM_KEY = 'apex_crm_threads_toki';
+    let currentActiveClientId = null;
+
+    const defaultClients = {
+      maria_rodriguez: {
+        id: 'maria_rodriguez',
+        name: 'Maria Rodriguez',
+        initials: 'MR',
+        badge: 'HOT BUYER',
+        heat: 'HOT',
+        category: 'BUYER',
+        phone: '(239) 555-0144',
+        email: 'maria.rodriguez@privateclient.com',
+        interest: 'Estero • Bella Terra (Budget $680K)',
+        nextFollowUp: '2026-09-05',
+        notes: 'Pre-approved with CrossCountry Mortgage ($680K). Looking for single-story pool home in Estero or Bonita Springs. Kids attend Pinewoods Elementary. Likes open-concept kitchens.',
+        threads: [
+          {
+            sender: 'client',
+            type: 'received',
+            subject: 'Re: Bella Terra showings this weekend',
+            time: 'Yesterday 4:15 PM',
+            body: "Hi John 'Toki' Grullon! We're really excited to see 21450 Bella Terra Blvd. We have our CrossCountry pre-approval letter for $680k in hand. Does Saturday morning at 11 AM work for you?"
+          },
+          {
+            sender: 'agent',
+            type: 'sent',
+            subject: 'Bella Terra Walkthrough Confirmation & Keystone CMA',
+            time: 'Yesterday 5:20 PM',
+            body: "Hi Maria! I've booked our private walkthrough for Saturday at 11 AM. Attached is our Keystone comparative market breakdown showing the permitted 2023 roof and pool value spread. Looking forward to showing you the property!"
+          }
+        ]
+      },
+      walsh_couple: {
+        id: 'walsh_couple',
+        name: 'David & Karen Walsh',
+        initials: 'DW',
+        badge: 'HOT SELLER',
+        heat: 'HOT',
+        category: 'SELLER',
+        phone: '(239) 555-0189',
+        email: 'dkwalsh@westbayfamily.com',
+        interest: '22001 West Bay Blvd ($1.89M Listing)',
+        nextFollowUp: '2026-09-04',
+        notes: 'High-equity sellers. Concerned about FL doc stamps ($0.70/$100) and capital gains. Emphasize off-market discretion and private buyer pool.',
+        threads: [
+          {
+            sender: 'agent',
+            type: 'sent',
+            subject: 'Keystone Valuation Dossier — 22001 West Bay Blvd ($1.89M)',
+            time: 'Yesterday 11:30 AM',
+            body: "David & Karen, here is our full pricing analysis comparing your property with recent West Bay Club off-market comps. Net proceeds sheet reflects Florida $0.70/$100 doc stamp tax."
+          }
+        ]
+      },
+      jennifer_liu: {
+        id: 'jennifer_liu',
+        name: 'Jennifer Liu',
+        initials: 'JL',
+        badge: 'WARM BUYER',
+        heat: 'WARM',
+        category: 'BUYER',
+        phone: '(312) 555-0177',
+        email: 'jliu@chicagolaw.com',
+        interest: 'Relocating from Chicago • Budget $650K',
+        nextFollowUp: '2026-09-04',
+        notes: 'Referral from Marcus Sterling. Moving to SWFL in November. Wants private golf community with quick access to RSW airport.',
+        threads: [
+          {
+            sender: 'client',
+            type: 'received',
+            subject: 'Relocation from Chicago to SW Florida',
+            time: 'Aug 31, 2026',
+            body: "Hi John 'Toki' Grullon, our friend Marcus Sterling recommended we reach out. We're looking for a gated community near golf in Southwest FL."
+          },
+          {
+            sender: 'agent',
+            type: 'sent',
+            subject: 'Welcome to Southwest Florida! Private Community Dossiers',
+            time: 'Aug 31, 2026',
+            body: "Excited to connect, Jennifer. Sending over our private neighborhood dossiers for Estero & Bonita Springs tailored to golf and airport access."
+          }
+        ]
+      },
+      thomas_cruz: {
+        id: 'thomas_cruz',
+        name: 'Thomas Cruz',
+        initials: 'TC',
+        badge: 'FSBO PROSPECT',
+        heat: 'WARM',
+        category: 'FSBO',
+        phone: '(239) 555-0133',
+        email: 'cruz.thomas@gmail.com',
+        interest: '3812 Stoneybrook Dr (~$525K)',
+        nextFollowUp: '2026-09-06',
+        notes: 'FSBO seller. Highly sensitive to commission. Goal: 15-minute CMA appointment. Shared data on 90-day sold comps.',
+        threads: [
+          {
+            sender: 'agent',
+            type: 'sent',
+            subject: 'Market Data & Recent Sold Comps for Stoneybrook',
+            time: 'Sep 1, 2026',
+            body: "Thomas, as promised on our call, here is the sold comp sheet for your neighborhood showing actual appraisal values over the last 90 days."
+          }
+        ]
+      },
+      nguyen_family: {
+        id: 'nguyen_family',
+        name: 'Beth & Paul Nguyen',
+        initials: 'BP',
+        badge: 'SPHERE CLIENT',
+        heat: 'COLD',
+        category: 'SPHERE',
+        phone: '(239) 555-0199',
+        email: 'pnguyen@leecountyhealth.org',
+        interest: 'Past Client (Closed 2022) • Annual Equity Review',
+        nextFollowUp: '2026-09-15',
+        notes: 'Past buyers 2022. Great advocates for referrals in Pelican Sound.',
+        threads: [
+          {
+            sender: 'agent',
+            type: 'sent',
+            subject: 'Happy 3-Year Home Anniversary! 🏡',
+            time: 'Aug 29, 2026',
+            body: "Beth & Paul, happy 3-year home anniversary! Values in your section of Estero are up ~14% since your closing. Would love to send a quick equity snapshot."
+          }
+        ]
+      }
+    };
+
+    function getCrmData() {
+      try {
+        const raw = localStorage.getItem(CRM_KEY);
+        if (!raw) return defaultClients;
+        const parsed = JSON.parse(raw);
+        return Object.assign({}, defaultClients, parsed);
+      } catch (e) {
+        return defaultClients;
+      }
+    }
+
+    function saveCrmData(data) {
+      try {
+        localStorage.setItem(CRM_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn('Error saving CRM data:', e);
+      }
+    }
+
+    function getActiveClient(id) {
+      const allCrm = getCrmData();
+      if (allCrm[id]) return allCrm[id];
+
+      // Check dynamic front-door leads
+      try {
+        const rawLeads = localStorage.getItem(LEADS_KEY);
+        if (rawLeads) {
+          const leads = JSON.parse(rawLeads);
+          const found = leads.find(l => l.id === id);
+          if (found) {
+            const initials = (found.full_name || 'IN').split(' ').map(n => n[0]).join('').toUpperCase() || 'IN';
+            return {
+              id: found.id,
+              name: found.full_name,
+              initials: initials,
+              badge: '✨ NEW DOSSIER',
+              heat: 'HOT',
+              category: 'BUYER',
+              phone: found.contact,
+              email: (found.contact && found.contact.includes('@')) ? found.contact : found.contact + '@client.phone',
+              interest: found.property_interest + ' (Target: ' + found.valuation_target + ')',
+              nextFollowUp: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+              notes: 'Inbound brief from Front-Door Dossier Form. Target valuation: ' + found.valuation_target + '. Received: ' + found.timestamp,
+              threads: [
+                {
+                  sender: 'client',
+                  type: 'system',
+                  subject: 'Confidential Front-Door Dossier Intake',
+                  time: found.timestamp || 'Just Now',
+                  body: 'Target Property / Address: ' + found.property_interest + '\nTarget Valuation: ' + found.valuation_target + '\nClient Contact: ' + found.contact + '\nDispatched via Apex Front-Door Form'
+                }
+              ]
+            };
+          }
+        }
+      } catch (err) {
+        console.warn('Error reading dynamic lead for CRM:', err);
+      }
+
+      return defaultClients.maria_rodriguez;
+    }
+
+    function openClientDossier(clientId) {
+      currentActiveClientId = clientId;
+      const client = getActiveClient(clientId);
+      if (!client) return;
+
+      document.getElementById('crm-modal-avatar').innerText = client.initials || 'CL';
+      document.getElementById('crm-modal-name').innerText = client.name;
+      document.getElementById('crm-modal-badge').innerText = client.badge || 'CLIENT';
+      document.getElementById('crm-modal-phone').innerText = '📞 ' + (client.phone || 'No phone');
+      document.getElementById('crm-modal-email').innerText = '✉️ ' + (client.email || 'No email');
+      document.getElementById('crm-modal-interest').innerText = '📍 ' + (client.interest || 'Southwest Florida');
+
+      // Thread render
+      renderClientThread(client);
+
+      // Notes & Followup
+      document.getElementById('crm-notes-text').value = client.notes || '';
+      document.getElementById('crm-next-date').value = client.nextFollowUp || '';
+
+      // Reset feedback
+      document.getElementById('crm-reply-feedback').style.display = 'none';
+      document.getElementById('crm-notes-feedback').style.display = 'none';
+
+      // Default to thread tab
+      switchCrmTab('thread');
+
+      document.getElementById('crm-modal').classList.add('open');
+    }
+
+    function closeCrmModal() {
+      document.getElementById('crm-modal').classList.remove('open');
+      currentActiveClientId = null;
+    }
+
+    function switchCrmTab(tabName, btn) {
+      document.querySelectorAll('.crm-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.crm-tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('crm-tab-' + tabName).classList.add('active');
+      if (btn) btn.classList.add('active');
+      else {
+        const targetBtn = Array.from(document.querySelectorAll('.crm-tab')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabName));
+        if (targetBtn) targetBtn.classList.add('active');
+      }
+    }
+
+    function renderClientThread(client) {
+      const list = document.getElementById('crm-thread-list');
+      if (!client.threads || client.threads.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;padding:1.5rem;text-align:center;">No previous messages logged yet. Use Compose Reply to start the thread.</div>';
+        return;
+      }
+      list.innerHTML = client.threads.map(m => `
+        <div class="thread-msg ${m.type}">
+          <div class="thread-header">
+            <span class="thread-sender ${m.type}">${m.sender === 'agent' ? ADVISOR_NAME + ' (Advisor)' : (m.sender === 'client' ? client.name : 'System Intake')}</span>
+            <span class="thread-time">${m.time}</span>
+          </div>
+          <div class="thread-subject">${m.subject}</div>
+          <div class="thread-body">${m.body}</div>
+        </div>
+      `).join('');
+    }
+
+    function applyEmailTemplate(type) {
+      const client = getActiveClient(currentActiveClientId);
+      const firstName = (client.name || 'Client').split(' ')[0];
+      const subjectInput = document.getElementById('crm-reply-subject');
+      const bodyInput = document.getElementById('crm-reply-body');
+
+      if (type === 'cma') {
+        subjectInput.value = 'Keystone CMA Valuation Analysis — ' + (client.interest || 'Your Property');
+        bodyInput.value = 'Hi ' + firstName + ',\n\nI have prepared our Keystone Comparative Market Analysis for ' + (client.interest || 'your property') + '. Our pricing model indicates significant equity spread compared to automated estimates.\n\nWould you have 15 minutes tomorrow afternoon to review the net sheet together?\n\nBest regards,\n' + ADVISOR_NAME;
+      } else if (type === 'showing') {
+        subjectInput.value = 'VIP Showing Confirmation — ' + (client.interest || 'Private Tour');
+        bodyInput.value = 'Hi ' + firstName + ',\n\nI have scheduled our private showing for ' + (client.interest || 'the property') + '. I will meet you at the community gate with the full dossier and gate credentials.\n\nLooking forward to seeing you then!\n\nWarm regards,\n' + ADVISOR_NAME;
+      } else if (type === 'preapproval') {
+        subjectInput.value = 'Financing & Pre-Approval Milestone Check-in';
+        bodyInput.value = 'Hi ' + firstName + ',\n\nTo ensure our offer position remains dominant in today’s Southwest Florida market, our transaction team is ready to align your financing credentials with the listing agent prior to contract submission.\n\nPlease let me know if you would like me to connect directly with your lender.\n\nSincerely,\n' + ADVISOR_NAME;
+      } else if (type === 'closing') {
+        subjectInput.value = 'Florida As-Is Contract Milestone Update';
+        bodyInput.value = 'Hi ' + firstName + ',\n\nHere is your latest Florida contract milestone update for ' + (client.interest || 'your transaction') + '. Earnest money deposit is logged with title, and inspection period preparations are underway.\n\nFeel free to call my direct line if you have any questions!\n\nBest regards,\n' + ADVISOR_NAME;
+      }
+    }
+
+    function sendCrmReply() {
+      const subject = document.getElementById('crm-reply-subject').value.trim();
+      const body = document.getElementById('crm-reply-body').value.trim();
+      if (!subject || !body) {
+        alert('Please provide both a subject and message body.');
+        return;
+      }
+      const allCrm = getCrmData();
+      const client = getActiveClient(currentActiveClientId);
+      if (!client) return;
+
+      const newMsg = {
+        sender: 'agent',
+        type: 'sent',
+        subject: subject,
+        time: 'Today ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        body: body
+      };
+
+      if (!client.threads) client.threads = [];
+      client.threads.push(newMsg);
+      allCrm[client.id] = client;
+      saveCrmData(allCrm);
+
+      renderClientThread(client);
+
+      document.getElementById('crm-reply-subject').value = '';
+      document.getElementById('crm-reply-body').value = '';
+      document.getElementById('crm-reply-feedback').style.display = 'block';
+
+      addMsg('Logged outbound email to <strong>' + client.name + '</strong> (' + subject + '). Thread updated in CRM.', 'agent');
+
+      setTimeout(() => {
+        switchCrmTab('thread');
+      }, 1200);
+    }
+
+    function openMailtoClient() {
+      const client = getActiveClient(currentActiveClientId);
+      const subject = document.getElementById('crm-reply-subject').value.trim();
+      const body = document.getElementById('crm-reply-body').value.trim();
+      const email = (client.email && client.email.includes('@')) ? client.email : 'client@private.domain';
+      window.open('mailto:' + encodeURIComponent(email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
+    }
+
+    function setQuickDate(days) {
+      const d = new Date(Date.now() + days * 86400000);
+      document.getElementById('crm-next-date').value = d.toISOString().split('T')[0];
+    }
+
+    function saveCrmNotes() {
+      const allCrm = getCrmData();
+      const client = getActiveClient(currentActiveClientId);
+      if (!client) return;
+
+      client.notes = document.getElementById('crm-notes-text').value.trim();
+      client.nextFollowUp = document.getElementById('crm-next-date').value;
+      allCrm[client.id] = client;
+      saveCrmData(allCrm);
+
+      document.getElementById('crm-notes-feedback').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('crm-notes-feedback').style.display = 'none';
+      }, 2500);
+    }
+
+    function filterCrmQueue(cat, btn) {
+      document.querySelectorAll('.crm-filter-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const rows = document.querySelectorAll('#contact-rows-container .contact-row');
+      rows.forEach(r => {
+        const rCat = (r.getAttribute('data-category') || '').toUpperCase();
+        const rHeat = (r.getAttribute('data-heat') || '').toUpperCase();
+
+        if (cat === 'ALL') {
+          r.style.display = 'flex';
+        } else if (cat === 'HOT') {
+          r.style.display = rHeat === 'HOT' ? 'flex' : 'none';
+        } else if (cat === 'FSBO') {
+          r.style.display = (rCat === 'FSBO' || rCat === 'EXPIRED') ? 'flex' : 'none';
+        } else {
+          r.style.display = rCat === cat ? 'flex' : 'none';
+        }
+      });
+    }
 
     // ── INIT ──
     loadScript('fsbo', null);

@@ -59,6 +59,16 @@ class TestLeadFlowIntegration(unittest.TestCase):
         self.assertIn("buyer-col-new-lead", portal_html)
         self.assertIn("copilot-inbound-alert", portal_html)
 
+        # Rosie Wishlist #1: Email + CRM Conversation Tracker & Dossier
+        self.assertIn("crm-modal", portal_html, "CRM modal container must exist in portal.html")
+        self.assertIn("openClientDossier", portal_html, "openClientDossier function must exist")
+        self.assertIn("applyEmailTemplate", portal_html, "applyEmailTemplate composer helper must exist")
+        self.assertIn("sendCrmReply", portal_html, "sendCrmReply function must exist")
+        self.assertIn("openMailtoClient", portal_html, "openMailtoClient helper must exist")
+        self.assertIn("saveCrmNotes", portal_html, "saveCrmNotes function must exist")
+        self.assertIn("filterCrmQueue", portal_html, "filterCrmQueue filter bar function must exist")
+        self.assertIn("crm-filter-bar", portal_html, "crm-filter-bar element must exist")
+
     def test_multi_tenant_clean_compilation(self):
         """Verify all 4 tenants compile cleanly with idempotent output."""
         for t in tenant_manager.list_tenants():
