@@ -42,6 +42,12 @@
    - Verified `allowUnsafeCustomBinary: true` in `git-review-ops.ts` (line 59) preventing space-in-path unhandled exceptions.
    - Hermes desktop running cleanly without GUI crash.
 
-5. **Test Suite Verification:**
-   - `python -m unittest discover -s tests` → **27/27 PASS** (0 failures, 0 errors).
+5. **Rosie Dry-Run Lead Verification (§9 ROSIE_ONBOARDING_SOP.md):**
+   - Executive approval: Leo Peralta sent `APPROVED PROVISION DRYRUN`.
+   - Executed mock lead intake via `apex_core/execute_dryrun_lead.py`: **PASS**.
+   - Generated staged briefs and tenant skeleton (`dryrun-rosie-test`) with drafts from Harbor, Keystone, and Quill.
+   - Zero external sends, zero false claims.
+
+6. **Test Suite Verification:**
+   - `python -m unittest discover -s tests` → **28/28 PASS** (0 failures, 0 errors).
 

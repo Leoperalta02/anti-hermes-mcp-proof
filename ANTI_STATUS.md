@@ -47,11 +47,19 @@ Leo **APPROVE SOPs** — specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS
 
 ---
 
-## After W1–W5 + P1–P5
+## Dry-Run Verification (§9 ROSIE_ONBOARDING_SOP.md) — PASS
 
-1. Leo sends **`APPROVE PROVISION DRYRUN`**
-2. Run dry-run per `ROSIE_ONBOARDING_SOP.md` §9
-3. Cursor audits transcript; update `HERMES_STATUS.md`
+- **Executive Approval:** Leo Peralta sent **`APPROVED PROVISION DRYRUN`**
+- **Execution Script:** `apex_core/execute_dryrun_lead.py`
+- **Result:** **PASS** (Zero external sends, all false-claim boundaries respected)
+- **Lead Name:** `DRYRUN Rosie Test` (Apex Staging Brokerage, Estero FL)
+- **Staged Brief:** `business-scope/onboarding-briefs/20260904T003033Z-dryrun-rosie-test.json` (.md included)
+- **Staged Tenant:** `business-scope/tenants/dryrun-rosie-test/TENANT_MANIFEST.json`
+- **Drafts Generated on Disk:**
+  - **Harbor:** `business-scope/tenants/dryrun-rosie-test/harbor/follow_up_queue.json` & protocol
+  - **Keystone:** `business-scope/tenants/dryrun-rosie-test/keystone/cma_market_consult.md`
+  - **Quill:** `business-scope/tenants/dryrun-rosie-test/quill/listing_marketing_drafts.md`
+- **Test Suite:** `python -m unittest discover -s tests` → **28/28 PASS** (0 failures, 0 errors)
 
 ---
 
