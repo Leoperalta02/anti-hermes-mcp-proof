@@ -77,6 +77,30 @@ class TestLeadFlowIntegration(unittest.TestCase):
             portal_path = os.path.join(PUBLIC_SITES_DIR, t.subdomain_slug, "portal.html")
             self.assertTrue(os.path.exists(portal_path))
 
+    def test_external_coaching_playbook(self):
+        """Verify office_playbook.json exists and dynamically injects into portal templates."""
+        playbook_path = os.path.join(os.path.dirname(__file__), "..", "apex_core", "office_playbook.json")
+        self.assertTrue(os.path.exists(playbook_path), "office_playbook.json must exist in apex_core")
+
+        playbook = self.builder.load_playbook()
+        self.assertIsInstance(playbook, dict)
+        required_keys = ["fsbo", "expired", "buyer", "seller", "commission", "lowball", "apptset", "followup"]
+        for k in required_keys:
+            self.assertIn(k, playbook, f"Playbook must contain '{k}' script")
+            self.assertIn("title", playbook[k])
+            self.assertIn("cat", playbook[k])
+            self.assertIn("html", playbook[k])
+
+        # Verify portal.html contains rendered buttons and scripts object
+        portal_path = os.path.join(PUBLIC_SITES_DIR, self.rosie.subdomain_slug, "portal.html")
+        with open(portal_path, "r", encoding="utf-8") as f:
+            portal_html = f.read()
+
+        self.assertIn("loadScript('fsbo'", portal_html)
+        self.assertIn("FSBO First Call", portal_html)
+        self.assertIn("Expired Recovery", portal_html)
+        self.assertIn("const scripts = {", portal_html)
+
 
 if __name__ == "__main__":
     unittest.main()

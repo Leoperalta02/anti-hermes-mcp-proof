@@ -21,6 +21,19 @@ class FastSiteBuilder:
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
 
+    @staticmethod
+    def load_playbook() -> Dict[str, Any]:
+        playbook_path = os.path.join(os.path.dirname(__file__), "office_playbook.json")
+        if os.path.exists(playbook_path):
+            try:
+                with open(playbook_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict) and data:
+                        return data
+            except Exception as e:
+                print(f"[FastSiteBuilder] Warning reading {playbook_path}: {e}")
+        return {}
+
     def build_site(self, tenant: Tenant) -> str:
         site_folder = os.path.join(self.output_dir, tenant.subdomain_slug)
         os.makedirs(site_folder, exist_ok=True)
@@ -1701,6 +1714,15 @@ class FastSiteBuilder:
     def _generate_portal_html(self, t: Tenant) -> str:
         coaching_label = getattr(t, 'coaching_source', 'Office Coaching Playbook')
         market_label = getattr(t, 'market', 'Southwest Florida')
+        playbook = self.load_playbook()
+        buttons_html = []
+        for i, (k, s) in enumerate(playbook.items()):
+            active_cls = " active" if i == 0 else ""
+            label = s.get("menu_title", s.get("title", k))
+            buttons_html.append(f'          <button class="script-item{active_cls}" onclick="loadScript(\'{k}\', this)">{label}</button>')
+        playbook_menu_markup = "\n".join(buttons_html)
+        first_script_key = next(iter(playbook.keys()), "fsbo")
+        playbook_json_str = json.dumps(playbook)
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2854,14 +2876,7 @@ class FastSiteBuilder:
       </div>
       <div class="playbook-grid">
         <div class="script-menu">
-          <button class="script-item active" onclick="loadScript('fsbo', this)">📞 FSBO First Call</button>
-          <button class="script-item" onclick="loadScript('expired', this)">📋 Expired Recovery</button>
-          <button class="script-item" onclick="loadScript('buyer', this)">👤 Buyer Lead Call</button>
-          <button class="script-item" onclick="loadScript('seller', this)">🏡 Seller Lead Call</button>
-          <button class="script-item" onclick="loadScript('commission', this)">💰 Commission Defense</button>
-          <button class="script-item" onclick="loadScript('lowball', this)">📉 Lowball Offer</button>
-          <button class="script-item" onclick="loadScript('apptset', this)">📅 Appointment Setting</button>
-          <button class="script-item" onclick="loadScript('followup', this)">🔁 Long-Term Follow-Up</button>
+{playbook_menu_markup}
         </div>
         <div class="script-viewer" id="script-viewer">
           <!-- Default script loaded -->
@@ -3061,7 +3076,7 @@ class FastSiteBuilder:
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.getElementById('panel-' + name).classList.add('active');
       if (btn) btn.classList.add('active');
-      if (name === 'playbook') loadScript('fsbo', document.querySelector('.script-item'));
+      if (name === 'playbook') loadScript('{first_script_key}', document.querySelector('.script-item'));
     }}
 
     // ── PIPE SWITCHER ──
@@ -3145,80 +3160,7 @@ class FastSiteBuilder:
     function fmt(n) {{ return Math.round(n).toLocaleString(); }}
 
     // ── PLAYBOOK SCRIPTS ──
-    const scripts = {{
-      fsbo: {{
-        title: 'FSBO First Call',
-        cat: 'For Sale By Owner • Value-First Approach',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">YOU (Opening)</div><div class="script-text">Hi, this is [Your Name] with [Brokerage]. I noticed your home at [Address] is listed for sale — beautiful property in [Neighborhood]. I'm not calling to list your home; I actually help FSBO owners get the most accurate market data so you can price it right. Do you have 90 seconds?</div></div>
-          <div class="script-block"><div class="script-speaker prospect">IF THEY SAY: "I don't want to pay a commission."</div></div>
-          <div class="script-block"><div class="script-speaker agent">YOUR RESPONSE</div><div class="script-text">I completely understand — and honestly, if you can sell it yourself, you should. My question is: do you know what buyers are actually paying for homes like yours in the last 90 days? Because the gap between what FSBO sellers think they can get and what buyers are pre-approved for is usually the #1 reason deals fall apart. Can I send you a quick data sheet — no charge?</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> Do not pitch your commission on the first call. Your goal is a 15-minute CMA appointment — nothing more. Let the data do the heavy lifting.</div>
-        `
-      }},
-      expired: {{
-        title: 'Expired Listing Recovery Call',
-        cat: 'Expired Listings • Recovery & Trust Rebuilding',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">YOU (Opening)</div><div class="script-text">Hi [Owner Name], this is [Your Name]. I'm calling because I noticed your listing at [Address] recently came off the market — and before you make any decisions about your next move, I wanted to reach out. I specialize in re-listing homes that didn't sell, and I have some specific data on why properties in [Neighborhood] sit without selling. Can I share that with you?</div></div>
-          <div class="script-block"><div class="script-speaker objection">COMMON OBJECTION: "We're just going to wait."</div></div>
-          <div class="script-block"><div class="script-speaker agent">YOUR RESPONSE</div><div class="script-text">That's a completely reasonable choice. Can I ask — what's the timeline you're working with? The reason I ask is that inventory in [Neighborhood] is [rising/falling] right now, and a 60-day wait could move your position significantly. I'd hate for you to wait and lose leverage. Would a quick 20-minute market update be worth your time this week?</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> Never attack the previous agent. Position the expired as a pricing/marketing problem, not a personal failure.</div>
-        `
-      }},
-      commission: {{
-        title: 'Commission Defense',
-        cat: 'Objection Handler • Seller Negotiations',
-        html: `
-          <div class="script-block"><div class="script-speaker objection">OBJECTION: "Will you cut your commission to 4%?"</div></div>
-          <div class="script-block"><div class="script-speaker agent">RESPONSE (Value Positioning)</div><div class="script-text">I appreciate you asking directly. Here's how I think about it: at [full commission]%, I'm bringing professional photography, MLS syndication to 500+ portals, and targeted digital advertising to your listing. At 4%, I'd need to cut the buyer-agent co-op, which means fewer agents showing your home. On a $600,000 sale, the difference in my fee is $12,000 — but if cutting that fee costs you one serious buyer, that's a $30,000 to $60,000 price reduction. Does that math work for you?</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> Never just say "no." Reframe the commission as an investment with a defined ROI, not a cost.</div>
-        `
-      }},
-      buyer: {{
-        title: 'Buyer Lead Call',
-        cat: 'Inbound Buyer • Qualification & Consultation',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">OPENING</div><div class="script-text">Hi [Name]! This is [Your Name] getting back to you — I saw you were looking at homes in [Area]. Great taste, by the way. A couple of quick questions so I can actually be useful to you: Are you renting currently or do you have a home to sell first? And have you had a chance to connect with a lender yet?</div></div>
-          <div class="script-block"><div class="script-speaker agent">IF PRE-APPROVED</div><div class="script-text">Perfect. With a pre-approval in hand, you're in the top 20% of buyers right now — most serious sellers won't even accept an offer without it. Let me send you 3 properties that hit your criteria today, and we can set up showings as early as [specific day]. Does that work?</div></div>
-        `
-      }},
-      lowball: {{
-        title: 'Lowball Offer Handler',
-        cat: 'Objection Handler • Negotiation',
-        html: `
-          <div class="script-block"><div class="script-speaker objection">SCENARIO: Buyer wants to offer $180K on a $220K listed property</div></div>
-          <div class="script-block"><div class="script-speaker agent">TO YOUR BUYER</div><div class="script-text">I want to get you this house — and I want to do it strategically. An offer at $180K on a $220K listing is going to get rejected immediately and could damage our negotiating position going forward. Here's what the data tells us: the seller has $94K in equity and this home has only been on market 11 days. They're not desperate yet. A $205K offer with a 15-day close and no contingencies? That's a conversation. Want to try that approach?</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> Use the Keystone Quadrant equity data to ground the conversation in facts, not feelings.</div>
-        `
-      }},
-      seller: {{
-        title: 'Seller Lead Call',
-        cat: 'Outbound Seller • Listing Presentation Setup',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">OPENING</div><div class="script-text">Hi [Name], this is [Your Name]. I specialize in [Neighborhood], and I noticed from public records that you've owned your home since [year]. I've been watching your area closely and there's actually a window in the market right now where sellers in your community are netting significantly above what Zillow estimates — I'm talking $40K to $100K more. Do you have 3 minutes so I can share what I'm seeing?</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> The Keystone alpha spread ($286K over Zillow on Bella Terra) is your most powerful opener with absentee/high-equity owners.</div>
-        `
-      }},
-      apptset: {{
-        title: 'Appointment Setting',
-        cat: 'Conversion Script • All Lead Types',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">ASSUMPTIVE CLOSE</div><div class="script-text">Based on everything you've told me, the next step that makes sense is a 20-minute no-pressure market review at your home — I'll bring the data, you ask every question you have. I'm in your area [Day 1] around 10 AM and [Day 2] at 3 PM. Which works better for you?</div></div>
-          <div class="script-block"><div class="script-speaker objection">IF "I need to think about it"</div></div>
-          <div class="script-block"><div class="script-speaker agent">RESPONSE</div><div class="script-text">Absolutely — what specifically would help you feel confident about meeting? Because if it's data, I can send that now. If it's references, I have 3 neighbors in [Subdivision] I closed for this year. What would make you comfortable?</div></div>
-        `
-      }},
-      followup: {{
-        title: 'Long-Term Nurture Follow-Up',
-        cat: 'Sphere / Past Clients / Cold Leads',
-        html: `
-          <div class="script-block"><div class="script-speaker agent">6-MONTH FOLLOW-UP TEXT</div><div class="script-text">Hi [Name]! This is [Your Name] — I was thinking about you because I just closed a home 2 streets over from yours at [Price]. Your neighborhood is absolutely on fire right now. No pressure at all, but if you're ever curious what your home could sell for in today's market, I'd love to pull the numbers. Hope you're doing great!</div></div>
-          <div class="script-block"><div class="script-speaker agent">ANNUAL HOMEOWNER VALUE CHECK-IN</div><div class="script-text">Happy home anniversary! 🏡 It's been [X] year(s) since you closed on [Address]. The great news: values in your area are up approximately [X]% since then. Your home could now be worth around [Keystone Estimate]. Want me to send a quick equity snapshot? No strings attached — just useful intel.</div></div>
-          <div class="objection-tip"><strong>Tip:</strong> Past clients are your highest-conversion source. A 1-year and 3-year follow-up calendar should be set immediately at every closing.</div>
-        `
-      }}
-    }};
+    const scripts = {playbook_json_str};
 
     function loadScript(key, btn) {{
       const s = scripts[key];
@@ -3740,7 +3682,7 @@ class FastSiteBuilder:
     }}
 
     // ── INIT ──
-    loadScript('fsbo', null);
+    loadScript('{first_script_key}', null);
     loadInboundLeads();
   </script>
 </body>
