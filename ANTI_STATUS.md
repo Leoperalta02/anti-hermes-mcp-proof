@@ -51,7 +51,7 @@ Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_O
 - **`send_managed_agent` Channel Guards**:
   - `#panel-advisors` — hard blocked with `[STOP — TOOL DENY]`
   - `#Alienware-hq` — hard blocked with `[STOP — HOLD ACTIVE]`
-  - Specialist agents (`Harbor`, `Keystone`, `Quill`, `Rosie`) — hard blocked to sandbox channels (`#rosie-onboarding-sandbox`, `#wellington-canary`) with `[STOP — SANDBOX VIOLATION]`
+  - Specialist agents (`Harbor`, `Keystone`, `Quill`, `Rosie`) — hard blocked outside sandbox channels (`#rosie-onboarding-sandbox`, `#wellington-canary`) with `[STOP — SANDBOX VIOLATION]`; fails closed if channel context is missing or None
 - **Live Sync**: Synced to `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`
 
 ---
@@ -68,7 +68,7 @@ Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_O
   - **Harbor:** `business-scope/tenants/dryrun-rosie-test/harbor/follow_up_queue.json` & protocol
   - **Keystone:** `business-scope/tenants/dryrun-rosie-test/keystone/cma_market_consult.md`
   - **Quill:** `business-scope/tenants/dryrun-rosie-test/quill/listing_marketing_drafts.md`
-- **Test Suite:** `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors)
+- **Test Suite:** `python -m unittest discover -s tests` → **68/68 PASS** (0 failures, 0 errors)
 
 ---
 

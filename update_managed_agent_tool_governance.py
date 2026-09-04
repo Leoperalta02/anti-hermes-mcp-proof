@@ -115,7 +115,7 @@ def send_managed_agent(raw_args: Any) -> str:
     _SANDBOX_CHANNELS = {"wellington-canary", "#wellington-canary", "rosie-onboarding-sandbox", "#rosie-onboarding-sandbox"}
     _SPECIALIST_AGENTS = {"harbor", "keystone", "quill", "rosie"}
     if target_clean.lower() in _SPECIALIST_AGENTS:
-        if ch_val and ch_val[0].lower() not in _SANDBOX_CHANNELS:
+        if not ch_val or ch_val[0].lower() not in _SANDBOX_CHANNELS:
             block_msg = f"[STOP — SANDBOX VIOLATION] Specialist '{target_clean}' can only be delegated to in sandbox channels: {_SANDBOX_CHANNELS}."
             logger.warning(block_msg)
             return block_msg
