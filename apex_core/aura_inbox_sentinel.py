@@ -410,6 +410,103 @@ class AuraInboxSentinel:
         print(f"[Aura Desktop Organizer] Moved {moved} loose avatar files into {avatars_dir}. Desktop is clean & alphabetical.")
         return moved
 
+    # ── Interactive Triage & Rule Learning ────────────────────────────────────
+
+    def get_triage_items(self, max_items: int = 6) -> List[Dict[str, Any]]:
+        """Find pending files in vault that require user decision (save vs delete)."""
+        items = []
+        candidate_dirs = [ARCHIVE_BASE_DIR / "07_General_Documents", ARCHIVE_BASE_DIR / "04_HOA_and_Architecture"]
+        for cdir in candidate_dirs:
+            if not cdir.exists():
+                continue
+            for f in cdir.glob("*.*"):
+                if f.is_file():
+                    size_mb = round(f.stat().st_size / (1024 * 1024), 2)
+                    items.append({
+                        "filename": f.name,
+                        "path": str(f),
+                        "folder": cdir.name,
+                        "size_mb": size_mb,
+                    })
+                if len(items) >= max_items:
+                    break
+            if len(items) >= max_items:
+                break
+        return items
+
+    def format_triage_markdown(self, items: List[Dict[str, Any]]) -> str:
+        """Format items with two interactive checkboxes: [ ] SAVE and [ ] DELETE."""
+        if not items:
+            return "All files on Drive D:\\ are currently categorized and up to date! Zero items pending review."
+
+        lines = [
+            "### 📋 Aura Vault Triage — Review & Teach",
+            "Check the box for each file to teach me whether to keep or permanently delete:\n"
+        ]
+        for i, it in enumerate(items, 1):
+            lines.append(f"**{i}. 📄 {it['filename']}** ({it['size_mb']} MB) — *{it['folder']}*")
+            lines.append(f"   - [ ] 💾 **SAVE / KEEP** (Archive permanently & train as VIP)")
+            lines.append(f"   - [ ] 🗑️ **DELETE / PURGE** (Remove from D:\\ & train as auto-trash)\n")
+
+        lines.append("\n*Reply with your choice (e.g. '1 delete, 2 save') and I will apply your decision immediately!*")
+        return "\n".join(lines)
+
+    def apply_triage_decision(self, target_filename: str, decision: str) -> Dict[str, Any]:
+        """Apply user choice (SAVE or DELETE), purge/move file, and update learned rulebook."""
+        rules_path = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof\config\aura_learned_rules.json")
+        rules = {}
+        if rules_path.exists():
+            try:
+                with open(rules_path, "r", encoding="utf-8") as rf:
+                    rules = json.load(rf)
+            except Exception:
+                pass
+
+        decision_upper = decision.upper()
+        found_file: Optional[Path] = None
+
+        for f in ARCHIVE_BASE_DIR.glob("**/*"):
+            if f.is_file() and target_filename.lower() in f.name.lower():
+                found_file = f
+                break
+
+        if not found_file:
+            return {"status": "error", "error": f"File '{target_filename}' not found on Drive D:\\"}
+
+        clean_keyword = found_file.stem.split("-")[0].replace("USD_", "").strip().lower()
+
+        if "DELETE" in decision_upper or "TRASH" in decision_upper:
+            found_file.unlink(missing_ok=True)
+            trash_kws = rules.setdefault("auto_trash_keywords", [])
+            if clean_keyword and clean_keyword not in trash_kws:
+                trash_kws.append(clean_keyword)
+            rules["last_updated"] = datetime.now(timezone.utc).isoformat()
+            with open(rules_path, "w", encoding="utf-8") as wf:
+                json.dump(rules, wf, indent=2)
+
+            return {
+                "status": "success",
+                "action": "DELETED",
+                "file": found_file.name,
+                "learned_rule": f"Added '{clean_keyword}' to auto-trash rulebook.",
+            }
+
+        else:
+            vip_kws = rules.setdefault("vip_keep_keywords", [])
+            if clean_keyword and clean_keyword not in vip_kws:
+                vip_kws.append(clean_keyword)
+            rules["last_updated"] = datetime.now(timezone.utc).isoformat()
+            with open(rules_path, "w", encoding="utf-8") as wf:
+                json.dump(rules, wf, indent=2)
+
+            return {
+                "status": "success",
+                "action": "SAVED",
+                "file": found_file.name,
+                "learned_rule": f"Trained '{clean_keyword}' as permanent VIP asset.",
+            }
+
+
     def run_heartbeat_cycle(self) -> Dict[str, Any]:
         """Execute one complete heartbeat maintenance cycle."""
         timestamp = datetime.now(timezone.utc).isoformat()
@@ -541,12 +638,22 @@ if __name__ == "__main__":
         print("[*] Running single heartbeat cycle...")
         sentinel.run_heartbeat_cycle()
 
-    elif cmd == "heartbeat":
-        interval = int(sys.argv[2]) if len(sys.argv) > 2 else 900
-        sentinel.run_heartbeat_loop(interval_seconds=interval)
+    elif cmd == "triage":
+        items = sentinel.get_triage_items(max_items=6)
+        print(sentinel.format_triage_markdown(items))
+
+    elif cmd == "decide":
+        if len(sys.argv) < 4:
+            print("Usage: python apex_core/aura_inbox_sentinel.py decide <filename> <SAVE|DELETE>")
+        else:
+            file_arg = sys.argv[2]
+            decision_arg = sys.argv[3]
+            res = sentinel.apply_triage_decision(file_arg, decision_arg)
+            print(json.dumps(res, indent=2))
 
     else:
         print(f"Unknown command: {cmd}")
-        print("Available commands: scan | offload | clean_promos | purge_trash | cycle | heartbeat [seconds]")
+        print("Available commands: scan | offload | clean_promos | purge_trash | cycle | heartbeat | triage | decide")
+
 
 

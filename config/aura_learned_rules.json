@@ -1,0 +1,37 @@
+{
+  "vip_keep_senders": [
+    "chase.com",
+    "floridapeninsula.com",
+    "americanintegrity.com",
+    "cypress.com",
+    "edisoninsurance.com",
+    "leegov.com"
+  ],
+  "vip_keep_keywords": [
+    "as-is",
+    "contract",
+    "purchase agreement",
+    "estero",
+    "title",
+    "closing disclosure",
+    "wire instructions",
+    "survey",
+    "1646 heritage 2% 2500"
+  ],
+  "auto_trash_senders": [
+    "momentumsolar.com",
+    "brandsmartusa.com",
+    "e.usa.experian.com",
+    "hello.galls.com",
+    "dacariphue.com"
+  ],
+  "auto_trash_keywords": [
+    "solar proposal",
+    "momentum solar",
+    "free medicare",
+    "sexbadoo",
+    "0% interest",
+    "cash advance"
+  ],
+  "last_updated": "2026-09-04T13:02:33.343458+00:00"
+}
