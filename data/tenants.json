@@ -2,7 +2,7 @@
   {
     "id": "tenant_sofia_lanz",
     "name": "Sofia Lanz",
-    "company_name": "Final Claim (Demo Prospect)",
+    "company_name": "Final Claim",
     "vertical": "FL_NO_FAULT_ACCIDENT",
     "phone_number": "786-461-0049",
     "subdomain_slug": "sofia",
@@ -20,13 +20,13 @@
       "primary": "#d4af37",
       "secondary": "#0c1524"
     },
-    "status": "DEMO_PROSPECT",
+    "status": "ACTIVE",
     "created_at": "2026-08-28T11:00:00Z"
   },
   {
     "id": "tenant_toki_grullon",
     "name": "John 'Toki' Grullon",
-    "company_name": "The No Fault Group (Demo Prospect)",
+    "company_name": "The No Fault Group",
     "vertical": "FL_NO_FAULT_ACCIDENT",
     "phone_number": "786-683-4523",
     "subdomain_slug": "toki",
@@ -44,7 +44,7 @@
       "primary": "#06b6d4",
       "secondary": "#0a111e"
     },
-    "status": "DEMO_PROSPECT",
+    "status": "ACTIVE",
     "created_at": "2026-08-28T11:05:00Z"
   },
   {
@@ -69,5 +69,29 @@
     },
     "status": "ACTIVE",
     "created_at": "2026-08-28T11:10:00Z"
+  },
+  {
+    "id": "tenant_rosie_rivera",
+    "name": "Rosie Rivera",
+    "company_name": "Rosie Rivera Luxury Real Estate",
+    "vertical": "LUXURY_REAL_ESTATE",
+    "phone_number": "239-555-0144",
+    "subdomain_slug": "rosie",
+    "languages": [
+      "en",
+      "es"
+    ],
+    "tagline": "Private Client Luxury Real Estate Advisor \u2014 Estero, Bonita Springs & Naples",
+    "headshot_path": "assets/clients/rosie_headshot.png",
+    "flyer_path": null,
+    "buzz_channel": "#client-rosie-rivera",
+    "vapi_assistant_id": null,
+    "google_drive_folder": null,
+    "custom_colors": {
+      "primary": "#d4af37",
+      "secondary": "#080d1a"
+    },
+    "status": "ACTIVE",
+    "created_at": "2026-09-04T00:00:00Z"
   }
 ]

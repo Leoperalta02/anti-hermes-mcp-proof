@@ -110,8 +110,27 @@ class TenantManager:
         )
         self.tenants[vance.id] = vance
 
+        # 4. Rosie Rivera — Rosie Rivera Luxury Real Estate
+        rosie = Tenant(
+            id="tenant_rosie_rivera",
+            name="Rosie Rivera",
+            company_name="Rosie Rivera Luxury Real Estate",
+            vertical="LUXURY_REAL_ESTATE",
+            phone_number="239-555-0144",
+            subdomain_slug="rosie",
+            languages=["en", "es"],
+            tagline="Private Client Luxury Real Estate Advisor — Estero, Bonita Springs & Naples",
+            headshot_path="assets/clients/rosie_headshot.png",
+            buzz_channel="#client-rosie-rivera",
+            custom_colors={"primary": "#d4af37", "secondary": "#080d1a"},
+            status="ACTIVE",
+            created_at="2026-09-04T00:00:00Z"
+        )
+        self.tenants[rosie.id] = rosie
+
         self._save()
-        print("[TenantManager] Initialized default client tenants (Sofia Lanz, John Toki Grullon, Priscilla Vance)")
+        print("[TenantManager] Initialized default client tenants (Sofia Lanz, John Toki Grullon, Priscilla Vance, Rosie Rivera)")
+
 
     def get_tenant(self, tenant_id: str) -> Optional[Tenant]:
         return self.tenants.get(tenant_id)

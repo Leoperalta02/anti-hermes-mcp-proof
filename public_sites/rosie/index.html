@@ -1,307 +1,17 @@
-"""
-Apex Luxury AI — Autonomous Fast Site Builder (Fizz Engine)
-Generates high-converting live landing pages for real estate, Florida No-Fault, and PIP clients.
-"""
-
-import os
-import sys
-from typing import Dict, Any
-
-# Ensure workspace root is on sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from apex_core.tenant_manager import tenant_manager, Tenant
-
-PUBLIC_SITES_DIR = os.path.join(os.path.dirname(__file__), "..", "public_sites")
-
-class FastSiteBuilder:
-    def __init__(self, output_dir: str = PUBLIC_SITES_DIR):
-        self.output_dir = output_dir
-        os.makedirs(self.output_dir, exist_ok=True)
-
-    def build_site(self, tenant: Tenant) -> str:
-        site_folder = os.path.join(self.output_dir, tenant.subdomain_slug)
-        os.makedirs(site_folder, exist_ok=True)
-        os.makedirs(os.path.join(site_folder, "assets"), exist_ok=True)
-
-        # Copy client assets to site folder if they exist
-        if tenant.headshot_path and os.path.exists(tenant.headshot_path):
-            import shutil
-            shutil.copyfile(tenant.headshot_path, os.path.join(site_folder, "assets", "headshot.png"))
-        if tenant.flyer_path and os.path.exists(tenant.flyer_path):
-            import shutil
-            shutil.copyfile(tenant.flyer_path, os.path.join(site_folder, "assets", "flyer.png"))
-
-        # Generate HTML based on vertical
-        if tenant.vertical == "FL_NO_FAULT_ACCIDENT":
-            html = self._generate_accident_pip_html(tenant)
-        else:
-            html = self._generate_luxury_realty_html(tenant)
-
-        index_file = os.path.join(site_folder, "index.html")
-        with open(index_file, "w", encoding="utf-8") as f:
-            f.write(html)
-
-        print(f"[FastSiteBuilder] Deployed landing page for {tenant.name} -> {index_file}")
-        return index_file
-
-    def _generate_accident_pip_html(self, t: Tenant) -> str:
-        return f"""<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{t.company_name} | {t.name} — Asistencia de Accidentes 24/7</title>
-  <meta name="description" content="{t.tagline}. Te conectamos con los mejores médicos y abogados de accidentes en Florida.">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {{
-      --bg-dark: #080d1a;
-      --bg-card: rgba(16, 24, 40, 0.85);
-      --gold-primary: #d4af37;
-      --gold-gradient: linear-gradient(135deg, #fae596 0%, #d4af37 50%, #aa820a 100%);
-      --cyan-accent: #06b6d4;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --danger: #ef4444;
-      --success: #10b981;
-    }}
-    * {{ margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }}
-    body {{ background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }}
-    
-    .container {{ max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }}
-    
-    /* Nav */
-    .navbar {{ display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid rgba(212,175,55,0.15); }}
-    .brand {{ font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-transform: uppercase; }}
-    .brand span {{ color: var(--gold-primary); }}
-    
-    /* Emergency Bar */
-    .pip-alert-bar {{
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      padding: 0.85rem 1.25rem;
-      border-radius: 8px;
-      margin: 1.5rem 0 2.5rem 0;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-      color: #fca5a5;
-    }}
-    
-    /* Hero */
-    .hero-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 4rem; }}
-    .hero-title {{ font-family: 'Outfit', sans-serif; font-size: 3.25rem; line-height: 1.1; margin-bottom: 1rem; font-weight: 900; }}
-    .gold-text {{ background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }}
-    .hero-desc {{ font-size: 1.15rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6; }}
-    
-    /* Profile Image Box */
-    .profile-card {{
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.2);
-      text-align: center;
-    }}
-    .profile-img {{ width: 100%; height: 380px; object-fit: cover; }}
-    .profile-body {{ padding: 1.5rem; }}
-    
-    /* Buttons */
-    .btn-call {{
-      background: var(--gold-gradient);
-      color: #080d1a;
-      font-size: 1.25rem;
-      font-weight: 800;
-      font-family: 'Outfit', sans-serif;
-      padding: 1.15rem 2rem;
-      border-radius: 12px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      box-shadow: 0 8px 25px rgba(212,175,55,0.4);
-      transition: transform 0.2s;
-    }}
-    .btn-call:hover {{ transform: translateY(-3px); }}
-    
-    /* Intake Form Card */
-    .intake-card {{
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 16px;
-      padding: 2.5rem;
-      margin-bottom: 4rem;
-    }}
-    .form-row {{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }}
-    .form-input {{
-      width: 100%;
-      background: rgba(8, 13, 26, 0.9);
-      border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 8px;
-      padding: 0.9rem 1rem;
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-    }}
-    .form-input:focus {{ border-color: var(--gold-primary); }}
-    
-    /* Features Grid */
-    .features-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }}
-    .feature-box {{
-      background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 1.75rem;
-      text-align: center;
-    }}
-    .feature-icon {{ font-size: 2rem; margin-bottom: 0.75rem; }}
-    .feature-title {{ font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--gold-primary); }}
-    
-    /* Footer */
-    .footer {{ text-align: center; padding: 3rem 0; border-top: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); font-size: 0.85rem; }}
-    
-    @media (max-width: 800px) {{
-      .hero-grid {{ grid-template-columns: 1fr; }}
-      .form-row {{ grid-template-columns: 1fr; }}
-      .features-grid {{ grid-template-columns: 1fr; }}
-      .hero-title {{ font-size: 2.5rem; }}
-    }}
-  </style>
-</head>
-<body>
-  <div class="container">
-    
-    <!-- Navbar -->
-    <header class="navbar">
-      <div class="brand">{t.company_name} <span>24/7</span></div>
-      <a href="tel:{t.phone_number.replace('-', '')}" class="btn-call" style="font-size: 1rem; padding: 0.65rem 1.25rem;">
-        <span>📞 {t.phone_number}</span>
-      </a>
-    </header>
-
-    <!-- Florida PIP 14-Day Countdown Bar -->
-    <div class="pip-alert-bar">
-      <span>⚠️</span>
-      <div>
-        <strong>¡Ley de Florida (Regla de los 14 Días)!</strong> Debe recibir evaluación médica dentro de los 14 días posteriores al accidente para activar sus <strong>$10,000 en beneficios médicos (PIP)</strong>.
-      </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero-grid">
-      <div>
-        <h1 class="hero-title">DESPUÉS DE UN <br><span class="gold-text">ACCIDENTE</span><br>Estoy Aquí Para Ayudarte</h1>
-        <p class="hero-desc">
-          Te conecto de inmediato con los <strong>mejores médicos especialistas y abogados de accidentes</strong> en Florida para que recibas la atención médica y compensación que mereces.
-        </p>
-        
-        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-          <a href="tel:{t.phone_number.replace('-', '')}" class="btn-call">
-            <span>🚨 Llamar Ahora 24/7 ({t.phone_number})</span>
-          </a>
-          <div style="font-size: 0.85rem; color: var(--success); display: flex; align-items: center; gap: 0.4rem;">
-            <span>● Asistente de Voz IA Activa en Español</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile Card -->
-      <div class="profile-card">
-        <img src="assets/headshot.png" alt="{t.name}" class="profile-img" onerror="this.src='../../assets/clients/sofia_headshot.png'">
-        <div class="profile-body">
-          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff;">{t.name}</h3>
-          <div style="font-size: 0.9rem; color: var(--gold-primary); text-transform: uppercase; font-weight: 700; margin-top: 0.25rem;">
-            Tu Enlace de Confianza en Florida
-          </div>
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
-            Confidencialidad Garantizada &bull; Atención en Todo Florida
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3 Core Advantages -->
-    <section class="features-grid">
-      <div class="feature-box">
-        <div class="feature-icon">🏥</div>
-        <div class="feature-title">Evaluación Médica Inmediata</div>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Coordinamos tu cita con clínicas y quiroprácticos certificados antes de que venza el plazo de los 14 días.
-        </p>
-      </div>
-      <div class="feature-box">
-        <div class="feature-icon">⚖️</div>
-        <div class="feature-title">Abogados de Confianza</div>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Te referimos con firmas legales de primera línea para proteger tus derechos sin costos de tu bolsillo.
-        </p>
-      </div>
-      <div class="feature-box">
-        <div class="feature-icon">🚗</div>
-        <div class="feature-title">Gestión de Grúa y Transporte</div>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Te orientamos en la gestión de transporte y reclamos de daños a tu vehículo.
-        </p>
-      </div>
-    </section>
-
-    <!-- Emergency Intake Form -->
-    <section class="intake-card">
-      <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; text-align: center;">
-        Registro Rápido de <span class="gold-text">Accidente en 60 Segundos</span>
-      </h2>
-      <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
-        Completa los datos y nuestro equipo te contactará en menos de 2 minutos.
-      </p>
-
-      <form id="pip-form">
-        <div class="form-row">
-          <input type="text" class="form-input" placeholder="Nombre y Apellido" required>
-          <input type="tel" class="form-input" placeholder="Teléfono de Contacto" required>
-        </div>
-        <div class="form-row">
-          <input type="text" class="form-input" placeholder="Ciudad del Accidente (Ej: Miami, Orlando)" required>
-          <input type="date" class="form-input" placeholder="Fecha del Accidente" required>
-        </div>
-        <button type="submit" class="btn-call" style="width: 100%; justify-content: center; border: none; cursor: pointer;">
-          <span>📋 Enviar Reclamo y Recibir Ayuda Inmediata</span>
-        </button>
-      </form>
-    </section>
-
-    <!-- Footer & Disclaimer -->
-    <footer class="footer">
-      <p style="margin-bottom: 0.75rem;">
-        <strong>Aviso Legal Importante:</strong> {t.name} y {t.company_name} no son firmas de abogados y no ofrecen asesoría legal directa. Nuestro servicio es conectar a víctimas de accidentes con profesionales médicos y legales independientes y autorizados en el Estado de Florida.
-      </p>
-      <p>&copy; 2026 {t.company_name} — Powered by Apex Luxury AI Autonomous Workforce.</p>
-    </footer>
-
-  </div>
-</body>
-</html>"""
-
-    def _generate_luxury_realty_html(self, t: Tenant) -> str:
-        return f"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{t.name} | {t.company_name} — Southwest Florida Luxury Real Estate</title>
-  <meta name="description" content="{t.tagline}. Private client real estate advisory across Estero, Bonita Springs, and Naples, Florida.">
+  <title>Rosie Rivera | Rosie Rivera Luxury Real Estate — Southwest Florida Luxury Real Estate</title>
+  <meta name="description" content="Private Client Luxury Real Estate Advisor — Estero, Bonita Springs & Naples. Private client real estate advisory across Estero, Bonita Springs, and Naples, Florida.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
-    :root {{
+    :root {
       --bg-dark: #080d1a;
       --bg-surface: rgba(16, 24, 40, 0.75);
       --bg-card: rgba(21, 32, 54, 0.7);
@@ -313,10 +23,10 @@ class FastSiteBuilder:
       --border-subtle: rgba(212, 175, 55, 0.2);
       --border-glow: rgba(212, 175, 55, 0.4);
       --success: #10b981;
-    }}
+    }
     
-    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-    body {{
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
       font-family: 'Inter', sans-serif;
       background: var(--bg-dark);
       color: var(--text-main);
@@ -324,19 +34,19 @@ class FastSiteBuilder:
       background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.07) 0%, transparent 40%),
                         radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
       min-height: 100vh;
-    }}
+    }
     
-    .container {{ max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }}
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
     
     /* Navbar */
-    .navbar {{
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem 0;
       border-bottom: 1px solid var(--border-subtle);
-    }}
-    .brand {{
+    }
+    .brand {
       font-family: 'Outfit', sans-serif;
       font-size: 1.4rem;
       font-weight: 800;
@@ -345,9 +55,9 @@ class FastSiteBuilder:
       display: flex;
       align-items: center;
       gap: 0.5rem;
-    }}
-    .brand span {{ color: var(--gold-primary); }}
-    .badge-bilingual {{
+    }
+    .brand span { color: var(--gold-primary); }
+    .badge-bilingual {
       background: rgba(212, 175, 55, 0.12);
       border: 1px solid var(--border-subtle);
       color: var(--gold-light);
@@ -357,8 +67,8 @@ class FastSiteBuilder:
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }}
-    .btn-contact {{
+    }
+    .btn-contact {
       background: var(--gold-gradient);
       color: #080d1a;
       font-weight: 700;
@@ -369,21 +79,21 @@ class FastSiteBuilder:
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
-    }}
-    .btn-contact:hover {{
+    }
+    .btn-contact:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-    }}
+    }
     
     /* Hero */
-    .hero-grid {{
+    .hero-grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       gap: 3.5rem;
       align-items: center;
       padding: 4.5rem 0 3.5rem 0;
-    }}
-    .hero-tagline {{
+    }
+    .hero-tagline {
       color: var(--gold-primary);
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -393,29 +103,29 @@ class FastSiteBuilder:
       display: flex;
       align-items: center;
       gap: 0.5rem;
-    }}
-    .hero-title {{
+    }
+    .hero-title {
       font-family: 'Outfit', sans-serif;
       font-size: 3.2rem;
       line-height: 1.1;
       font-weight: 900;
       margin-bottom: 1.25rem;
       letter-spacing: -0.5px;
-    }}
-    .gold-text {{
+    }
+    .gold-text {
       background: var(--gold-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }}
-    .hero-desc {{
+    }
+    .hero-desc {
       font-size: 1.15rem;
       color: var(--text-muted);
       margin-bottom: 2rem;
       max-width: 580px;
-    }}
+    }
     
     /* Profile Card */
-    .profile-card {{
+    .profile-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
@@ -424,52 +134,52 @@ class FastSiteBuilder:
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(12px);
-    }}
-    .profile-card::before {{
+    }
+    .profile-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; height: 3px;
       background: var(--gold-gradient);
-    }}
-    .profile-img {{
+    }
+    .profile-img {
       width: 100%;
       height: 380px;
       object-fit: cover;
       object-position: top center;
       border-radius: 14px;
       margin-bottom: 1.25rem;
-    }}
-    .profile-info h3 {{
+    }
+    .profile-info h3 {
       font-family: 'Outfit', sans-serif;
       font-size: 1.6rem;
       font-weight: 800;
       color: #fff;
-    }}
-    .profile-info .role {{
+    }
+    .profile-info .role {
       color: var(--gold-primary);
       font-size: 0.9rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 0.5rem;
-    }}
-    .profile-badges {{
+    }
+    .profile-badges {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
       margin-top: 0.75rem;
-    }}
-    .badge {{
+    }
+    .badge {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
       font-size: 0.75rem;
       padding: 0.3rem 0.6rem;
       border-radius: 6px;
       color: var(--text-muted);
-    }}
+    }
 
     /* Interactive CMA Calculator */
-    .cma-section {{
+    .cma-section {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 24px;
@@ -477,26 +187,26 @@ class FastSiteBuilder:
       margin: 3rem 0;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       backdrop-filter: blur(16px);
-    }}
-    .cma-header {{
+    }
+    .cma-header {
       text-align: center;
       max-width: 700px;
       margin: 0 auto 2.5rem auto;
-    }}
-    .cma-header h2 {{
+    }
+    .cma-header h2 {
       font-family: 'Outfit', sans-serif;
       font-size: 2.2rem;
       font-weight: 800;
       margin-bottom: 0.5rem;
-    }}
-    .cma-grid {{
+    }
+    .cma-grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 2.5rem;
       align-items: center;
-    }}
-    .form-group {{ margin-bottom: 1.25rem; }}
-    .form-group label {{
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
       display: block;
       font-size: 0.85rem;
       font-weight: 600;
@@ -504,8 +214,8 @@ class FastSiteBuilder:
       margin-bottom: 0.4rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }}
-    .form-select, .form-input {{
+    }
+    .form-select, .form-input {
       width: 100%;
       background: rgba(8, 13, 26, 0.8);
       border: 1px solid var(--border-subtle);
@@ -515,18 +225,18 @@ class FastSiteBuilder:
       font-size: 1rem;
       outline: none;
       transition: border-color 0.2s;
-    }}
-    .form-select:focus, .form-input:focus {{
+    }
+    .form-select:focus, .form-input:focus {
       border-color: var(--gold-primary);
       box-shadow: 0 0 10px rgba(212,175,55,0.25);
-    }}
-    .checkbox-group {{
+    }
+    .checkbox-group {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
       margin-top: 0.5rem;
-    }}
-    .checkbox-label {{
+    }
+    .checkbox-label {
       background: rgba(8, 13, 26, 0.5);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 8px;
@@ -537,97 +247,97 @@ class FastSiteBuilder:
       font-size: 0.85rem;
       cursor: pointer;
       color: var(--text-muted);
-    }}
-    .checkbox-label input {{ accent-color: var(--gold-primary); }}
+    }
+    .checkbox-label input { accent-color: var(--gold-primary); }
     
-    .cma-result-box {{
+    .cma-result-box {
       background: rgba(8, 13, 26, 0.95);
       border: 1px solid var(--border-glow);
       border-radius: 16px;
       padding: 2rem;
       text-align: center;
       position: relative;
-    }}
-    .valuation-label {{
+    }
+    .valuation-label {
       color: var(--text-muted);
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-    }}
-    .valuation-number {{
+    }
+    .valuation-number {
       font-family: 'Outfit', sans-serif;
       font-size: 2.8rem;
       font-weight: 900;
       color: var(--gold-light);
       margin: 0.5rem 0;
-    }}
-    .valuation-range {{
+    }
+    .valuation-range {
       color: var(--gold-primary);
       font-size: 0.95rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
-    }}
+    }
     
     /* Communities Grid */
-    .communities-section {{ padding: 2rem 0 4rem 0; }}
-    .section-title {{
+    .communities-section { padding: 2rem 0 4rem 0; }
+    .section-title {
       font-family: 'Outfit', sans-serif;
       font-size: 2rem;
       font-weight: 800;
       text-align: center;
       margin-bottom: 2rem;
-    }}
-    .comm-grid {{
+    }
+    .comm-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
-    }}
-    .comm-card {{
+    }
+    .comm-card {
       background: var(--bg-card);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px;
       padding: 1.75rem;
       transition: all 0.2s ease;
-    }}
-    .comm-card:hover {{
+    }
+    .comm-card:hover {
       transform: translateY(-3px);
       border-color: var(--border-subtle);
-    }}
-    .comm-city {{
+    }
+    .comm-city {
       font-size: 0.8rem;
       color: var(--gold-primary);
       text-transform: uppercase;
       font-weight: 700;
       letter-spacing: 0.5px;
-    }}
-    .comm-name {{
+    }
+    .comm-name {
       font-family: 'Outfit', sans-serif;
       font-size: 1.3rem;
       font-weight: 700;
       margin: 0.35rem 0;
       color: #fff;
-    }}
-    .comm-desc {{
+    }
+    .comm-desc {
       color: var(--text-muted);
       font-size: 0.88rem;
       line-height: 1.5;
-    }}
+    }
 
     /* Footer */
-    .footer {{
+    .footer {
       text-align: center;
       padding: 3rem 0;
       border-top: 1px solid var(--border-subtle);
       color: var(--text-muted);
       font-size: 0.85rem;
-    }}
+    }
     
-    @media (max-width: 860px) {{
-      .hero-grid, .cma-grid, .comm-grid {{ grid-template-columns: 1fr; }}
-      .hero-title {{ font-size: 2.4rem; }}
-      .checkbox-group {{ grid-template-columns: 1fr; }}
-      .profile-img {{ height: 300px; }}
-    }}
+    @media (max-width: 860px) {
+      .hero-grid, .cma-grid, .comm-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.4rem; }
+      .checkbox-group { grid-template-columns: 1fr; }
+      .profile-img { height: 300px; }
+    }
   </style>
 </head>
 <body>
@@ -636,12 +346,12 @@ class FastSiteBuilder:
     <!-- Navbar -->
     <header class="navbar">
       <div class="brand">
-        {t.company_name} <span>ESTATES</span>
+        Rosie Rivera Luxury Real Estate <span>ESTATES</span>
       </div>
       <div style="display: flex; align-items: center; gap: 1rem;">
         <span class="badge-bilingual">Bilingual Advisory (EN / ES)</span>
-        <a href="tel:{t.phone_number.replace('-', '')}" class="btn-contact">
-          <span>📞 {t.phone_number}</span>
+        <a href="tel:2395550144" class="btn-contact">
+          <span>📞 239-555-0144</span>
         </a>
       </div>
     </header>
@@ -658,25 +368,25 @@ class FastSiteBuilder:
           Reimagined.
         </h1>
         <p class="hero-desc">
-          {t.tagline}. Dedicated representation for buyers and sellers across Estero, Bonita Springs, and Naples.
+          Private Client Luxury Real Estate Advisor — Estero, Bonita Springs & Naples. Dedicated representation for buyers and sellers across Estero, Bonita Springs, and Naples.
         </p>
         
         <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
           <a href="#cma-tool" class="btn-contact" style="padding: 0.85rem 1.6rem; font-size: 1.05rem;">
             <span>📊 Instant Estero / Naples Valuation</span>
           </a>
-          <a href="tel:{t.phone_number.replace('-', '')}" style="color: var(--text-muted); text-decoration: none; font-size: 0.95rem;">
-            Direct: <strong>{t.phone_number}</strong>
+          <a href="tel:2395550144" style="color: var(--text-muted); text-decoration: none; font-size: 0.95rem;">
+            Direct: <strong>239-555-0144</strong>
           </a>
         </div>
       </div>
 
       <!-- Profile Card -->
       <div class="profile-card">
-        <img src="assets/headshot.png" alt="{t.name}" class="profile-img" onerror="this.src='../../assets/clients/rosie_headshot.png'">
+        <img src="assets/headshot.png" alt="Rosie Rivera" class="profile-img" onerror="this.src='../../assets/clients/rosie_headshot.png'">
         <div class="profile-info">
           <div class="role">Private Client Luxury Advisor</div>
-          <h3>{t.name}</h3>
+          <h3>Rosie Rivera</h3>
           <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
             Specializing in screened lanai private pool residences, waterfront estates, and premier golf club communities.
           </p>
@@ -797,25 +507,25 @@ class FastSiteBuilder:
     <!-- Footer -->
     <footer class="footer">
       <p style="margin-bottom: 0.5rem;">
-        <strong>{t.company_name}</strong> &bull; {t.name}, Licensed Luxury Real Estate Advisor
+        <strong>Rosie Rivera Luxury Real Estate</strong> &bull; Rosie Rivera, Licensed Luxury Real Estate Advisor
       </p>
       <p style="margin-bottom: 0.5rem; font-size: 0.8rem; color: #64748b;">
         Equal Housing Opportunity &bull; All real estate information deemed reliable but subject to independent verification.
       </p>
-      <p>&copy; 2026 {t.company_name} &bull; Powered by Apex Autonomous Real Estate Infrastructure.</p>
+      <p>&copy; 2026 Rosie Rivera Luxury Real Estate &bull; Powered by Apex Autonomous Real Estate Infrastructure.</p>
     </footer>
 
   </div>
 
   <script>
-    const MARKET_BASE = {{
-      estero: {{ basePerSqft: 285, pool: 45000, roof: 35000, view: 25000, kitchen: 35000 }},
-      bonita: {{ basePerSqft: 340, pool: 55000, roof: 40000, view: 35000, kitchen: 45000 }},
-      naples: {{ basePerSqft: 520, pool: 85000, roof: 50000, view: 65000, kitchen: 70000 }},
-      ftmyers: {{ basePerSqft: 260, pool: 40000, roof: 30000, view: 30000, kitchen: 30000 }}
-    }};
+    const MARKET_BASE = {
+      estero: { basePerSqft: 285, pool: 45000, roof: 35000, view: 25000, kitchen: 35000 },
+      bonita: { basePerSqft: 340, pool: 55000, roof: 40000, view: 35000, kitchen: 45000 },
+      naples: { basePerSqft: 520, pool: 85000, roof: 50000, view: 65000, kitchen: 70000 },
+      ftmyers: { basePerSqft: 260, pool: 40000, roof: 30000, view: 30000, kitchen: 30000 }
+    };
 
-    function recalculateCMA() {{
+    function recalculateCMA() {
       const market = document.getElementById('cma-market').value;
       const sqft = parseFloat(document.getElementById('cma-sqft').value) || 2000;
       const cfg = MARKET_BASE[market] || MARKET_BASE.estero;
@@ -833,9 +543,9 @@ class FastSiteBuilder:
 
       document.getElementById('target-value').innerText = '$' + target.toLocaleString();
       document.getElementById('value-range').innerText = 'Estimated Range: $' + low.toLocaleString() + ' – $' + high.toLocaleString();
-    }}
+    }
 
-    function handleLeadSubmit(e) {{
+    function handleLeadSubmit(e) {
       e.preventDefault();
       const name = document.getElementById('lead-name').value;
       const phone = document.getElementById('lead-phone').value;
@@ -847,12 +557,12 @@ class FastSiteBuilder:
       btn.innerText = 'Transmitting...';
 
       // Send async lead to receiver
-      fetch('http://127.0.0.1:8787/brief', {{
+      fetch('http://127.0.0.1:8787/brief', {
         method: 'POST',
-        headers: {{ 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           kind: 'apex_realtor_onboarding_brief',
-          answers: {{
+          answers: {
             full_name: name,
             brokerage: 'Prospective Client / Homeowner',
             market: market,
@@ -860,25 +570,18 @@ class FastSiteBuilder:
             phone: phone,
             needs: ['cma_valuation', 'seller_consultation'],
             estimated_valuation: target
-          }}
-        }})
-      }}).catch(() => {{
+          }
+        })
+      }).catch(() => {
         // Silent fallback for offline testing
-      }}).finally(() => {{
+      }).finally(() => {
         document.getElementById('form-feedback').style.display = 'block';
         btn.innerText = '✓ Dossier Requested';
-      }});
-    }}
+      });
+    }
 
     // Initial calculation on load
     recalculateCMA();
   </script>
 </body>
-</html>"""
-
-
-fast_builder = FastSiteBuilder()
-
-if __name__ == "__main__":
-    for t in tenant_manager.list_tenants():
-        fast_builder.build_site(t)
+</html>

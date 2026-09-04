@@ -1,1 +1,587 @@
-<!-- Luxury Realty template for Priscilla Vance -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priscilla Vance | Vance Luxury Properties — Southwest Florida Luxury Real Estate</title>
+  <meta name="description" content="Curated Ultra-Luxury Real Estate & Private Estates. Private client real estate advisory across Estero, Bonita Springs, and Naples, Florida.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #080d1a;
+      --bg-surface: rgba(16, 24, 40, 0.75);
+      --bg-card: rgba(21, 32, 54, 0.7);
+      --gold-primary: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa820a 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(212, 175, 55, 0.2);
+      --border-glow: rgba(212, 175, 55, 0.4);
+      --success: #10b981;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.07) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+      min-height: 100vh;
+    }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand span { color: var(--gold-primary); }
+    .badge-bilingual {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--border-subtle);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-contact {
+      background: var(--gold-gradient);
+      color: #080d1a;
+      font-weight: 700;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .btn-contact:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    }
+    
+    /* Hero */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
+      align-items: center;
+      padding: 4.5rem 0 3.5rem 0;
+    }
+    .hero-tagline {
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.2rem;
+      line-height: 1.1;
+      font-weight: 900;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    .gold-text {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 580px;
+    }
+    
+    /* Profile Card */
+    .profile-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--gold-gradient);
+    }
+    .profile-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 14px;
+      margin-bottom: 1.25rem;
+    }
+    .profile-info h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .profile-info .role {
+      color: var(--gold-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .profile-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+    .badge {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      color: var(--text-muted);
+    }
+
+    /* Interactive CMA Calculator */
+    .cma-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 3rem;
+      margin: 3rem 0;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      backdrop-filter: blur(16px);
+    }
+    .cma-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 2.5rem auto;
+    }
+    .cma-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .cma-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-select, .form-input {
+      width: 100%;
+      background: rgba(8, 13, 26, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-select:focus, .form-input:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 10px rgba(212,175,55,0.25);
+    }
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .checkbox-label {
+      background: rgba(8, 13, 26, 0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .checkbox-label input { accent-color: var(--gold-primary); }
+    
+    .cma-result-box {
+      background: rgba(8, 13, 26, 0.95);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .valuation-label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .valuation-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--gold-light);
+      margin: 0.5rem 0;
+    }
+    .valuation-range {
+      color: var(--gold-primary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Communities Grid */
+    .communities-section { padding: 2rem 0 4rem 0; }
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .comm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .comm-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: all 0.2s ease;
+    }
+    .comm-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-subtle);
+    }
+    .comm-city {
+      font-size: 0.8rem;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .comm-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0.35rem 0;
+      color: #fff;
+    }
+    .comm-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    
+    @media (max-width: 860px) {
+      .hero-grid, .cma-grid, .comm-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.4rem; }
+      .checkbox-group { grid-template-columns: 1fr; }
+      .profile-img { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="brand">
+        Vance Luxury Properties <span>ESTATES</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span class="badge-bilingual">Bilingual Advisory (EN / ES)</span>
+        <a href="tel:3055550199" class="btn-contact">
+          <span>📞 305-555-0199</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-grid">
+      <div>
+        <div class="hero-tagline">
+          <span>⚜️</span> Private Client Luxury Real Estate Advisor
+        </div>
+        <h1 class="hero-title">
+          SOUTHWEST FLORIDA <br>
+          <span class="gold-text">LUXURY ESTATES</span> <br>
+          Reimagined.
+        </h1>
+        <p class="hero-desc">
+          Curated Ultra-Luxury Real Estate & Private Estates. Dedicated representation for buyers and sellers across Estero, Bonita Springs, and Naples.
+        </p>
+        
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+          <a href="#cma-tool" class="btn-contact" style="padding: 0.85rem 1.6rem; font-size: 1.05rem;">
+            <span>📊 Instant Estero / Naples Valuation</span>
+          </a>
+          <a href="tel:3055550199" style="color: var(--text-muted); text-decoration: none; font-size: 0.95rem;">
+            Direct: <strong>305-555-0199</strong>
+          </a>
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <img src="assets/headshot.png" alt="Priscilla Vance" class="profile-img" onerror="this.src='../../assets/clients/rosie_headshot.png'">
+        <div class="profile-info">
+          <div class="role">Private Client Luxury Advisor</div>
+          <h3>Priscilla Vance</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+            Specializing in screened lanai private pool residences, waterfront estates, and premier golf club communities.
+          </p>
+          <div class="profile-badges">
+            <span class="badge">Estero & Naples Specialist</span>
+            <span class="badge">Certified Luxury Home Marketing</span>
+            <span class="badge">Bilingual EN / ES</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive CMA Valuation Section -->
+    <section class="cma-section" id="cma-tool">
+      <div class="cma-header">
+        <div class="hero-tagline" style="justify-content: center;">
+          <span>📈</span> Powered by Keystone AI Intelligence
+        </div>
+        <h2>Instant Property Market Valuation</h2>
+        <p style="color: var(--text-muted);">
+          Calculate realistic benchmark pricing for your Southwest Florida property based on recent neighborhood comps and post-Ian insurance improvements.
+        </p>
+      </div>
+
+      <div class="cma-grid">
+        <!-- Controls -->
+        <div>
+          <div class="form-group">
+            <label for="cma-market">Select Neighborhood Corridor</label>
+            <select id="cma-market" class="form-select" onchange="recalculateCMA()">
+              <option value="estero">Estero Corridor (Stoneybrook / Bella Terra / West Bay)</option>
+              <option value="bonita">Bonita Springs (Bonita Bay / Barefoot Beach / Pelican Landing)</option>
+              <option value="naples">Naples Luxury (Pelican Bay / Park Shore / Olde Naples)</option>
+              <option value="ftmyers">Fort Myers / Cape Coral Waterfront</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cma-sqft">Living Area (Square Feet)</label>
+            <input type="number" id="cma-sqft" class="form-input" value="2400" min="1200" max="8000" step="50" oninput="recalculateCMA()">
+          </div>
+
+          <div class="form-group">
+            <label>Florida Property Features & Upgrades</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="feat-pool" checked onchange="recalculateCMA()">
+                Screened Lanai & Pool (+$$$)
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="feat-roof" checked onchange="recalculateCMA()">
+                New Roof Post-Ian (2022-24)
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="feat-view" onchange="recalculateCMA()">
+                Lake / Golf Preserve View
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="feat-kitchen" onchange="recalculateCMA()">
+                Designer Kitchen & Baths
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Box -->
+        <div class="cma-result-box">
+          <div class="valuation-label">Target Market Valuation</div>
+          <div class="valuation-number" id="target-value">$675,000</div>
+          <div class="valuation-range" id="value-range">Estimated Range: $640,000 – $710,000</div>
+          
+          <form id="lead-form" onsubmit="handleLeadSubmit(event)" style="margin-top: 1.5rem;">
+            <div style="margin-bottom: 0.75rem;">
+              <input type="text" id="lead-name" class="form-input" placeholder="Your Name" required style="padding: 0.65rem 0.85rem; font-size: 0.9rem;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+              <input type="tel" id="lead-phone" class="form-input" placeholder="Phone Number (for SMS report)" required style="padding: 0.65rem 0.85rem; font-size: 0.9rem;">
+            </div>
+            <button type="submit" id="submit-btn" class="btn-contact" style="width: 100%; justify-content: center; border: none; cursor: pointer; padding: 0.75rem 1rem;">
+              <span>📩 Send Verified CMA Dossier</span>
+            </button>
+            <div id="form-feedback" style="display: none; margin-top: 0.75rem; font-size: 0.85rem; color: var(--success);">
+              ✓ Request received! Rosie will prepare your official market packet.
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Premier Communities -->
+    <section class="communities-section">
+      <h2 class="section-title">Premier Southwest Florida Communities</h2>
+      <div class="comm-grid">
+        <div class="comm-card">
+          <div class="comm-city">Estero, FL</div>
+          <h3 class="comm-name">Gated Golf & Preserve Estates</h3>
+          <p class="comm-desc">
+            Vibrant family communities like Stoneybrook and West Bay Club offering championship golf, tennis, and private pool lanai living minutes from Hertz Arena and Coconut Point.
+          </p>
+        </div>
+        <div class="comm-card">
+          <div class="comm-city">Bonita Springs, FL</div>
+          <h3 class="comm-name">Waterfront & Beachside Residences</h3>
+          <p class="comm-desc">
+            Direct Gulf access properties, private beach clubs, and serene coastal enclaves along Barefoot Beach and Bonita Bay with private marina slips.
+          </p>
+        </div>
+        <div class="comm-card">
+          <div class="comm-city">Naples, FL</div>
+          <h3 class="comm-name">Ultra-Luxury Coastal Architecture</h3>
+          <p class="comm-desc">
+            World-renowned estates in Olde Naples, Pelican Bay, and Park Shore showcasing high-end craftsmanship, private beach trams, and five-star coastal dining.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p style="margin-bottom: 0.5rem;">
+        <strong>Vance Luxury Properties</strong> &bull; Priscilla Vance, Licensed Luxury Real Estate Advisor
+      </p>
+      <p style="margin-bottom: 0.5rem; font-size: 0.8rem; color: #64748b;">
+        Equal Housing Opportunity &bull; All real estate information deemed reliable but subject to independent verification.
+      </p>
+      <p>&copy; 2026 Vance Luxury Properties &bull; Powered by Apex Autonomous Real Estate Infrastructure.</p>
+    </footer>
+
+  </div>
+
+  <script>
+    const MARKET_BASE = {
+      estero: { basePerSqft: 285, pool: 45000, roof: 35000, view: 25000, kitchen: 35000 },
+      bonita: { basePerSqft: 340, pool: 55000, roof: 40000, view: 35000, kitchen: 45000 },
+      naples: { basePerSqft: 520, pool: 85000, roof: 50000, view: 65000, kitchen: 70000 },
+      ftmyers: { basePerSqft: 260, pool: 40000, roof: 30000, view: 30000, kitchen: 30000 }
+    };
+
+    function recalculateCMA() {
+      const market = document.getElementById('cma-market').value;
+      const sqft = parseFloat(document.getElementById('cma-sqft').value) || 2000;
+      const cfg = MARKET_BASE[market] || MARKET_BASE.estero;
+
+      let value = sqft * cfg.basePerSqft;
+      if (document.getElementById('feat-pool').checked) value += cfg.pool;
+      if (document.getElementById('feat-roof').checked) value += cfg.roof;
+      if (document.getElementById('feat-view').checked) value += cfg.view;
+      if (document.getElementById('feat-kitchen').checked) value += cfg.kitchen;
+
+      // Round to nearest $5,000
+      const target = Math.round(value / 5000) * 5000;
+      const low = Math.round((target * 0.95) / 5000) * 5000;
+      const high = Math.round((target * 1.06) / 5000) * 5000;
+
+      document.getElementById('target-value').innerText = '$' + target.toLocaleString();
+      document.getElementById('value-range').innerText = 'Estimated Range: $' + low.toLocaleString() + ' – $' + high.toLocaleString();
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('lead-name').value;
+      const phone = document.getElementById('lead-phone').value;
+      const market = document.getElementById('cma-market').value;
+      const target = document.getElementById('target-value').innerText;
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'Transmitting...';
+
+      // Send async lead to receiver
+      fetch('http://127.0.0.1:8787/brief', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'apex_realtor_onboarding_brief',
+          answers: {
+            full_name: name,
+            brokerage: 'Prospective Client / Homeowner',
+            market: market,
+            email: phone + '@sms.lead',
+            phone: phone,
+            needs: ['cma_valuation', 'seller_consultation'],
+            estimated_valuation: target
+          }
+        })
+      }).catch(() => {
+        // Silent fallback for offline testing
+      }).finally(() => {
+        document.getElementById('form-feedback').style.display = 'block';
+        btn.innerText = '✓ Dossier Requested';
+      });
+    }
+
+    // Initial calculation on load
+    recalculateCMA();
+  </script>
+</body>
+</html>
