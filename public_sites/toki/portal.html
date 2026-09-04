@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>John 'Toki' Grullon • Executive Workforce Console & Private Portal</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-canvas: #000000;
+      --bg-surface: #0a0a0d;
+      --bg-card: rgba(20, 20, 25, 0.72);
+      --bg-card-elevated: rgba(26, 26, 33, 0.85);
+      --text-primary: #f5f5f7;
+      --text-secondary: #86868b;
+      --gold-accent: #e5c890;
+      --gold-gradient: linear-gradient(135deg, #f7e7c4 0%, #e5c890 50%, #b89547 100%);
+      --hairline: rgba(255, 255, 255, 0.08);
+      --hairline-hover: rgba(229, 200, 144, 0.35);
+      --success: #34d399;
+      --apple-radius: 20px;
+      --pill-radius: 980px;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 200, 144, 0.16) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 90% 40%, rgba(41, 151, 255, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(229, 200, 144, 0.05) 0%, transparent 60%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Liquid Glass Top Navigation */
+    .portal-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 0;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .brand-mark {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold-accent);
+      box-shadow: 0 0 10px rgba(229, 200, 144, 0.6);
+    }
+    .badge-scope {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--pill-radius);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .status-live {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--success);
+      font-weight: 500;
+    }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .btn-frontdoor {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.45rem 1.1rem;
+      border-radius: var(--pill-radius);
+      text-decoration: none;
+      border: 1px solid var(--hairline);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-frontdoor:hover {
+      background: var(--text-primary);
+      color: #000;
+    }
+
+    /* Executive Hero Bar */
+    .portal-hero {
+      padding: 3rem 0 2rem 0;
+    }
+    .welcome-title {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+    .welcome-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+    }
+
+    /* Stripe 8/16px Telemetry Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin: 2rem 0 2.5rem 0;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+      border-color: var(--hairline-hover);
+      transform: translateY(-2px);
+    }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 0.2rem;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold-accent);
+      font-weight: 500;
+    }
+
+    /* Workspace 2-Column Split */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    /* Left Column: Staged Queue */
+    .queue-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .queue-badge {
+      font-size: 0.75rem;
+      background: rgba(229, 200, 144, 0.15);
+      color: var(--gold-accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--pill-radius);
+      border: 1px solid rgba(229, 200, 144, 0.3);
+    }
+
+    .staged-card {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: var(--apple-radius);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .staged-card:hover {
+      border-color: var(--hairline-hover);
+      background: var(--bg-card-elevated);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+    }
+    .staged-tag {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .specialist-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold-accent);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .timestamp {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .staged-headline {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .staged-body {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .staged-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .btn-approve {
+      background: var(--text-primary);
+      color: #000;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--pill-radius);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-approve:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    }
+    .btn-revise {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--pill-radius);
+      border: 1px solid var(--hairline);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-revise:hover {
+      border-color: var(--gold-accent);
+      color: var(--gold-accent);
+    }
+
+    /* Right Column: Personal AI Copilot Console */
+    .copilot-card {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: var(--apple-radius);
+      display: flex;
+      flex-direction: column;
+      height: 680px;
+      position: sticky;
+      top: 5rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+    }
+    .copilot-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .copilot-agent {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .copilot-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold-accent);
+      object-fit: cover;
+    }
+    .copilot-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .copilot-sub {
+      font-size: 0.75rem;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .copilot-feed {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .msg-bubble {
+      padding: 0.9rem 1.1rem;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      max-width: 90%;
+    }
+    .msg-agent {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline);
+      align-self: flex-start;
+      color: var(--text-primary);
+    }
+    .msg-user {
+      background: var(--gold-accent);
+      color: #000;
+      align-self: flex-end;
+      font-weight: 500;
+    }
+    
+    .copilot-chips {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0 1.25rem 0.75rem 1.25rem;
+      flex-wrap: wrap;
+    }
+    .chip {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--pill-radius);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .chip:hover {
+      color: var(--text-primary);
+      border-color: var(--gold-accent);
+      background: rgba(229, 200, 144, 0.08);
+    }
+
+    .copilot-input-box {
+      padding: 1.25rem;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      gap: 0.75rem;
+    }
+    .copilot-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .copilot-input:focus {
+      border-color: var(--gold-accent);
+    }
+    .btn-send {
+      background: var(--text-primary);
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .btn-send:hover {
+      transform: scale(1.03);
+    }
+
+    /* Footer */
+    .portal-footer {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 960px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .copilot-card { position: static; height: 500px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Liquid Glass Nav -->
+  <header class="portal-nav">
+    <div class="container nav-inner">
+      <div class="brand-group">
+        <div class="brand-mark">
+          <span class="brand-dot"></span>
+          John 'Toki' Grullon
+        </div>
+        <span class="badge-scope">TENANT: toki</span>
+      </div>
+
+      <div class="nav-right">
+        <div class="status-live">
+          <span class="pulse-dot"></span>
+          Fleet Active • Zero Cloud Leaks
+        </div>
+        <a href="index.html" class="btn-frontdoor" target="_blank">
+          View Public Front Door ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Header -->
+    <div class="portal-hero">
+      <h1 class="welcome-title">Executive Workforce Console</h1>
+      <p class="welcome-sub">Your private co-pilot and 3 specialist agents (Harbor, Keystone, Quill) are operating under your direct supervision.</p>
+    </div>
+
+    <!-- Stripe 8/16px Telemetry Cards -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Staged Drafts Pending Review</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">$565K</div>
+        <div class="stat-label">Estero Target CMA Value</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">1</div>
+        <div class="stat-label">New Front-Door Lead</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">0.00s</div>
+        <div class="stat-label">Autonomous Delivery Latency</div>
+      </div>
+    </div>
+
+    <!-- Two-Column Workspace -->
+    <div class="workspace-grid">
+      
+      <!-- Staged Deliverables Queue -->
+      <section>
+        <div class="queue-title">
+          <span>Staged Deliverables Queue</span>
+          <span class="queue-badge">Human-in-the-Loop Signoff</span>
+        </div>
+
+        <!-- Keystone CMA Card -->
+        <div class="staged-card" id="card-cma">
+          <div class="staged-tag">
+            <span class="specialist-badge">📐 KEYSTONE • TRANSACTION & CMA LEAD</span>
+            <span class="timestamp">Today 10:21 AM</span>
+          </div>
+          <h3 class="staged-headline">Comparative Market Analysis: Estero Corridor</h3>
+          <p class="staged-body">
+            Calculated micro-neighborhood baseline ($260–$320/sqft) with +$45K screened pool lanai premium and post-Ian roof valuation impact. Strategic list recommendation: <strong>$565,000</strong> (Target) with a 14-day liquidation tier of <strong>$525,000</strong>.
+          </p>
+          <div class="staged-actions">
+            <button class="btn-approve" onclick="approveAction('card-cma', 'CMA Valuation Model Approved & Locked')">✓ Approve Valuation</button>
+            <button class="btn-revise" onclick="alert('Adjustment request sent to Keystone analyst.')">✎ Request Revision</button>
+          </div>
+        </div>
+
+        <!-- Quill Marketing Card -->
+        <div class="staged-card" id="card-copy">
+          <div class="staged-tag">
+            <span class="specialist-badge">✍️ QUILL • LUXURY COPY & MLS LEAD</span>
+            <span class="timestamp">Today 10:21 AM</span>
+          </div>
+          <h3 class="staged-headline">MLS Public Remarks & Instagram Launch Draft</h3>
+          <p class="staged-body">
+            <em>"Welcome to your Southwest Florida sanctuary in the heart of Estero! Featuring an expansive screened lanai overlooking tranquil water views, brand-new roof, and open-concept chef's kitchen..."</em>
+          </p>
+          <div class="staged-actions">
+            <button class="btn-approve" onclick="approveAction('card-copy', 'Marketing Copy Approved for Syndication')">✓ Approve Copy</button>
+            <button class="btn-revise" onclick="alert('Revision prompt opened with Quill.')">✎ Edit Text</button>
+          </div>
+        </div>
+
+        <!-- Harbor Lead Card -->
+        <div class="staged-card" id="card-lead">
+          <div class="staged-tag">
+            <span class="specialist-badge">🧭 HARBOR • INTAKE & RELATIONSHIPS</span>
+            <span class="timestamp">Today 09:55 AM</span>
+          </div>
+          <h3 class="staged-headline">Confidential Inquiry: Leo Peralta (1646 Heritage)</h3>
+          <p class="staged-body">
+            Captured from Front Door CMA calculator. Property: Estero Single-Family • Staged valuation requested: $2.15M. Ready for personalized seller briefing dispatch.
+          </p>
+          <div class="staged-actions">
+            <button class="btn-approve" onclick="approveAction('card-lead', 'Calendar Consultation Dispatched')">✓ Dispatch Brief</button>
+            <button class="btn-revise" onclick="alert('Lead flagged for manual phone follow-up.')">✎ Snooze / Call First</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Personal AI Copilot Console -->
+      <aside>
+        <div class="copilot-card">
+          <div class="copilot-header">
+            <div class="copilot-agent">
+              <img src="assets/headshot.png" alt="Copilot" class="copilot-avatar" onerror="this.src='assets/Rosie.png'">
+              <div>
+                <div class="copilot-name">John 'Toki' Grullon Copilot</div>
+                <div class="copilot-sub"><span class="pulse-dot"></span> Online • Local Qwen 9B</div>
+              </div>
+            </div>
+            <span class="badge-scope">SOVEREIGN</span>
+          </div>
+
+          <div class="copilot-feed" id="chat-feed">
+            <div class="msg-bubble msg-agent">
+              Good morning John 'Toki' Grullon. Harbor, Keystone, and Quill have completed 3 staged tasks for your review. No outgoing communications will occur until you approve them in the queue.
+            </div>
+            <div class="msg-bubble msg-agent">
+              How can I assist you with your Estero or Naples pipeline today?
+            </div>
+          </div>
+
+          <div class="copilot-chips">
+            <span class="chip" onclick="sendQuickPrompt('Explain Keystone CMA $/sqft breakdown')">📐 Explain CMA</span>
+            <span class="chip" onclick="sendQuickPrompt('Draft a welcome SMS for Leo Peralta')">💬 Draft SMS</span>
+            <span class="chip" onclick="sendQuickPrompt('Review pending tasks')">📋 Review Tasks</span>
+          </div>
+
+          <form class="copilot-input-box" onsubmit="handleChatSubmit(event)">
+            <input type="text" class="copilot-input" id="user-msg-input" placeholder="Ask your copilot anything..." autocomplete="off">
+            <button type="submit" class="btn-send">Send</button>
+          </form>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="portal-footer container">
+    <div>&copy; 2026 The No Fault Group • Protected Client Workspace</div>
+    <div>Sovereign Autonomous Node • Powered by Apex Luxury AI Architecture</div>
+  </footer>
+
+  <script>
+    function approveAction(cardId, confirmationText) {
+      const card = document.getElementById(cardId);
+      card.style.borderColor = 'var(--success)';
+      card.style.background = 'rgba(52, 211, 153, 0.06)';
+      card.querySelector('.staged-actions').innerHTML = 
+        '<div style="color: var(--success); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">' +
+        '<span>✓</span> ' + confirmationText +
+        '</div>';
+      
+      // Post notification to chat feed
+      const feed = document.getElementById('chat-feed');
+      const note = document.createElement('div');
+      note.className = 'msg-bubble msg-agent';
+      note.innerHTML = '<strong>Action Recorded:</strong> ' + confirmationText + '. Transmitted to tenant ledger.';
+      feed.appendChild(note);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function sendQuickPrompt(text) {
+      document.getElementById('user-msg-input').value = text;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('user-msg-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const feed = document.getElementById('chat-feed');
+
+      // User bubble
+      const uMsg = document.createElement('div');
+      uMsg.className = 'msg-bubble msg-user';
+      uMsg.innerText = val;
+      feed.appendChild(uMsg);
+      input.value = '';
+
+      // Simulated agent response
+      setTimeout(() => {
+        const aMsg = document.createElement('div');
+        aMsg.className = 'msg-bubble msg-agent';
+
+        if (val.toLowerCase().includes('cma') || val.toLowerCase().includes('sqft')) {
+          aMsg.innerHTML = "Keystone's Estero model applies $290/sqft baseline for Copper Oaks & Bella Terra. Homes with post-2022 roofs command +8.5% premium due to insurance underwriting advantages.";
+        } else if (val.toLowerCase().includes('sms') || val.toLowerCase().includes('draft')) {
+          aMsg.innerHTML = "<em>Draft SMS for Leo Peralta:</em><br>&ldquo;Hi Leo, Rosie Rivera here. I received your confidential Estero brief. I have prepared your private valuation dossier and would love to review the comp analysis whenever convenient today.&rdquo;";
+        } else {
+          aMsg.innerHTML = "Understood. I have logged this directive with the specialist fleet. All updates will stage in your queue for final sign-off.";
+        }
+
+        feed.appendChild(aMsg);
+        feed.scrollTop = feed.scrollHeight;
+      }, 500);
+    }
+  </script>
+</body>
+</html>
