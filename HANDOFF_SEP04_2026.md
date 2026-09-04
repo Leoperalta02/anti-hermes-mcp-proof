@@ -47,6 +47,20 @@ Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py
 6. **Playbook (Scripts & Objections)**: 8 coaching scripts (FSBO, Expired, Buyer, Seller, Commission Defense, Lowball, Appointment Setting, Follow-up). Driven tenant-agnostically by `coaching_source` so Rosie's office can customize via JSON.
 7. **Transactions (Contract Tracker)**: Florida As-Is contract milestone tracker with visual countdown pills (EMD, Inspection, Loan, Title, Walkthrough, Closing).
 
+### C. Lead Flow Integration (Front Door → Portal) ✅
+- **Front-Door Dossier Submission (`index.html`)**:
+  - Captures Full Name, Direct Phone/Email, Property Interest/Address, and Calculated Valuation Target.
+  - Generates structured lead record with ISO timestamp and `HOT` priority badge.
+  - Persists directly to `localStorage` under `apex_leads_{tenant}` for instant reactivity.
+  - Simultaneously transmits payload to loopback receiver `http://127.0.0.1:8787/brief`.
+  - Displays instant confirmation card with link to directly open and view the staged lead in `portal.html`.
+- **Portal Reactive Rendering (`portal.html`)**:
+  - **Action Queue ("Who Needs Contact Today")**: Dynamically prepends incoming leads at the top of the queue with initials avatar, `✨ FRONT-DOOR DOSSIER` badge, target property details, and active `📞 Call` / `✉ Text` buttons. Increments pending count pill (e.g. from `5 Pending` to `6 Pending`).
+  - **Buyer Pipeline Kanban**: Automatically stages the new lead under the **"New Lead"** column with property description, valuation target, and contact info.
+  - **Copilot Inbound Alert**: Injects an alert bubble into the Copilot chat feed informing the realtor that a new principal inquiry was received from the Front Door.
+  - **Real-Time Storage Sync & Simulation**: Listens to `storage` events and polls every 3 seconds so leads submitted from the Front Door appear in the Portal instantly without page refresh. Includes a `+ Demo Lead` button for testing simulation.
+- **Verification**: Form submission tested on Rosie's site; Dr. Alistair Sterling staged in Action Queue and Buyer Pipeline. JavaScript parsing verified clean with zero syntax errors via Node.js.
+
 ---
 
 ## 2. Quota & Environment Telemetry Snapshot
@@ -89,6 +103,11 @@ python apex_core/fast_site_builder.py
 - **Chat Benchmark Response**: `concierge_chip_response_1788540789998.png`
 - **Intelligence Flyout Persisting on Move**: `intelligence_flyout_hover_1788541019166.png`
 - **Advisory Flyout Persisting on Move**: `advisory_flyout_hover_1788541038400.png`
+- **Lead Flow Confirmation**: `confirmation_card_1788542076544.png`
+- **Lead Flow Staged in Dashboard**: `dashboard_staged_lead_1788542128332.png`
+- **Lead Flow Staged in Buyer Pipeline**: `buyer_pipeline_kanban_1788542171861.png`
+- **Copilot Inbound Dossier Alert**: `copilot_inbound_alert_1788542179361.png`
+- **Node.js JS Syntax Verification**: 100% clean parsing across all landing pages and portals.
 
 ---
 
@@ -103,6 +122,7 @@ python apex_core/fast_site_builder.py
 
 ## 6. Recommended Next Actions (Next Session)
 
-1. **Lead Flow Integration**: Wire front-door CMA inquiry submission (`index.html` dossier form) to write new entries directly into the portal's CRM / Buyer pipeline (`portal.html`).
-2. **Email / CRM Synchronization**: Build out the inbound/outbound email tracker (Rosie wishlist item #1).
-3. **External Coaching Injection**: Create `office_playbook.json` to allow Rosie's brokerage to update scripts without editing Python code.
+1. [x] **Lead Flow Integration**: Wired front-door CMA inquiry submission (`index.html` dossier form) to write entries directly into the portal's CRM / Buyer pipeline (`portal.html`) and notify Copilot.
+2. [ ] **Email / CRM Synchronization**: Build out the inbound/outbound email tracker (Rosie wishlist item #1).
+3. [ ] **External Coaching Injection**: Create `office_playbook.json` to allow Rosie's brokerage to update scripts without editing Python code.
+4. [ ] **Hermes Telegram Alert Hook (W1)**: Wire folder-watcher to ping Telegram on new incoming briefs.

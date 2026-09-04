@@ -888,16 +888,40 @@
       e.preventDefault();
       const btn = document.getElementById('inquiry-submit-btn');
       btn.disabled = true;
-      btn.innerText = 'Encrypting & Sending...';
+      btn.innerText = 'Encrypting & Transmitting...';
 
+      const name = document.getElementById('inquiry-name').value.trim();
+      const contact = document.getElementById('inquiry-contact').value.trim();
+      const address = document.getElementById('inquiry-address').value.trim();
+      const val = document.getElementById('cma-hero-price').innerText.trim();
+
+      const newLead = {
+        id: 'lead_' + Date.now(),
+        full_name: name,
+        contact: contact,
+        property_interest: address,
+        valuation_target: val,
+        tenant: 'rosie',
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        date: new Date().toISOString(),
+        heat: 'HOT'
+      };
+
+      // Persist to localStorage for immediate reactive display in Sovereign OS Portal
+      try {
+        const storageKey = 'apex_leads_rosie';
+        const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        existing.unshift(newLead);
+        localStorage.setItem(storageKey, JSON.stringify(existing));
+      } catch (err) {
+        console.warn('localStorage sync error:', err);
+      }
+
+      // Transmit to Loopback server (:8787/brief)
       const payload = {
         kind: 'apex_realtor_onboarding_brief',
-        answers: {
-          full_name: document.getElementById('inquiry-name').value,
-          contact: document.getElementById('inquiry-contact').value,
-          property_interest: document.getElementById('inquiry-address').value,
-          valuation_target: document.getElementById('cma-hero-price').innerText
-        }
+        tenant: 'rosie',
+        lead: newLead
       };
 
       fetch('http://127.0.0.1:8787/brief', {
@@ -905,7 +929,21 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).catch(() => {}).finally(() => {
-        document.getElementById('inquiry-feedback').style.display = 'block';
+        const feedback = document.getElementById('inquiry-feedback');
+        feedback.innerHTML = `
+          <div style="background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); padding: 1.1rem; border-radius: 14px; margin-top: 1.25rem; text-align: left;">
+            <div style="color: #34d399; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>✓</span> Confidential Brief Transmitted
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.82rem; margin: 0.4rem 0 0.85rem 0; line-height: 1.45;">
+              Your valuation target of <strong style="color:#fff;">${val}</strong> for <strong style="color:#fff;">${address}</strong> has been dispatched and staged directly into Rosie Rivera's Sovereign OS portal.
+            </p>
+            <a href="portal.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #ffd700; text-decoration: none; font-weight: 600; background: rgba(229,200,144,0.12); padding: 0.45rem 0.95rem; border-radius: 20px; border: 1px solid rgba(229,200,144,0.3); transition: all 0.2s ease;">
+              View Staged Lead in Portal ↗
+            </a>
+          </div>
+        `;
+        feedback.style.display = 'block';
         btn.innerText = '✓ Brief Dispatched';
       });
     }

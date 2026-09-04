@@ -1181,16 +1181,40 @@ class FastSiteBuilder:
       e.preventDefault();
       const btn = document.getElementById('inquiry-submit-btn');
       btn.disabled = true;
-      btn.innerText = 'Encrypting & Sending...';
+      btn.innerText = 'Encrypting & Transmitting...';
 
+      const name = document.getElementById('inquiry-name').value.trim();
+      const contact = document.getElementById('inquiry-contact').value.trim();
+      const address = document.getElementById('inquiry-address').value.trim();
+      const val = document.getElementById('cma-hero-price').innerText.trim();
+
+      const newLead = {{
+        id: 'lead_' + Date.now(),
+        full_name: name,
+        contact: contact,
+        property_interest: address,
+        valuation_target: val,
+        tenant: '{t.subdomain_slug}',
+        timestamp: new Date().toLocaleTimeString([], {{hour: '2-digit', minute:'2-digit'}}),
+        date: new Date().toISOString(),
+        heat: 'HOT'
+      }};
+
+      // Persist to localStorage for immediate reactive display in Sovereign OS Portal
+      try {{
+        const storageKey = 'apex_leads_{t.subdomain_slug}';
+        const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        existing.unshift(newLead);
+        localStorage.setItem(storageKey, JSON.stringify(existing));
+      }} catch (err) {{
+        console.warn('localStorage sync error:', err);
+      }}
+
+      // Transmit to Loopback server (:8787/brief)
       const payload = {{
         kind: 'apex_realtor_onboarding_brief',
-        answers: {{
-          full_name: document.getElementById('inquiry-name').value,
-          contact: document.getElementById('inquiry-contact').value,
-          property_interest: document.getElementById('inquiry-address').value,
-          valuation_target: document.getElementById('cma-hero-price').innerText
-        }}
+        tenant: '{t.subdomain_slug}',
+        lead: newLead
       }};
 
       fetch('http://127.0.0.1:8787/brief', {{
@@ -1198,7 +1222,21 @@ class FastSiteBuilder:
         headers: {{ 'Content-Type': 'application/json' }},
         body: JSON.stringify(payload)
       }}).catch(() => {{}}).finally(() => {{
-        document.getElementById('inquiry-feedback').style.display = 'block';
+        const feedback = document.getElementById('inquiry-feedback');
+        feedback.innerHTML = `
+          <div style="background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); padding: 1.1rem; border-radius: 14px; margin-top: 1.25rem; text-align: left;">
+            <div style="color: #34d399; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>✓</span> Confidential Brief Transmitted
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.82rem; margin: 0.4rem 0 0.85rem 0; line-height: 1.45;">
+              Your valuation target of <strong style="color:#fff;">${{val}}</strong> for <strong style="color:#fff;">${{address}}</strong> has been dispatched and staged directly into {t.name}'s Sovereign OS portal.
+            </p>
+            <a href="portal.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #ffd700; text-decoration: none; font-weight: 600; background: rgba(229,200,144,0.12); padding: 0.45rem 0.95rem; border-radius: 20px; border: 1px solid rgba(229,200,144,0.3); transition: all 0.2s ease;">
+              View Staged Lead in Portal ↗
+            </a>
+          </div>
+        `;
+        feedback.style.display = 'block';
         btn.innerText = '✓ Brief Dispatched';
       }});
     }}
@@ -2234,11 +2272,15 @@ class FastSiteBuilder:
       <div class="workspace-grid">
         <section>
           <!-- ACTION QUEUE -->
-          <div class="section-header">
+          <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
             <span class="section-title">🔥 Who Needs Contact Today</span>
-            <span class="count-pill">5 Pending</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="count-pill" id="action-queue-count">5 Pending</span>
+              <button onclick="addTestLead()" class="btn-sm" style="font-size:0.7rem; padding:0.18rem 0.6rem; cursor:pointer;" title="Simulate incoming front-door dossier inquiry">+ Demo Lead</button>
+            </div>
           </div>
 
+          <div id="contact-rows-container">
           <div class="contact-row">
             <div class="contact-avatar av-hot">MR</div>
             <div class="contact-info">
@@ -2298,6 +2340,7 @@ class FastSiteBuilder:
               <button class="btn-action" onclick="logAction(this,'Moved to nurture')">💌 Nurture</button>
             </div>
           </div>
+          </div><!-- /contact-rows-container -->
 
           <!-- STAGED QUEUE -->
           <div class="section-header" style="margin-top:2rem;">
@@ -2422,9 +2465,9 @@ class FastSiteBuilder:
       <div id="pipe-buyer" style="display:none;">
         <div class="kanban-track">
           <div class="kanban">
-            <div class="kanban-col"><div class="kanban-stage">New Lead</div>
+            <div class="kanban-col" id="buyer-col-new-lead"><div class="kanban-stage">New Lead</div>
               <div class="deal-card"><div class="deal-name">J. Liu</div><div class="deal-addr">Relocating from Chicago</div><div class="deal-val">Budget $650K</div><div class="deal-days">Referral • Day 1</div></div>
-              <div class="kanban-add">+ Add</div>
+              <div class="kanban-add" onclick="addTestLead()">+ Add Lead</div>
             </div>
             <div class="kanban-col"><div class="kanban-stage">Qualified</div>
               <div class="deal-card"><div class="deal-name">The Park Family</div><div class="deal-addr">Golf community pref</div><div class="deal-val">Budget $1.2M</div><div class="deal-days">Day 4</div></div>
@@ -2951,7 +2994,7 @@ class FastSiteBuilder:
         const q = val.toLowerCase();
         let reply;
         if (q.includes('gci') || q.includes('pipeline')) reply = "Current pipeline value: <strong>$14.2M</strong>. At 2% average net commission: projected GCI = <strong>$284,000</strong>. Top opportunity: Walsh listing at $1.89M = ~$52K GCI.";
-        else if (q.includes('sms') || q.includes('maria')) reply = '<em>Draft SMS — Maria Rodriguez:</em><br>"Hi Maria! This is {t.name}. Just wanted to follow up on our Bella Terra conversation — I have 2 new listings that just hit the market today that match exactly what you\'re looking for. Can we chat this afternoon?"';
+        else if (q.includes('sms') || q.includes('maria')) reply = '<em>Draft SMS — Maria Rodriguez:</em><br>"Hi Maria! This is {t.name}. Just wanted to follow up on our Bella Terra conversation — I have 2 new listings that just hit the market today that match exactly what you are looking for. Can we chat this afternoon?"';
         else if (q.includes('cma') || q.includes('sqft')) reply = "Keystone benchmark: Bella Terra at <strong>$310/sqft</strong> + $80K adjustments = <strong>$848,800</strong> recommended list. Zillow Zestimate delta: +$286,400 in seller favor.";
         else if (q.includes('today') || q.includes('queue')) reply = "Today's priority actions:<br>1. 🔴 Call Maria Rodriguez (Buyer — 3 days cold)<br>2. 🔴 Call Walsh couple (Seller — CMA delivered, no reply)<br>3. 🟡 Approve Keystone CMA in queue<br>4. 🟡 Follow up Jennifer Liu<br>5. 🟢 Annual check-in Beth & Paul Nguyen";
         else reply = "Understood. Logged directive to the Apex fleet. All actions stage in your queue for final sign-off — nothing leaves without your approval.";
@@ -2967,8 +3010,120 @@ class FastSiteBuilder:
       feed.scrollTop = feed.scrollHeight;
     }}
 
+    // ── LEAD FLOW INTEGRATION ──
+    const LEADS_KEY = 'apex_leads_{t.subdomain_slug}';
+
+    function loadInboundLeads() {{
+      try {{
+        const raw = localStorage.getItem(LEADS_KEY);
+        if (!raw) return;
+        const leads = JSON.parse(raw);
+        if (!Array.isArray(leads) || leads.length === 0) return;
+
+        const queueContainer = document.getElementById('contact-rows-container');
+        const countPill = document.getElementById('action-queue-count');
+        const buyerNewLeadCol = document.getElementById('buyer-col-new-lead');
+        const chatFeed = document.getElementById('chat-feed');
+
+        // Clear existing dynamic rows/cards before re-rendering
+        document.querySelectorAll('.dynamic-inbound-row').forEach(el => el.remove());
+        document.querySelectorAll('.dynamic-inbound-card').forEach(el => el.remove());
+
+        if (countPill) {{
+          countPill.innerText = (5 + leads.length) + ' Pending';
+        }}
+
+        // Render each lead into Action Queue & Buyer Pipeline
+        leads.forEach(lead => {{
+          const initials = (lead.full_name || 'IN').split(' ').map(n => n[0]).join('').toUpperCase() || 'IN';
+
+          // 1. Action Queue row in Dashboard
+          if (queueContainer) {{
+            const row = document.createElement('div');
+            row.className = 'contact-row dynamic-inbound-row';
+            row.style.borderLeft = '3px solid var(--gold-accent)';
+            row.style.background = 'rgba(229,200,144,0.05)';
+            row.innerHTML = `
+              <div class="contact-avatar av-hot" style="border: 1.5px solid var(--gold-accent);">${{initials}}</div>
+              <div class="contact-info">
+                <div class="contact-name">${{lead.full_name}} <span class="heat-badge heat-hot" style="background:rgba(229,200,144,0.25);color:var(--gold-accent);border:1px solid var(--gold-accent);">✨ FRONT-DOOR DOSSIER</span></div>
+                <div class="contact-meta">Buyer Inquiry • Target: ${{lead.property_interest}} • Est: ${{lead.valuation_target}} • Received: ${{lead.timestamp}}</div>
+              </div>
+              <div class="contact-actions">
+                <a href="tel:${{(lead.contact || '').replace(/[^0-9]/g, '')}}" class="btn-action primary" style="text-decoration:none;" onclick="logAction(this,'Called ${{lead.full_name}}')">📞 Call</a>
+                <a href="sms:${{(lead.contact || '').replace(/[^0-9]/g, '')}}" class="btn-action" style="text-decoration:none;" onclick="logAction(this,'SMS Sent')">✉ Text</a>
+              </div>
+            `;
+            queueContainer.insertBefore(row, queueContainer.firstChild);
+          }}
+
+          // 2. Deal card in Buyer Pipeline Kanban (New Lead column)
+          if (buyerNewLeadCol) {{
+            const card = document.createElement('div');
+            card.className = 'deal-card dynamic-inbound-card';
+            card.style.borderColor = 'var(--gold-accent)';
+            card.style.boxShadow = '0 0 14px rgba(229,200,144,0.2)';
+            card.innerHTML = `
+              <div class="deal-name">${{lead.full_name}} <span style="font-size:0.6rem;background:var(--gold-dim);color:var(--gold-accent);padding:1px 5px;border-radius:6px;">ONLINE</span></div>
+              <div class="deal-addr">${{lead.property_interest}}</div>
+              <div class="deal-val">${{lead.valuation_target}}</div>
+              <div class="deal-days" style="color:var(--success);">Just In (${{lead.timestamp}}) • ${{lead.contact}}</div>
+            `;
+            const addBtn = buyerNewLeadCol.querySelector('.kanban-add');
+            if (addBtn) {{
+              buyerNewLeadCol.insertBefore(card, addBtn);
+            }} else {{
+              buyerNewLeadCol.appendChild(card);
+            }}
+          }}
+        }});
+
+        // If leads exist, inject a live notification into Copilot chat feed if not already present
+        if (chatFeed && !document.getElementById('copilot-inbound-alert')) {{
+          const alertBubble = document.createElement('div');
+          alertBubble.id = 'copilot-inbound-alert';
+          alertBubble.className = 'msg-bubble msg-agent';
+          alertBubble.style.borderColor = 'var(--gold-accent)';
+          alertBubble.innerHTML = `✨ <strong>Inbound Dossier Alert:</strong> Received ${{leads.length}} principal inquiry from your Front Door. Staged directly into your <strong>Who Needs Contact Today</strong> queue and <strong>Buyer Pipeline</strong>.`;
+          chatFeed.appendChild(alertBubble);
+        }}
+      }} catch (err) {{
+        console.warn('Error loading inbound leads:', err);
+      }}
+    }}
+
+    function addTestLead() {{
+      const sampleNames = ['Dr. Aris Thorne', 'Elena Rostova', 'Harrison & Claire Vance', 'Marcus Sterling'];
+      const sampleAddrs = ['Pelican Bay Penthouse', 'West Bay Club Fairway Villa', 'Bella Terra Executive Pool Home', 'Barefoot Beachfront Estate'];
+      const sampleVals = ['$1,450,000', '$2,100,000', '$848,800', '$3,750,000'];
+      const idx = Math.floor(Math.random() * sampleNames.length);
+
+      const lead = {{
+        id: 'lead_' + Date.now(),
+        full_name: sampleNames[idx],
+        contact: '(239) 555-' + Math.floor(1000 + Math.random() * 9000),
+        property_interest: sampleAddrs[idx],
+        valuation_target: sampleVals[idx],
+        tenant: '{t.subdomain_slug}',
+        timestamp: new Date().toLocaleTimeString([], {{hour: '2-digit', minute:'2-digit'}}),
+        date: new Date().toISOString(),
+        heat: 'HOT'
+      }};
+
+      const existing = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
+      existing.unshift(lead);
+      localStorage.setItem(LEADS_KEY, JSON.stringify(existing));
+      loadInboundLeads();
+    }}
+
+    window.addEventListener('storage', (e) => {{
+      if (e.key === LEADS_KEY) loadInboundLeads();
+    }});
+    setInterval(loadInboundLeads, 3000);
+
     // ── INIT ──
     loadScript('fsbo', null);
+    loadInboundLeads();
   </script>
 </body>
 </html>"""
