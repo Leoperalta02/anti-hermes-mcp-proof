@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "last_updated": "2026-09-04T20:24:00+00:00",
+  "last_updated": "2026-09-04T20:26:50.960240+00:00",
   "recorded_by": "Leo Peralta",
   "gates": {
     "a4_watch_complete": true,
     "live_provision_enabled": true,
     "telegram_live_enabled": true,
-    "alienware_hq_hold_active": true
+    "alienware_hq_hold_active": false
   },
   "history": [
     {
@@ -17,6 +17,17 @@
         "a4_watch_complete": true,
         "live_provision_enabled": true,
         "telegram_live_enabled": true
+      }
+    },
+    {
+      "timestamp": "2026-09-04T20:26:50.960227+00:00",
+      "recorded_by": "Leo Peralta",
+      "notes": "Leo approve \u2014 APPROVE PROVISION + Alienware HQ HOLD lifted",
+      "updates": {
+        "a4_watch_complete": true,
+        "live_provision_enabled": true,
+        "telegram_live_enabled": true,
+        "alienware_hq_hold_active": false
       }
     }
   ]

@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-04T20:26:50.960240+00:00",
+  "recorded_by": "Leo Peralta",
+  "leo_decision": "APPROVE PROVISION",
+  "scope": "live_realtor_onboarding",
+  "gates_open": {
+    "a4_watch_complete": true,
+    "live_provision_enabled": true,
+    "telegram_live_enabled": true,
+    "alienware_hq_hold_active": false
+  },
+  "claims": {
+    "agent_deployed": false,
+    "portal_created": false,
+    "mls_connected": false,
+    "published_live": false,
+    "voice_enabled": false,
+    "calendar_synced": false
+  }
+}

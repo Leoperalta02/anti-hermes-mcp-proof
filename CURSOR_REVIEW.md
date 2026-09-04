@@ -127,6 +127,13 @@ Recorded in `evidence/operator_gates.json`:
 
 Live `APPROVE PROVISION` now passes gate check. Telegram live send still requires `APEX_TELEGRAM_BOT_TOKEN` on Alienware.
 
+## Leo Executive Approval — Sep 04, 2026
+
+**Decision:** `APPROVE PROVISION` (Leo: "approve")  
+**Artifact:** `evidence/leo_provision_approval.json`  
+**HQ HOLD:** **LIFTED** (`alienware_hq_hold_active: false` in operator_gates.json)  
+**Governance:** `update_managed_agent_tool_governance.py` now reads operator_gates for conditional HQ block — Anti must re-run patch on Alienware.
+
 ## Cursor Implementation — provision executor (pending commit)
 
 **Gated Provision Executor (§6.5 & §8)**

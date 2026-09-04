@@ -192,6 +192,12 @@ class StatusTelemetryReader:
             t.gateway_status_line = "Degraded"
 
         t.hold_active = bool(re.search(r"HOLD.*#Alienware-hq|Alienware-hq.*HOLD", anti + hermes, re.I))
+        try:
+            from apex_core.operator_gates import is_alienware_hq_hold_active
+
+            t.hold_active = is_alienware_hq_hold_active()
+        except Exception:
+            pass
 
         a4 = re.search(r"A4[^\|]*\|\s*\*\*(IN PROGRESS|PASS|FAIL)[^*]*\*\*", anti, re.I)
         t.a4_status = a4.group(1).upper() if a4 else "unknown"

@@ -7,6 +7,7 @@ code = '''"""Tool for sending structured, authenticated messages to named Buzz m
 import contextvars
 import json
 import logging
+from pathlib import Path
 from typing import Any, Optional, Set, Tuple
 
 from tools.registry import registry
@@ -60,6 +61,23 @@ def _is_panel_channel() -> bool:
     return name in _PANEL_BLOCKED_CHANNEL_NAMES or cid in _PANEL_BLOCKED_CHANNEL_IDS
 
 
+def _is_alienware_hq_hold_active() -> bool:
+    """Fail-closed: HOLD active unless evidence/operator_gates.json records lift."""
+    candidates = [
+        Path(r"C:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\evidence\\operator_gates.json"),
+        Path(__file__).resolve().parents[2] / "evidence" / "operator_gates.json",
+    ]
+    for gates_path in candidates:
+        try:
+            if gates_path.exists():
+                data = json.loads(gates_path.read_text(encoding="utf-8"))
+                gates = data.get("gates") if isinstance(data.get("gates"), dict) else {}
+                return bool(gates.get("alienware_hq_hold_active", True))
+        except Exception:
+            continue
+    return True
+
+
 # ---------------------------------------------------------------------------
 # send_managed_agent — HARD BLOCKED IN #panel-advisors
 # ---------------------------------------------------------------------------
@@ -90,7 +108,7 @@ def send_managed_agent(raw_args: Any) -> str:
     ch_val = _current_channel_ctx.get()
     if ch_val:
         ch_name, _ = ch_val
-        if ch_name in {"alienware-hq", "#alienware-hq"}:
+        if ch_name in {"alienware-hq", "#alienware-hq"} and _is_alienware_hq_hold_active():
             block_msg = "[STOP — HOLD ACTIVE] send_managed_agent is blocked in #Alienware-hq. Practice hops only in #wellington-canary or #rosie-onboarding-sandbox."
             logger.warning("HOLD ACTIVE DENY: send_managed_agent called in #Alienware-hq — blocked.")
             return block_msg
