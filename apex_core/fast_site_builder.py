@@ -777,20 +777,96 @@ class FastSiteBuilder:
 </head>
 <body>
 
-  <!-- Apple Minimal Navigation -->
+  <!-- Apple Frosted Glass Navigation with Slide-Down Flyout -->
   <header class="apple-nav">
     <div class="nav-inner">
       <a href="#" class="brand-mark">
         <span class="brand-dot"></span>
         {t.name}
       </a>
+
       <div class="nav-actions">
-        <a href="#valuation" class="nav-link">Intelligence</a>
-        <a href="#advisory" class="nav-link">Advisory</a>
+        <!-- Dropdown 1: Intelligence -->
+        <div class="nav-item-dropdown">
+          <a class="nav-link" href="#valuation">
+            Intelligence
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </a>
+          <!-- Slide-Down Flyout -->
+          <div class="apple-flyout">
+            <div class="flyout-container">
+              <div>
+                <div class="flyout-col-title">Analytical Engines</div>
+                <div class="flyout-link-stack">
+                  <a href="#valuation" class="flyout-big-link">Interactive CMA Valuation ›</a>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; margin-top: 0.3rem;">
+                    Real-time algorithmic pricing across Estero, Bonita Springs, and Naples submarkets.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="flyout-col-title">Micro-Neighborhoods</div>
+                <div class="flyout-link-stack">
+                  <a href="#valuation" class="flyout-sub-link">Estero & West Bay Club <span>$510/sq.ft</span></a>
+                  <a href="#valuation" class="flyout-sub-link">Bonita Springs & Bay Colony <span>$610/sq.ft</span></a>
+                  <a href="#valuation" class="flyout-sub-link">Naples & Port Royal <span>$780/sq.ft</span></a>
+                  <a href="#valuation" class="flyout-sub-link">Gulf Harbour Yacht & CC <span>$465/sq.ft</span></a>
+                </div>
+              </div>
+              <div>
+                <div class="flyout-col-title">Direct Actions</div>
+                <div class="flyout-link-stack">
+                  <a href="#consultation" class="flyout-sub-link">Request Private CMA Dossier <span>PDF</span></a>
+                  <a href="#advisory" class="flyout-sub-link">Flood & Roof Risk Mitigation <span>Audit</span></a>
+                  <a href="tel:{t.phone_number.replace('-', '')}" class="flyout-sub-link">Direct Principal Line <span>24/7</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropdown 2: Advisory -->
+        <div class="nav-item-dropdown">
+          <a class="nav-link" href="#advisory">
+            Advisory
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </a>
+          <!-- Slide-Down Flyout -->
+          <div class="apple-flyout">
+            <div class="flyout-container">
+              <div>
+                <div class="flyout-col-title">The Standard</div>
+                <div class="flyout-link-stack">
+                  <a href="#advisory" class="flyout-big-link">Discreet Principal Representation ›</a>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; margin-top: 0.3rem;">
+                    Bespoke off-market acquisition and disposition for family offices and luxury homeowners.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="flyout-col-title">Specialist Disciplines</div>
+                <div class="flyout-link-stack">
+                  <a href="#advisory" class="flyout-sub-link">Off-Market Pocket Listings <span>Private</span></a>
+                  <a href="#advisory" class="flyout-sub-link">Bilingual English / Español <span>Native</span></a>
+                  <a href="#advisory" class="flyout-sub-link">HOA Reserve & Flood Audits <span>Certified</span></a>
+                </div>
+              </div>
+              <div>
+                <div class="flyout-col-title">Client Surface</div>
+                <div class="flyout-link-stack">
+                  <a href="portal.html" class="flyout-sub-link" target="_blank">Executive Client Portal ↗ <span>Back Door</span></a>
+                  <a href="#consultation" class="flyout-sub-link">Book In-Person Appraisal <span>Confidential</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <a href="#consultation" class="pill-btn-small">Request Private Brief</a>
       </div>
     </div>
   </header>
+  <div class="apple-page-scrim"></div>
 
   <!-- Cinematic Hero -->
   <section class="hero container">
