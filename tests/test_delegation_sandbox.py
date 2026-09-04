@@ -103,8 +103,30 @@ class TestDelegationSandbox(unittest.TestCase):
         out_path = Path(res["output_file"])
         self.assertTrue(out_path.exists())
         data = json.loads(out_path.read_text(encoding="utf-8"))
-        self.assertEqual(data["status"], "DRAFT_PENDING_REALTOR_APPROVAL")
-        self.assertFalse(data["external_sent"])
+        entry = data[-1] if isinstance(data, list) else data
+        self.assertEqual(entry["status"], "DRAFT_PENDING_REALTOR_APPROVAL")
+        self.assertFalse(entry["external_sent"])
+
+    def test_harbor_queue_accumulation(self):
+        """Verify multiple dispatches to Harbor accumulate as a list in follow_up_queue.json."""
+        self.sandbox.delegate_task(
+            target_agent="harbor",
+            task_type="lead_1",
+            content="First lead",
+            tenant_slug="rosie_accumulate"
+        )
+        res2 = self.sandbox.delegate_task(
+            target_agent="harbor",
+            task_type="lead_2",
+            content="Second lead",
+            tenant_slug="rosie_accumulate"
+        )
+        out_path = Path(res2["output_file"])
+        data = json.loads(out_path.read_text(encoding="utf-8"))
+        self.assertIsInstance(data, list)
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["task_type"], "lead_1")
+        self.assertEqual(data[1]["task_type"], "lead_2")
 
     def test_delegate_to_keystone(self):
         """Verify delegation to Keystone produces draft cma_market_consult.md."""

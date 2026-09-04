@@ -1,50 +1,51 @@
-# Cursor Review: Brief Watcher & Triage Telegram Alert Hook (W1 & W2)
+# Cursor Review: Hermes Onboarding Wiring Stack (W1–W5)
 
-## Audit verdict: **STAGED PASS** — commit `354b095`
+## Audit verdict: **PASS** (W5) · Stack **STAGED PASS** (W1–W5) — commit `536e193`
 
-Audited `354b095` on `github/main`. W1/W2 scaffold is solid and SOP-compliant for **staging**; live Telegram delivery to Leo is not in this commit.
+Audited `536e193` on `github/main`. W5 implementation is solid; the full onboarding chain still needs live operator gates.
 
-### What verified
+### W5 (`536e193`) — verified
 
 | Area | Result |
 |------|--------|
-| **`brief_watcher.py`** | Folder poll (`scan_once` / `watch_loop`), triage, idempotence cache, JSONL log |
-| **Triage classifications** | `STAGE:READY`, `STAGE:DISCOVERY`, `STAGE:REJECTED_CREDENTIALS` |
-| **§12 false-claims guard** | Alerts say `STAGED ONLY`; all `claims.*` are `false` |
-| **POST hook** | `brief_receiver.py` calls triage after write; failures are logged, not fatal |
-| **Tests** | `tests/test_brief_watcher.py` — **4/4 PASS** |
-| **HOLD / secrets** | No `#Alienware-hq` changes; no bot tokens (chat routing ID only) |
+| **Spec** | `DELEGATION_SANDBOX_SPEC.md` — `#rosie-onboarding-sandbox`, `#wellington-canary`; HOLD on `#Alienware-hq`; `#panel-advisors` blocked |
+| **Dispatcher** | `delegation_sandbox.py` — fail-closed channels, input validation, 4 specialists |
+| **Draft posture** | `DRAFT_PENDING_REALTOR_APPROVAL`, `external_send_blocked: true`, `send_gate: LEO_AND_REALTOR_APPROVAL_REQUIRED` |
+| **§12 claims** | All `claims.*` explicitly `false` |
+| **§9 mock orchestration** | `run_mock_delegation()` — Harbor + Keystone + Quill → `PASS` |
+| **Tests** | **9/9 PASS** (now **10/10 PASS** with queue accumulation) |
+| **Secrets** | None in commit (4 files only) |
 
-### Why STAGED PASS (not full PASS)
+### Hermes wiring stack (W1–W5)
 
-1. **W2 live delivery** — Alerts land in `evidence/brief_telegram_alert.json` only. Nothing in this commit sends Telegram. SOP W2 verification (“Leo receives structured ping”) needs Hermes/W3 to consume the staged file.
-2. **39/39 regression** — Not reproducible in Cursor cloud: **20/31 runnable tests pass**; 11 fail on import (Alienware-only `tools/` / Hermes-state paths). Re-run on Alienware to confirm 39/39 (verified on Alienware: **41/41 PASS**).
-3. **`STAGE:DEFER`** — Not implemented (non-blocking; Leo gate handles defer manually).
+| SOP | Tests (Alienware Local) | Verdict |
+|-----|-------------------------|---------|
+| W1 Brief watcher + POST hook | 6/6 | STAGED PASS |
+| W2 Telegram alert template | (in W1) | STAGED PASS |
+| W3 CoS triage evaluator | 8/8 | PASS |
+| W4 Tenant skeleton manager | 6/6 | PASS |
+| W5 Delegation sandbox | 10/10 | PASS |
 
-### SOP §6 flow (implemented)
+**Hermes modules combined: 30/30 PASS**
 
-```
-POST /brief → write JSON → triage_brief()
-  → classify → stage alert → append log → mark processed
-  → append hermes_triage_at / hermes_stage on brief
-```
+Full repo on Alienware local: **65/65 PASS** (45/56 runnable in Cursor cloud due to Alienware-only path dependencies).
 
-### Non-blocking notes
+### Why stack is STAGED PASS (not full PASS)
 
-- `TELEGRAM_TARGET = "telegram:8349762599"` is a routing reference (same pattern as `onboarding_pipeline.py`), not an API secret — consider env-var override before public sync.
-- Briefs missing `answers.needs[]` classify as `STAGE:DISCOVERY` (seen in evidence log for Rosie test files).
-- `evidence/onboarding_alert.json` still has onboarding-pipeline “deployed” language — separate from `brief_watcher` alerts.
+1. **Live Telegram** — Alerts still staged to JSON; Hermes must dispatch to Leo.
+2. **`send_managed_agent`** — Spec references tool lockdown; `delegation_sandbox.py` is a parallel Python dispatcher, not wired into the live Hermes tool path.
+3. **§9 full chain** — `run_mock_delegation()` covers steps 5–6 in isolation; Leo `APPROVE PROVISION DRYRUN` → specialist drafts → status log still needs operator sign-off.
 
-### Handoff status
+### Non-blocking notes addressed
 
-Item **#4 W1 & W2** is correctly marked complete as **scaffold**. Next open: **#5 W3** (CoS triage integration).
+- Harbor queue now accumulates entries as a list in `follow_up_queue.json` across multiple dispatches.
+- Default tenant root is Alienware path; tests correctly use isolated temp directories.
 
-Audit written to `CURSOR_REVIEW.md` and pushed to Cursor origin (`f043f1a`). Sync to GitHub when convenient.
+### Next operator gates
 
----
+1. Leo runs §9 dry-run and sends `APPROVE PROVISION DRYRUN`
+2. Wire `send_managed_agent` → sandbox channel guard
+3. A4 72h gateway watch
+4. `APPROVE PROVISION` for first real realtor
 
-### Follow-up Patches by Anti IDE (Post-Audit):
-- Added `STAGE:DEFER` triage handling (`brief.get("leo_decision") == "DEFER"` / `defer: True`) with non-action operator advisory.
-- Made Telegram target configurable via `APEX_TELEGRAM_TARGET` env var and constructor parameter, falling back to `telegram:8349762599`.
-- Added test coverage in `tests/test_brief_watcher.py`: **6/6 PASS**.
-- Full test suite verified on Alienware: **41/41 PASS**.
+Audit written to `CURSOR_REVIEW.md` and pushed to Cursor origin (`dd45a29`). Synced to GitHub by Anti IDE.

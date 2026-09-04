@@ -121,6 +121,19 @@ class DelegationSandbox:
         # Rule 4: Specialist specific draft generation (§8 SOP)
         if agent_norm == "harbor":
             output_file_path = specialist_dir / "follow_up_queue.json"
+            existing_queue = []
+            if output_file_path.exists():
+                try:
+                    loaded = json.loads(output_file_path.read_text(encoding="utf-8"))
+                    if isinstance(loaded, list):
+                        existing_queue = loaded
+                    elif isinstance(loaded, dict) and "entries" in loaded:
+                        existing_queue = loaded["entries"]
+                    elif isinstance(loaded, dict):
+                        existing_queue = [loaded]
+                except Exception:
+                    existing_queue = []
+
             queue_entry = {
                 "event_id": event_id,
                 "task_type": task_type,
@@ -130,7 +143,8 @@ class DelegationSandbox:
                 "approver": approver or "LEO_AND_REALTOR",
                 "external_sent": False
             }
-            output_file_path.write_text(json.dumps(queue_entry, indent=2), encoding="utf-8")
+            existing_queue.append(queue_entry)
+            output_file_path.write_text(json.dumps(existing_queue, indent=2), encoding="utf-8")
 
         elif agent_norm == "keystone":
             output_file_path = specialist_dir / "cma_market_consult.md"
