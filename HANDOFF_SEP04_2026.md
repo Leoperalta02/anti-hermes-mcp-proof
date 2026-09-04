@@ -150,8 +150,10 @@ python apex_core/fast_site_builder.py
    - Enables brokerage coaches / Nikki to update scripts and objection handlers without modifying Python code.
 4. [x] **Hermes Telegram Alert Hook & Brief Triage (W1 & W2)**:
    - Implemented `apex_core/brief_watcher.py` to monitor `onboarding-briefs/*.json`.
-   - Executes Hermes triage checklist (§6 SOP: validate, classify `STAGE:READY` vs `STAGE:DISCOVERY`, reject credentials).
+   - Executes Hermes triage checklist (§6 SOP: validate, classify `STAGE:READY` vs `STAGE:DISCOVERY` vs `STAGE:DEFER`, reject credentials).
    - Generates structured Telegram alert payload (`evidence/brief_telegram_alert.json`) with zero false claims (§12 SOP).
    - Hooked directly into `landing_page/brief_receiver.py` upon HTTP POST submission.
-   - Verified via `tests/test_brief_watcher.py` (4/4 tests pass).
+   - Added `STAGE:DEFER` classification and configurable Telegram routing (`APEX_TELEGRAM_TARGET` env var / constructor override).
+   - Audited by Cursor Pro (`f043f1a` on `354b095`): **STAGED PASS**.
+   - Verified via `tests/test_brief_watcher.py` (6/6 tests pass) and full Alienware test suite (41/41 tests pass).
 5. [ ] **Hermes CoS Triage Integration (W3)**: Wire triage evaluator into active Chief of Staff profile.

@@ -1,40 +1,50 @@
-# Cursor Review: Sovereign Realtor OS & Playbook Decoupling
+# Cursor Review: Brief Watcher & Triage Telegram Alert Hook (W1 & W2)
 
-## Audit verdict: **PASS** — commit `63591df`
+## Audit verdict: **STAGED PASS** — commit `354b095`
 
-Audited `63591df` on `github/main` (stack includes `e8d1df2` for the SOP §12 button rename). Working tree matches that commit; tests and portal JSON checks were run locally.
+Audited `354b095` on `github/main`. W1/W2 scaffold is solid and SOP-compliant for **staging**; live Telegram delivery to Leo is not in this commit.
 
-### What changed
+### What verified
 
 | Area | Result |
 |------|--------|
-| **External playbook** | `apex_core/office_playbook.json` holds all 8 scripts with `menu_title`, `title`, `cat`, `html` |
-| **Dynamic menu** | `_generate_portal_html()` loops playbook entries into `.script-item` buttons |
-| **JSON injection** | `const scripts = {playbook_json_str}` via `json.dumps(playbook)` |
-| **Python decoupling** | ~84 lines of inline script literals removed from `fast_site_builder.py` |
-| **Single-writer** | Portal HTML remains a generated artifact from the builder only |
-| **Log to Timeline** | Present in builder + all 4 portals (`e8d1df2`) |
-| **HOLD / secrets** | HOLD documented; playbook is coaching copy only — no keys/tokens |
+| **`brief_watcher.py`** | Folder poll (`scan_once` / `watch_loop`), triage, idempotence cache, JSONL log |
+| **Triage classifications** | `STAGE:READY`, `STAGE:DISCOVERY`, `STAGE:REJECTED_CREDENTIALS` |
+| **§12 false-claims guard** | Alerts say `STAGED ONLY`; all `claims.*` are `false` |
+| **POST hook** | `brief_receiver.py` calls triage after write; failures are logged, not fatal |
+| **Tests** | `tests/test_brief_watcher.py` — **4/4 PASS** |
+| **HOLD / secrets** | No `#Alienware-hq` changes; no bot tokens (chat routing ID only) |
 
-### Verification run
+### Why STAGED PASS (not full PASS)
 
-```bash
-python3 -m unittest tests.test_lead_flow -v   # 4/4 PASS
+1. **W2 live delivery** — Alerts land in `evidence/brief_telegram_alert.json` only. Nothing in this commit sends Telegram. SOP W2 verification (“Leo receives structured ping”) needs Hermes/W3 to consume the staged file.
+2. **39/39 regression** — Not reproducible in Cursor cloud: **20/31 runnable tests pass**; 11 fail on import (Alienware-only `tools/` / Hermes-state paths). Re-run on Alienware to confirm 39/39 (verified on Alienware: **41/41 PASS**).
+3. **`STAGE:DEFER`** — Not implemented (non-blocking; Leo gate handles defer manually).
+
+### SOP §6 flow (implemented)
+
 ```
-
-Node.js JSON parse of `const scripts = {...}`: **4/4 portals clean** (rosie, vance, sofia, toki).
-
-New test `test_external_coaching_playbook` asserts playbook load, required keys, dynamic buttons, and serialized scripts object.
-
-### Handoff status
-
-`HANDOFF_SEP04_2026.md` item **#3 External Coaching Injection** is correctly marked **[x] complete**. Next open item: **#4 Hermes Telegram Alert Hook (W1)**.
+POST /brief → write JSON → triage_brief()
+  → classify → stage alert → append log → mark processed
+  → append hermes_triage_at / hermes_stage on brief
+```
 
 ### Non-blocking notes
 
-- Playbook `html` is injected via `innerHTML` — same trust model as before; treat JSON as trusted brokerage content.
-- Script keys in `onclick` assume simple keys (current 8 are fine).
+- `TELEGRAM_TARGET = "telegram:8349762599"` is a routing reference (same pattern as `onboarding_pipeline.py`), not an API secret — consider env-var override before public sync.
+- Briefs missing `answers.needs[]` classify as `STAGE:DISCOVERY` (seen in evidence log for Rosie test files).
+- `evidence/onboarding_alert.json` still has onboarding-pipeline “deployed” language — separate from `brief_watcher` alerts.
 
-### Still open (unchanged)
+### Handoff status
 
-A4 72h gateway watch · W1–W5 Hermes live wiring · live email/CRM OAuth · `APPROVE PROVISION` gate after A4 + W1–W5.
+Item **#4 W1 & W2** is correctly marked complete as **scaffold**. Next open: **#5 W3** (CoS triage integration).
+
+Audit written to `CURSOR_REVIEW.md` and pushed to Cursor origin (`f043f1a`). Sync to GitHub when convenient.
+
+---
+
+### Follow-up Patches by Anti IDE (Post-Audit):
+- Added `STAGE:DEFER` triage handling (`brief.get("leo_decision") == "DEFER"` / `defer: True`) with non-action operator advisory.
+- Made Telegram target configurable via `APEX_TELEGRAM_TARGET` env var and constructor parameter, falling back to `telegram:8349762599`.
+- Added test coverage in `tests/test_brief_watcher.py`: **6/6 PASS**.
+- Full test suite verified on Alienware: **41/41 PASS**.

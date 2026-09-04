@@ -39,7 +39,8 @@ SECRET_RE = re.compile(
     re.IGNORECASE,
 )
 
-TELEGRAM_TARGET = "telegram:8349762599"
+DEFAULT_TELEGRAM_TARGET = "telegram:8349762599"
+TELEGRAM_TARGET = os.getenv("APEX_TELEGRAM_TARGET", DEFAULT_TELEGRAM_TARGET)
 
 
 def utc_now_iso() -> str:
@@ -47,9 +48,15 @@ def utc_now_iso() -> str:
 
 
 class BriefWatcher:
-    def __init__(self, briefs_dir: Optional[Path] = None, evidence_dir: Optional[Path] = None):
+    def __init__(
+        self,
+        briefs_dir: Optional[Path] = None,
+        evidence_dir: Optional[Path] = None,
+        telegram_target: Optional[str] = None,
+    ):
         self.briefs_dir = Path(briefs_dir) if briefs_dir else DEFAULT_BRIEFS_DIR
         self.evidence_dir = Path(evidence_dir) if evidence_dir else EVIDENCE_DIR
+        self.telegram_target = telegram_target or os.getenv("APEX_TELEGRAM_TARGET", TELEGRAM_TARGET)
         self.processed_file = self.evidence_dir / "processed_briefs.json"
         self.alert_file = self.evidence_dir / "brief_telegram_alert.json"
         self.triage_log = self.evidence_dir / "brief_triage_log.jsonl"
@@ -77,7 +84,7 @@ class BriefWatcher:
         Executes Hermes triage (§6 of ROSIE_ONBOARDING_SOP.md):
         1. Acknowledge brief
         2. Validate (no credentials, required fields)
-        3. Classify (STAGE:READY vs STAGE:DISCOVERY vs STAGE:REJECTED_CREDENTIALS)
+        3. Classify (STAGE:READY vs STAGE:DISCOVERY vs STAGE:DEFER vs STAGE:REJECTED_CREDENTIALS)
         4. Surface structured alert to Leo (Telegram target, zero false claims)
         5. Log event
         """
@@ -121,10 +128,22 @@ class BriefWatcher:
             has_name = name not in ("profile_unknown", "", None)
             has_needs = needs_str != "needs_unknown"
 
-            if has_name and has_needs:
+            is_deferred = (
+                brief.get("leo_decision") == "DEFER"
+                or brief.get("hermes_stage") == "STAGE:DEFER"
+                or answers.get("defer") is True
+                or brief.get("defer") is True
+            )
+
+            if is_deferred:
+                classification = "STAGE:DEFER"
+                action_recommendation = "Brief is deferred per operator instruction. Awaiting Leo re-activation."
+            elif has_name and has_needs:
                 classification = "STAGE:READY"
+                action_recommendation = "Review brief and await Leo gate ('APPROVE PROVISION DRYRUN')."
             else:
                 classification = "STAGE:DISCOVERY"
+                action_recommendation = "Incomplete discovery brief. Follow up on required intake fields."
 
             # 3. Alert Formatting (§12 & §6.4 — ZERO FALSE CLAIMS)
             alert_msg = (
@@ -139,13 +158,13 @@ class BriefWatcher:
                 f"• Agent deployed: NO\n"
                 f"• Public portal live: NO\n"
                 f"• MLS connected: NO\n\n"
-                f"👉 Recommended Action: Review brief and await Leo gate ('APPROVE PROVISION DRYRUN')."
+                f"👉 Recommended Action: {action_recommendation}"
             )
             stage_valid = True
 
         # 4. Stage Hermes Telegram Alert
         alert_payload = {
-            "channel": TELEGRAM_TARGET,
+            "channel": self.telegram_target,
             "brief_id": stem,
             "brief_file": str(brief_path),
             "timestamp": utc_now_iso(),

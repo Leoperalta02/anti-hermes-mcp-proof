@@ -117,6 +117,46 @@ class TestBriefWatcher(unittest.TestCase):
         found_again = self.watcher.scan_once()
         self.assertEqual(len(found_again), 0)
 
+    def test_triage_defer_brief(self):
+        """Verify brief flagged for deferral evaluates to STAGE:DEFER."""
+        defer_brief = {
+            "kind": "apex_realtor_onboarding_brief",
+            "leo_decision": "DEFER",
+            "answers": {
+                "full_name": "Deferred Agent",
+                "needs": ["intake"]
+            }
+        }
+        brief_file = self.briefs_dir / "20260904-defer.json"
+        brief_file.write_text(json.dumps(defer_brief), encoding="utf-8")
+
+        result = self.watcher.triage_brief(brief_file)
+        self.assertEqual(result["classification"], "STAGE:DEFER")
+        self.assertIn("STAGE:DEFER", result["message"])
+        self.assertIn("Brief is deferred", result["message"])
+
+    def test_telegram_target_configuration(self):
+        """Verify telegram target can be customized via env var or constructor."""
+        # Constructor override
+        custom_watcher = BriefWatcher(
+            briefs_dir=self.briefs_dir,
+            evidence_dir=self.evidence_dir,
+            telegram_target="telegram:custom_chat_999"
+        )
+        self.assertEqual(custom_watcher.telegram_target, "telegram:custom_chat_999")
+
+        # Env var override
+        os.environ["APEX_TELEGRAM_TARGET"] = "telegram:env_chat_123"
+        try:
+            env_watcher = BriefWatcher(
+                briefs_dir=self.briefs_dir,
+                evidence_dir=self.evidence_dir
+            )
+            self.assertEqual(env_watcher.telegram_target, "telegram:env_chat_123")
+        finally:
+            del os.environ["APEX_TELEGRAM_TARGET"]
+
 
 if __name__ == "__main__":
     unittest.main()
+
