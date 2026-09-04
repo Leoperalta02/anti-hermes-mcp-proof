@@ -244,10 +244,93 @@ class AuraInboxSentinel:
 
     # ── Autonomous Heartbeat Daemon ───────────────────────────────────────────
 
+    def get_system_memory_gb(self) -> Dict[str, float]:
+        """Get current free and total physical memory in GB."""
+        import subprocess
+        cmd = 'powershell -NoProfile -Command "Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize | ConvertTo-Json"'
+        try:
+            out = subprocess.check_output(cmd, shell=True, text=True).strip()
+            data = json.loads(out)
+            free_gb = round(data["FreePhysicalMemory"] / (1024 * 1024), 2)
+            total_gb = round(data["TotalVisibleMemorySize"] / (1024 * 1024), 2)
+            return {"free_gb": free_gb, "total_gb": total_gb}
+        except Exception:
+            return {"free_gb": 0.0, "total_gb": 0.0}
+
+    def reap_stale_processes(self) -> int:
+        """Scan and terminate zombie/orphaned test servers, stale headless browsers, and dead runners."""
+        import subprocess
+        ps_script = r'''
+        $protectedPids = @(37056, 4284, 7756, $PID)
+        $reaped = 0
+        
+        # 1. Orphaned python test servers & legacy runners
+        $stalePy = Get-CimInstance Win32_Process -Filter "Name = 'python.exe'" | Where-Object {
+            ($_.CommandLine -like "*http.server*" -or
+             $_.CommandLine -like "*legacy_archive\server.py*" -or
+             $_.CommandLine -like "*hermes_sandbox_server.py*") -and
+            $protectedPids -notcontains $_.ProcessId
+        }
+        foreach ($p in $stalePy) {
+            try { Stop-Process -Id $p.ProcessId -Force; $reaped++ } catch {}
+        }
+        
+        # 2. Orphaned headless Chrome browser subagent instances
+        $staleChrome = Get-CimInstance Win32_Process -Filter "Name = 'chrome.exe'" | Where-Object {
+            $_.CommandLine -like "*--remote-debugging-port=9222*" -and
+            $_.CommandLine -like "*--user-data-dir=C:\Users\leope\.gemini*"
+        }
+        foreach ($c in $staleChrome) {
+            try { Stop-Process -Id $c.ProcessId -Force; $reaped++ } catch {}
+        }
+        
+        # 3. Orphaned node devtools/playwright runners
+        $staleNode = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" | Where-Object {
+            ($_.CommandLine -like "*chrome-devtools*" -or
+             $_.CommandLine -like "*ms-playwright-go*")
+        }
+        foreach ($n in $staleNode) {
+            try { Stop-Process -Id $n.ProcessId -Force; $reaped++ } catch {}
+        }
+        
+        Write-Output $reaped
+        '''
+        try:
+            out = subprocess.check_output(["powershell", "-NoProfile", "-Command", ps_script], text=True).strip()
+            reaped_count = int(out) if out.isdigit() else 0
+            print(f"[Aura Memory Reaper] Safely terminated {reaped_count} stale/orphaned processes.")
+            return reaped_count
+        except Exception as e:
+            print(f"[Aura Memory Reaper Error] {e}")
+            return 0
+
+    def clean_hq_temp_files(self) -> int:
+        """Clean orphaned crash dumps and temporary files from Windows Temp directory."""
+        import tempfile
+        import time
+        temp_dir = Path(tempfile.gettempdir())
+        cleaned_count = 0
+        cutoff = time.time() - (86400 * 2)  # 2 days old
+        
+        try:
+            for item in temp_dir.glob("*.tmp"):
+                try:
+                    if item.is_file() and item.stat().st_mtime < cutoff:
+                        item.unlink(missing_ok=True)
+                        cleaned_count += 1
+                except Exception:
+                    continue
+        except Exception as e:
+            print(f"[Aura Temp Cleaner Error] {e}")
+            
+        print(f"[Aura Temp Cleaner] Purged {cleaned_count} stale temporary files from {temp_dir}.")
+        return cleaned_count
+
     def run_heartbeat_cycle(self) -> Dict[str, Any]:
         """Execute one complete heartbeat maintenance cycle."""
         timestamp = datetime.now(timezone.utc).isoformat()
-        print(f"\n[Aura Heartbeat] Cycle start: {timestamp}")
+        mem_before = self.get_system_memory_gb()
+        print(f"\n[Aura Heartbeat] Cycle start: {timestamp} (Free RAM: {mem_before.get('free_gb')} GB / {mem_before.get('total_gb')} GB)")
         
         # 1. Drive check
         drive_ready = ATTACHMENTS_DIR.exists()
@@ -270,12 +353,24 @@ class AuraInboxSentinel:
         # 3. Clean promotional blast emails
         clean_res = self.clean_promotions_batch(max_batch=30)
 
+        # 4. Reap stale processes on HQ to reclaim RAM
+        reaped = self.reap_stale_processes()
+
+        # 5. Purge stale temp files
+        temp_cleaned = self.clean_hq_temp_files()
+
+        mem_after = self.get_system_memory_gb()
+        print(f"[Aura Heartbeat] Memory after reap: Free RAM {mem_after.get('free_gb')} GB / {mem_after.get('total_gb')} GB")
+
         result = {
             "timestamp": timestamp,
             "drive_ready": drive_ready,
             "attachments_offloaded": len(offloaded_files),
             "promotions_trashed": clean_res.get("trashed_count", 0),
             "unsub_detected": len(clean_res.get("unsubscribe_records", [])),
+            "processes_reaped": reaped,
+            "temp_files_cleaned": temp_cleaned,
+            "free_ram_gb": mem_after.get("free_gb"),
         }
         print(f"[Aura Heartbeat] Cycle finished: {result}")
         
@@ -283,7 +378,7 @@ class AuraInboxSentinel:
         log_path = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof\evidence\aura_heartbeat.log")
         log_path.parent.mkdir(parents=True, exist_ok=True)
         with open(log_path, "a", encoding="utf-8") as lf:
-            lf.write(f"{timestamp} [HEARTBEAT] offloaded={len(offloaded_files)} trashed={clean_res.get('trashed_count', 0)} unsub={len(clean_res.get('unsubscribe_records', []))}\n")
+            lf.write(f"{timestamp} [HEARTBEAT] offloaded={len(offloaded_files)} trashed={clean_res.get('trashed_count', 0)} reaped_procs={reaped} free_ram={mem_after.get('free_gb')}GB\n")
 
         return result
 
