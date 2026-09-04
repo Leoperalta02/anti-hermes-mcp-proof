@@ -166,4 +166,9 @@ python apex_core/fast_site_builder.py
    - Seeded canonical template under `tenants/skeleton/` and provisioned isolated Rosie Rivera tenant skeleton under `tenants/rosie/` with `TENANT_MANIFEST.json`, `SOUL.md`, and specialist draft directories (`harbor/`, `keystone/`, `quill/`).
    - Synchronized `real-estate-copilot/SOUL.md` with §8 specialist delegation boundaries and strict §12 false-claims rules.
    - Verified via `tests/test_tenant_skeleton.py` (6/6 tests pass) and full Alienware test suite (55/55 tests pass).
-7. [ ] **Hermes Internal Delegation Sandbox Channel (W5)**: Configure isolated internal delegation sandbox channel for multi-agent dry-run execution (§8 & §9 SOP).
+7. [x] **Hermes Internal Delegation Sandbox Channel (W5)**:
+   - Established `sandbox/delegation-sandbox/DELEGATION_SANDBOX_SPEC.md` specifying `#rosie-onboarding-sandbox` and `#wellington-canary` as approved internal delegation sandbox channels.
+   - Built `apex_core/delegation_sandbox.py` dispatcher with fail-closed channel boundaries (hard blocks `#Alienware-hq`, `#panel-advisors`, and client production channels).
+   - Enforces §8 & §12 rules: internal draft outputs only (`DRAFT_PENDING_REALTOR_APPROVAL`), zero external send, and zero false claims across all specialist dispatches (Harbor, Keystone, Quill, Rosie).
+   - Automated multi-agent dry-run orchestration (§9 SOP) verified via `tests/test_delegation_sandbox.py` (9/9 tests pass) and full Alienware test suite (64/64 tests pass).
+   - **All 5 Wiring Tasks (W1, W2, W3, W4, W5) Complete**: Full Sovereign Realtor OS onboarding stack is staged, wired, and verified.
