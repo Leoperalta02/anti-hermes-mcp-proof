@@ -987,5 +987,323 @@
 
     updateValuation();
   </script>
+
+  <!-- Floating Glass AI Concierge Widget (Stripe x Apple) -->
+  <style>
+    .concierge-launcher {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 850;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: rgba(14, 14, 18, 0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(229, 200, 144, 0.35);
+      padding: 0.6rem 1.25rem 0.6rem 0.65rem;
+      border-radius: var(--pill-radius);
+      cursor: pointer;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 18px rgba(229, 200, 144, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .concierge-launcher:hover {
+      transform: translateY(-3px) scale(1.02);
+      border-color: var(--gold-accent);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(229, 200, 144, 0.3);
+    }
+    .concierge-avatar-wrap {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+    .concierge-launcher-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--gold-accent);
+    }
+    .concierge-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: #34d399;
+      border-radius: 50%;
+      border: 2px solid #000;
+      box-shadow: 0 0 8px #34d399;
+    }
+    .concierge-launcher-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .concierge-launcher-sub {
+      font-size: 0.72rem;
+      color: var(--gold-accent);
+      letter-spacing: 0.02em;
+    }
+
+    /* Concierge Chat Window */
+    .concierge-window {
+      position: fixed;
+      bottom: 5.5rem;
+      right: 2rem;
+      width: 380px;
+      max-width: calc(100vw - 2.5rem);
+      height: 540px;
+      max-height: calc(100vh - 7rem);
+      background: rgba(12, 12, 16, 0.94);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 200, 144, 0.1);
+      z-index: 860;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .concierge-window.is-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .concierge-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .concierge-header-agent {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .concierge-header-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--gold-accent);
+    }
+    .concierge-header-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .concierge-header-sub {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+    .concierge-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      transition: color 0.2s ease;
+    }
+    .concierge-close-btn:hover {
+      color: #fff;
+    }
+    .concierge-body {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .concierge-bubble {
+      max-width: 86%;
+      padding: 0.85rem 1.05rem;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .concierge-agent-bubble {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--hairline);
+      color: var(--text-primary);
+      align-self: flex-start;
+    }
+    .concierge-user-bubble {
+      background: var(--gold-accent);
+      color: #000;
+      font-weight: 500;
+      align-self: flex-end;
+    }
+    .concierge-chips {
+      display: flex;
+      gap: 0.4rem;
+      padding: 0 1.25rem 0.65rem 1.25rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .concierge-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .concierge-chip {
+      white-space: nowrap;
+      font-size: 0.72rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.7rem;
+      border-radius: var(--pill-radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .concierge-chip:hover {
+      color: #fff;
+      border-color: var(--gold-accent);
+      background: rgba(229, 200, 144, 0.1);
+    }
+    .concierge-footer {
+      padding: 0.85rem 1.25rem;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.01);
+    }
+    .concierge-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 0.65rem 0.9rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .concierge-input:focus {
+      border-color: var(--gold-accent);
+    }
+    .concierge-send-btn {
+      background: var(--text-primary);
+      color: #000;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+    }
+    .concierge-send-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+
+  <!-- Floating Concierge Elements -->
+  <div class="concierge-launcher" id="concierge-launcher" onclick="toggleConcierge()">
+    <div class="concierge-avatar-wrap">
+      <img src="assets/headshot.png" alt="Rosie Rivera" class="concierge-launcher-img" onerror="this.src='../../assets/clients/sofia_headshot.png'">
+      <span class="concierge-online-dot"></span>
+    </div>
+    <div class="concierge-launcher-info">
+      <div class="concierge-launcher-title">✨ Rosie Rivera's Digital Desk</div>
+      <div class="concierge-launcher-sub">Online • 24/7 Sovereign Concierge</div>
+    </div>
+  </div>
+
+  <div class="concierge-window" id="concierge-window">
+    <div class="concierge-header">
+      <div class="concierge-header-agent">
+        <img src="assets/headshot.png" alt="Rosie Rivera" class="concierge-header-img" onerror="this.src='../../assets/clients/sofia_headshot.png'">
+        <div>
+          <div class="concierge-header-name">Rosie Rivera Digital Desk</div>
+          <div class="concierge-header-sub">Keystone MLS & Appraisal Engine</div>
+        </div>
+      </div>
+      <button class="concierge-close-btn" onclick="toggleConcierge()">✕</button>
+    </div>
+
+    <div class="concierge-body" id="concierge-body">
+      <div class="concierge-bubble concierge-agent-bubble">
+        Hello! I am Rosie Rivera's Sovereign AI Concierge. I have live access to Southwest Florida MLS comps, Lee County tax records, and valuation models across Estero and Naples.<br><br>
+        How may I assist your acquisition or listing strategy today?
+      </div>
+    </div>
+
+    <div class="concierge-chips">
+      <button class="concierge-chip" onclick="askConcierge('📐 Estero $/sqft Rates')">📐 Estero $/sqft Rates</button>
+      <button class="concierge-chip" onclick="askConcierge('🏡 Bella Terra Valuation')">🏡 Bella Terra Valuation</button>
+      <button class="concierge-chip" onclick="askConcierge('🌊 Flood Zone AE vs X')">🌊 Flood Zone AE vs X</button>
+      <button class="concierge-chip" onclick="askConcierge('📅 Book Private Showing')">📅 Book Private Showing</button>
+    </div>
+
+    <form class="concierge-footer" onsubmit="sendConciergeMsg(event)">
+      <input type="text" class="concierge-input" id="concierge-input" placeholder="Ask about comps, valuations, or private tours..." autocomplete="off">
+      <button type="submit" class="concierge-send-btn">↑</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleConcierge() {
+      const win = document.getElementById('concierge-window');
+      win.classList.toggle('is-open');
+      if (win.classList.contains('is-open')) {
+        document.getElementById('concierge-input').focus();
+      }
+    }
+
+    function askConcierge(query) {
+      const body = document.getElementById('concierge-body');
+      
+      const userBubble = document.createElement('div');
+      userBubble.className = 'concierge-bubble concierge-user-bubble';
+      userBubble.innerText = query;
+      body.appendChild(userBubble);
+      body.scrollTop = body.scrollHeight;
+
+      setTimeout(() => {
+        const agentBubble = document.createElement('div');
+        agentBubble.className = 'concierge-bubble concierge-agent-bubble';
+
+        const q = query.toLowerCase();
+        if (q.includes('rate') || q.includes('sqft') || q.includes('estero')) {
+          agentBubble.innerHTML = '<strong>Keystone Micro-Comp Benchmark:</strong><br>• Estero Core Corridor: <strong>$310 – $340 / sq.ft</strong><br>• West Bay / Gated Luxury: <strong>$480 – $550 / sq.ft</strong><br>• Naples High-Luxury: <strong>$780 – $1,200+ / sq.ft</strong><br><br>Properties with post-Ian metal/tile roofs currently command an immediate 6–8% insurance underwriting discount.';
+        } else if (q.includes('bella terra') || q.includes('valuation')) {
+          agentBubble.innerHTML = '<strong>Keystone Property Quadrant:</strong><br>• Target: <strong>21450 Bella Terra Blvd</strong><br>• Keystone Appraisal: <strong>$848,800</strong><br>• Zillow Zestimate: $562,400<br>• Alpha Spread: <strong>+$286,400</strong><br><br>Zillow fails to factor in the permitted 2023 tile roof and custom heated pool. Rosie Rivera can present this exact appraisal to your buyer.';
+        } else if (q.includes('flood') || q.includes('ae') || q.includes('zone')) {
+          agentBubble.innerHTML = '<strong>FEMA Flood Zone Advisory:</strong><br>• <strong>Zone X:</strong> Minimal flood hazard; 0 mandatory flood insurance required.<br>• <strong>Zone AE:</strong> Base flood elevation required. Can add $3,200–$5,500/yr in insurance if unmitigated.<br><br>Rosie Rivera verifies all elevation certificates through Lee County GIS prior to contract execution.';
+        } else if (q.includes('showing') || q.includes('tour') || q.includes('book')) {
+          agentBubble.innerHTML = 'I would be delighted to arrange an exclusive private showing with Rosie Rivera.<br><br>Please enter your cell number or email below, or submit our Direct Principal Brief on this page, and Rosie Rivera will reach out to confirm your itinerary.';
+        } else {
+          agentBubble.innerHTML = 'Thank you for your inquiry regarding Southwest Florida luxury realty. I have forwarded this brief to Rosie Rivera\'s private workforce desk. Feel free to submit an official dossier request or call <strong>239-555-0144</strong> directly.';
+        }
+
+        body.appendChild(agentBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 400);
+    }
+
+    function sendConciergeMsg(e) {
+      e.preventDefault();
+      const input = document.getElementById('concierge-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      askConcierge(text);
+    }
+  </script>
 </body>
 </html>
