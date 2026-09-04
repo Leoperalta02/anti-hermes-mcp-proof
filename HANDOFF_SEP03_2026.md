@@ -20,6 +20,7 @@
 ## 2. Model Baseline Matrix & Fallback Hierarchy
 
 ### Default Local Primary (Zero Cost)
+
 - **Primary:** `qwen2.5:7b` (Ollama local, 32k context, fast low latency)
 - **Alternatives Tested & Verified Healthy:**
   - `qwen3.5:9b` (Ollama local, 262k context, vision + tools)
@@ -27,6 +28,7 @@
   - `qwen3.8:latest` (27B Q4, 262k context, heavy local reasoning)
 
 ### Tiered Fallback Cascade in `config.yaml` (Least Expensive / Lowest Latency First)
+
 1. **Tier 1 (Ultra-Low Cost & Fast):** `gemini` → `gemini-flash-lite-latest`
 2. **Tier 2 (Standard High-Speed Cloud):** `gemini` → `gemini-3.6-flash`
 3. **Tier 3 (Subscription Coding/Mini):** `openai-codex` → `gpt-5.4-mini`
@@ -57,4 +59,3 @@
 1. Anti is connected via ACP MCP (`anti-hermes-mcp-proof` + `hermes-sandbox-adapter`).
 2. Do not touch Buzz or remove HOLD on `#Alienware-hq`.
 3. If Hermes UI shows high latency or stalled turns, check whether `cursor-agent-api-proxy` is listening on `127.0.0.1:4646`.
-
