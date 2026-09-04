@@ -1,7 +1,7 @@
 # Hermes Agent Operational Status
 
-**Last Updated:** September 3, 2026 - 7:28 PM EDT  
-**Status:** Operational (Supervised Service Daemon PID 17320)  
+**Last Updated:** September 3, 2026 - 8:20 PM EDT  
+**Status:** Operational (Detached Gateway Daemon PID 37056 + Lease Guardian Watchdog PID 32880)  
 **Hold State:** STRICT HOLD on `#Alienware-hq` (Maintained)  
 
 ---
@@ -10,7 +10,8 @@
 
 | Agent / Component | Runtime & Model Route | Role & Status |
 |---|---|---|
-| **Hermes Gateway** | Python 3.11 venv (`hermes-state`) | Daemon PID 17320, Telegram sticky IPv4 polling (`149.154.166.110`), Web Dashboard (`http://127.0.0.1:9119`) |
+| **Hermes Gateway** | Python 3.11 venv (`hermes-state`) | Daemon PID 37056, Telegram sticky IPv4 polling (`149.154.166.110`), Web Dashboard (`http://127.0.0.1:9119`) |
+| **Lease Guardian** | `apex_core/lease_guardian.py` (PID 32880) | 60s Watchdog: auto-purges expired leases, restarts Gateway via WMI if dropped |
 | **Cursor Bridge** | Node Daemon (`cursor-agent-api-proxy`, port 4646) | Profile `cursor`: `gpt-5.3-codex-low-fast` via local proxy (~1s response time) |
 | **Aura (Sentinel)** | Local Ollama `qwen3.5:9b` (262k ctx, 100% offline) | HQ Sentinel & Multi-Drive Facility Organizer (`C:\`, `D:\`, `G:\`) |
 | **Anti (CoS)** | Antigravity Native / Gemini Pro | Infrastructure Execution, Process Lifecycle, DB Integrity |
@@ -22,13 +23,14 @@
 
 1. **Gateway Process Lifecycle:**
    - Terminated ephemeral child processes killed by Windows Job Objects on shell closure.
-   - Installed persistent Windows Login Item (`Hermes_Gateway.vbs`) and launched supervised background daemon task.
-   - Verified single instance (`hermes gateway status` confirms single running PID: `17320`).
+   - Detached gateway from Job Objects via WMI process spawn (`PID 37056`).
+   - Installed persistent Windows Login Item (`Hermes_Gateway.vbs`).
+   - Verified single instance (`hermes gateway status` confirms single running PID: `37056`).
 
 2. **SQLite Database Contention (`state.db`):**
-   - Cleaned up 23 stale turn leases in `session_turn_leases` (`scratch/purge_stale_leases.py`).
-   - Created pre-surgery backup: `C:\LEO-LAB-ANTIGRAVITY\hermes-state\state.db.bak-20260903`.
-   - Enforced single-writer rule to prevent WAL lock contention.
+   - Cleaned up stale turn leases in `session_turn_leases`.
+   - Deployed automated Lease Guardian daemon (`apex_core/lease_guardian.py`, PID 32880) running 60s cycle.
+   - Enforced single-writer rule with immediate connection termination to prevent WAL lock contention.
 
 3. **`managed_agent_tool.py` Kwargs Merge:**
    - Patched `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`.
@@ -36,9 +38,10 @@
    - Restored fail-closed separate validations for empty `target_agent` vs `content`.
    - Verified panel advisor security barriers intact.
 
-4. **Cursor Flashing CMD Elimination:**
-   - Added `-WindowStyle Hidden` and `windowsHide: true` to cursor-agent wrappers.
-   - Zero console flash interruptions on Windows desktop.
+4. **Desktop Electron Path Validation:**
+   - Verified `allowUnsafeCustomBinary: true` in `git-review-ops.ts` (line 59) preventing space-in-path unhandled exceptions.
+   - Hermes desktop running cleanly without GUI crash.
 
 5. **Test Suite Verification:**
-   - `python -m unittest discover -s tests` → **25/25 PASS** (0 failures, 0 errors).
+   - `python -m unittest discover -s tests` → **27/27 PASS** (0 failures, 0 errors).
+
