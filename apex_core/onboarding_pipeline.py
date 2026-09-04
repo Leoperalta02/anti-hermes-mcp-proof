@@ -19,6 +19,8 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from apex_core.tenant_manager import tenant_manager, Tenant
 from apex_core.fast_site_builder import fast_builder
 from apex_core.property_data_adapter import property_adapter
+from apex_core.provision_gate import assert_provision_allowed
+from apex_core.telegram_dispatch import dispatch_telegram_alert
 
 BUSINESS_SCOPE_DIR = r"C:\LEO-LAB-ANTIGRAVITY\business-scope"
 BRIEFS_DIR = os.path.join(BUSINESS_SCOPE_DIR, "onboarding-briefs")
@@ -33,6 +35,8 @@ class RealtorOnboardingPipeline:
 
     def run_onboarding(self, client_data: Dict[str, Any]) -> Dict[str, Any]:
         start_time = time.time()
+        leo_decision = client_data.get("leo_decision")
+        provision_gate = assert_provision_allowed(leo_decision)
         name = client_data.get("full_name", "Rosie Rivera")
         slug = client_data.get("subdomain_slug", "rosie")
         email = client_data.get("email", "rosie@rosieriveraluxury.com")
@@ -241,9 +245,12 @@ Warm regards,
         # 8. HERMES: EXECUTIVE TELEGRAM ALERT (For Leo Peralta)
         # ----------------------------------------------------
         hermes_alert = {
-            "channel": "telegram:8349762599",
+            "channel": os.getenv("APEX_TELEGRAM_TARGET", "telegram:8349762599"),
+            "brief_id": f"onboarding-{slug}",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "event": "NEW_REALTOR_ONBOARDED_AND_DEPLOYED",
+            "classification": f"GATE:{provision_gate['gate_mode']}",
+            "claims": provision_gate["claims"],
             "message": (
                 f"🚀 [APEX ONBOARDING SUCCESS]\n\n"
                 f"👤 Realtor: {name}\n"
@@ -252,14 +259,20 @@ Warm regards,
                 f"💳 Payment: $499/mo PAID ({receipt_no})\n\n"
                 f"🌐 Front Door: public_sites/{slug}/index.html\n"
                 f"🔐 Back Door: public_sites/{slug}/portal.html\n"
-                f"📨 Welcome Dispatch: Delivered to {email}\n\n"
-                f"Specialist Fleet (Harbor, Keystone, Quill) is active and awaiting her first signoff."
-            )
+                f"📨 Welcome Dispatch: Staged for {email}\n\n"
+                f"🛡️ Posture (§12): STAGED ONLY — specialist drafts await signoff.\n"
+                f"Gate: {provision_gate['gate_mode']}"
+            ),
         }
+        dispatch_result = dispatch_telegram_alert(
+            hermes_alert,
+            evidence_dir=os.path.join(EVIDENCE_DIR),
+        )
+        hermes_alert["dispatch"] = dispatch_result
         alert_file = os.path.join(EVIDENCE_DIR, "onboarding_alert.json")
         with open(alert_file, "w", encoding="utf-8") as f:
             json.dump(hermes_alert, f, indent=2)
-        print(f"📲 [8. Hermes Supervisor] Staged Telegram Dispatch for Leo Peralta")
+        print(f"📲 [8. Hermes Supervisor] Staged Telegram Dispatch for Leo Peralta ({dispatch_result['dispatch_status']})")
 
         elapsed = time.time() - start_time
         print(f"\n========================================================")
@@ -274,7 +287,9 @@ Warm regards,
             "front_door_url": front_door_file,
             "portal_url": portal_file,
             "welcome_instructions": welcome_email_md,
-            "telegram_alert": hermes_alert["message"]
+            "telegram_alert": hermes_alert["message"],
+            "provision_gate": provision_gate,
+            "dispatch": dispatch_result,
         }
 
 onboarding_pipeline = RealtorOnboardingPipeline()
@@ -289,6 +304,7 @@ if __name__ == "__main__":
         "market": "Estero & Naples, FL",
         "package_tier": "pro_realty",
         "monthly_price": 499,
-        "headshot_path": r"landing_page\assets\Rosie.png"
+        "headshot_path": r"landing_page\assets\Rosie.png",
+        "leo_decision": "APPROVE PROVISION DRYRUN",
     }
     result = onboarding_pipeline.run_onboarding(test_client)

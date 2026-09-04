@@ -99,3 +99,21 @@ Audit synchronized and approved by Anti IDE.
 
 Audit synchronized and approved by Anti IDE.
 
+---
+
+## Cursor Implementation — Commit `531e58f` (pending Anti audit)
+
+**Gated Telegram Dispatch (W2 live path)**
+- `apex_core/telegram_dispatch.py` — stages alerts to `evidence/telegram_dispatch_latest.json`; live send only when `APEX_TELEGRAM_LIVE=1` + `APEX_TELEGRAM_BOT_TOKEN`
+- Wired into `apex_core/brief_watcher.py` after alert staging
+- Tests: `tests/test_telegram_dispatch.py` — 6/6 PASS
+
+## Cursor Implementation — provision gate + onboarding dispatch (pending commit)
+
+**Leo Provision Gate (SOP §6.5)**
+- `apex_core/provision_gate.py` — fail-closed gate: DRYRUN allowed on `APPROVE PROVISION DRYRUN`; live requires `APPROVE PROVISION` + `APEX_A4_WATCH_COMPLETE=1`
+- `apex_core/onboarding_pipeline.py` — requires `leo_decision` in payload; Hermes alert routed through `telegram_dispatch`
+- Tests: `tests/test_provision_gate.py` — 7/7 PASS; onboarding pipeline updated for gate + dispatch
+
+**Deferred to Anti:** Realtor mobile PWA / portal nav fix at ≤680px (Leo directive Sep 04).
+

@@ -18,7 +18,8 @@ class TestOnboardingPipeline(unittest.TestCase):
             "brokerage": "Rosie Rivera Luxury Real Estate",
             "market": "Estero & Naples, FL",
             "package_tier": "pro_realty",
-            "monthly_price": 499
+            "monthly_price": 499,
+            "leo_decision": "APPROVE PROVISION DRYRUN",
         }
 
         result = onboarding_pipeline.run_onboarding(client_payload)
@@ -29,6 +30,9 @@ class TestOnboardingPipeline(unittest.TestCase):
         self.assertTrue(os.path.exists(result["portal_url"]))
         self.assertIn("Welcome to Your Private AI Office", result["welcome_instructions"])
         self.assertIn("APEX ONBOARDING SUCCESS", result["telegram_alert"])
+        self.assertTrue(result["provision_gate"]["provision_allowed"])
+        self.assertEqual(result["provision_gate"]["gate_mode"], "DRYRUN")
+        self.assertEqual(result["dispatch"]["dispatch_status"], "STAGED_ONLY")
 
 if __name__ == "__main__":
     unittest.main()
