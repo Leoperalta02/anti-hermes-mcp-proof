@@ -2,8 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Priscilla Vance • Sovereign Realtor OS</title>
+  
+  <!-- PWA & Apple iOS Standalone Mobile App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Priscilla OS">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Priscilla OS">
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -140,6 +153,75 @@
     }
     .nav-drawer-tabs .nav-tab.active {
       background: rgba(229,200,144,0.12); border-color: var(--hairline-gold); color: var(--gold-accent);
+    }
+
+    /* ── APPLE PWA INSTALL HELPER BANNER ── */
+    .pwa-banner {
+      display: none;
+      background: rgba(18, 18, 24, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--hairline-gold);
+      padding: 0.75rem 1.25rem;
+      position: relative;
+      z-index: 190;
+      animation: pwaSlideDown 0.35s ease;
+    }
+    @keyframes pwaSlideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .pwa-banner-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .pwa-banner-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e1e28, #0a0a0d);
+      border: 1.5px solid var(--gold-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--gold-accent);
+      box-shadow: 0 4px 14px rgba(229, 200, 144, 0.25);
+      flex-shrink: 0;
+    }
+    .pwa-banner-text {
+      flex: 1;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+    .pwa-banner-title {
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.88rem;
+    }
+    .pwa-banner-desc {
+      color: var(--text-secondary);
+      font-size: 0.76rem;
+      margin-top: 0.15rem;
+    }
+    .pwa-banner-close {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--pill);
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+    .pwa-banner-close:hover {
+      color: #fff;
+      border-color: var(--text-primary);
     }
 
     /* ── LAYOUT SHELL ── */
@@ -767,6 +849,20 @@
       <button class="nav-tab" onclick="switchPanelMobile('transactions', this)">Transactions</button>
     </div>
   </aside>
+
+  <!-- Apple iOS / Android PWA Install Helper Banner -->
+  <div id="pwa-install-banner" class="pwa-banner">
+    <div class="pwa-banner-inner">
+      <div class="pwa-banner-icon">
+        <span>PV</span>
+      </div>
+      <div class="pwa-banner-text">
+        <div class="pwa-banner-title">Install Priscilla OS on Your Phone</div>
+        <div class="pwa-banner-desc">Tap <strong>Share</strong> ⎋ then <strong>"Add to Home Screen"</strong> ⊞ for one-tap full-screen app access.</div>
+      </div>
+      <button type="button" class="pwa-banner-close" onclick="dismissPwaBanner()" aria-label="Dismiss banner">✕</button>
+    </div>
+  </div>
 
   <div class="os-shell">
 
@@ -1564,6 +1660,24 @@
       switchPanel(name, btn);
     }
 
+    // ── PWA INSTALL BANNER ──
+    function checkPwaInstallState() {
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      let dismissed = false;
+      try { dismissed = localStorage.getItem('pwa_banner_dismissed_' + TENANT_SLUG) === 'true'; } catch(e) {}
+      const isMobile = window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner && isMobile && !isStandalone && !dismissed) {
+        banner.style.display = 'block';
+      }
+    }
+
+    function dismissPwaBanner() {
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+      try { localStorage.setItem('pwa_banner_dismissed_' + TENANT_SLUG, 'true'); } catch(e) {}
+    }
+
     // ── PIPE SWITCHER ──
     function switchPipe(name, btn) {
       document.querySelectorAll('.pipe-tab').forEach(t => t.classList.remove('active'));
@@ -2289,6 +2403,7 @@
     loadScript('fsbo', null);
     loadInboundLeads();
     renderListingIntakeQueue();
+    checkPwaInstallState();
     if (window.location.hash === '#listings') {
       const listingsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => (t.getAttribute('onclick') || '').includes("'listings'"));
       switchPanel('listings', listingsTab || null);

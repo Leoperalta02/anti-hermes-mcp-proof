@@ -2471,6 +2471,103 @@ class FastSiteBuilder:
 </body>
 </html>"""
 
+    def _generate_manifest_json(self, tenant: Tenant) -> str:
+        first_name = tenant.name.split()[0] if tenant.name else "Realtor"
+        manifest = {
+            "name": f"{tenant.name} • Sovereign Realtor OS",
+            "short_name": f"{first_name} OS",
+            "description": f"Private Sovereign Realtor Operating System for {tenant.name} — Real-time CRM, Leads, Keystone CMA, and Listing Management.",
+            "start_url": "portal.html",
+            "display": "standalone",
+            "background_color": "#000000",
+            "theme_color": "#000000",
+            "orientation": "portrait-primary",
+            "scope": "./",
+            "icons": [
+                {
+                    "src": "icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "icon-512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "icon.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        }
+        return json.dumps(manifest, indent=2)
+
+    def _generate_icon_svg(self, tenant: Tenant) -> str:
+        initials = "".join([part[0] for part in tenant.name.split() if part][:2]).upper() if tenant.name else "OS"
+        return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181822"/>
+      <stop offset="50%" stop-color="#0a0a0d"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf0cd"/>
+      <stop offset="50%" stop-color="#e5c890"/>
+      <stop offset="100%" stop-color="#b38a42"/>
+    </linearGradient>
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#e5c890" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bgGrad)" stroke="url(#goldGrad)" stroke-width="6"/>
+  <circle cx="256" cy="235" r="145" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-opacity="0.35" stroke-dasharray="6 6"/>
+  <text x="256" y="275" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" font-size="128" font-weight="700" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="4" filter="url(#goldGlow)">{initials}</text>
+  <rect x="186" y="340" width="140" height="36" rx="18" fill="url(#goldGrad)"/>
+  <text x="256" y="364" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" font-size="16" font-weight="800" fill="#000000" text-anchor="middle" letter-spacing="3">SOVEREIGN</text>
+</svg>'''
+
+    def _generate_png_icon(self, size: int) -> bytes:
+        import zlib, struct
+        w, h = size, size
+        raw_rows = []
+        r_c, g_c, b_c = (229, 200, 144)
+        r_bg, g_bg, b_bg = (10, 10, 13)
+        center = size // 2
+        radius = int(size * 0.44)
+        inner_r = int(size * 0.40)
+        for y in range(h):
+            row = bytearray(1 + w * 3)
+            row[0] = 0
+            for x in range(w):
+                dx = x - center
+                dy = y - center
+                dist_sq = dx * dx + dy * dy
+                idx = 1 + x * 3
+                if dist_sq <= radius * radius and dist_sq >= inner_r * inner_r:
+                    row[idx] = r_c
+                    row[idx+1] = g_c
+                    row[idx+2] = b_c
+                elif dist_sq < inner_r * inner_r:
+                    row[idx] = 24
+                    row[idx+1] = 22
+                    row[idx+2] = 18
+                else:
+                    row[idx] = r_bg
+                    row[idx+1] = g_bg
+                    row[idx+2] = b_bg
+            raw_rows.append(bytes(row))
+        raw_data = b"".join(raw_rows)
+        def chunk(tag, data):
+            return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', zlib.crc32(tag + data) & 0xffffffff)
+        ihdr = chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0))
+        idat = chunk(b'IDAT', zlib.compress(raw_data))
+        iend = chunk(b'IEND', b'')
+        return b'\x89PNG\r\n\x1a\n' + ihdr + idat + iend
+
     def build_portal(self, tenant: Tenant) -> str:
         site_folder = os.path.join(self.output_dir, tenant.subdomain_slug)
         os.makedirs(site_folder, exist_ok=True)
@@ -2478,6 +2575,18 @@ class FastSiteBuilder:
         html = self._generate_portal_html(tenant)
         with open(portal_file, "w", encoding="utf-8") as f:
             f.write(html)
+        manifest_file = os.path.join(site_folder, "manifest.json")
+        with open(manifest_file, "w", encoding="utf-8") as f:
+            f.write(self._generate_manifest_json(tenant))
+        svg_icon_file = os.path.join(site_folder, "icon.svg")
+        with open(svg_icon_file, "w", encoding="utf-8") as f:
+            f.write(self._generate_icon_svg(tenant))
+        png192_file = os.path.join(site_folder, "icon-192.png")
+        with open(png192_file, "wb") as f:
+            f.write(self._generate_png_icon(192))
+        png512_file = os.path.join(site_folder, "icon-512.png")
+        with open(png512_file, "wb") as f:
+            f.write(self._generate_png_icon(512))
         return portal_file
 
     def _generate_portal_html(self, t: Tenant) -> str:
@@ -2492,14 +2601,29 @@ class FastSiteBuilder:
         playbook_menu_markup = "\n".join(buttons_html)
         first_script_key = next(iter(playbook.keys()), "fsbo")
         playbook_json_str = json.dumps(playbook)
+        first_name = t.name.split()[0] if t.name else "Realtor"
+        initials = "".join([part[0] for part in t.name.split() if part][:2]).upper() if t.name else "OS"
         intake_queue = self.load_intake_queue(t.subdomain_slug)
         intake_queue_json = json.dumps(intake_queue)
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>{t.name} • Sovereign Realtor OS</title>
+  
+  <!-- PWA & Apple iOS Standalone Mobile App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="{first_name} OS">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="{first_name} OS">
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -2636,6 +2760,75 @@ class FastSiteBuilder:
     }}
     .nav-drawer-tabs .nav-tab.active {{
       background: rgba(229,200,144,0.12); border-color: var(--hairline-gold); color: var(--gold-accent);
+    }}
+
+    /* ── APPLE PWA INSTALL HELPER BANNER ── */
+    .pwa-banner {{
+      display: none;
+      background: rgba(18, 18, 24, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--hairline-gold);
+      padding: 0.75rem 1.25rem;
+      position: relative;
+      z-index: 190;
+      animation: pwaSlideDown 0.35s ease;
+    }}
+    @keyframes pwaSlideDown {{
+      from {{ transform: translateY(-100%); opacity: 0; }}
+      to {{ transform: translateY(0); opacity: 1; }}
+    }}
+    .pwa-banner-inner {{
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }}
+    .pwa-banner-icon {{
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e1e28, #0a0a0d);
+      border: 1.5px solid var(--gold-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--gold-accent);
+      box-shadow: 0 4px 14px rgba(229, 200, 144, 0.25);
+      flex-shrink: 0;
+    }}
+    .pwa-banner-text {{
+      flex: 1;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }}
+    .pwa-banner-title {{
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.88rem;
+    }}
+    .pwa-banner-desc {{
+      color: var(--text-secondary);
+      font-size: 0.76rem;
+      margin-top: 0.15rem;
+    }}
+    .pwa-banner-close {{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--pill);
+      line-height: 1;
+      transition: all 0.2s ease;
+    }}
+    .pwa-banner-close:hover {{
+      color: #fff;
+      border-color: var(--text-primary);
     }}
 
     /* ── LAYOUT SHELL ── */
@@ -3263,6 +3456,20 @@ class FastSiteBuilder:
       <button class="nav-tab" onclick="switchPanelMobile('transactions', this)">Transactions</button>
     </div>
   </aside>
+
+  <!-- Apple iOS / Android PWA Install Helper Banner -->
+  <div id="pwa-install-banner" class="pwa-banner">
+    <div class="pwa-banner-inner">
+      <div class="pwa-banner-icon">
+        <span>{initials}</span>
+      </div>
+      <div class="pwa-banner-text">
+        <div class="pwa-banner-title">Install {first_name} OS on Your Phone</div>
+        <div class="pwa-banner-desc">Tap <strong>Share</strong> ⎋ then <strong>"Add to Home Screen"</strong> ⊞ for one-tap full-screen app access.</div>
+      </div>
+      <button type="button" class="pwa-banner-close" onclick="dismissPwaBanner()" aria-label="Dismiss banner">✕</button>
+    </div>
+  </div>
 
   <div class="os-shell">
 
@@ -4053,6 +4260,24 @@ class FastSiteBuilder:
       switchPanel(name, btn);
     }}
 
+    // ── PWA INSTALL BANNER ──
+    function checkPwaInstallState() {{
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      let dismissed = false;
+      try {{ dismissed = localStorage.getItem('pwa_banner_dismissed_' + TENANT_SLUG) === 'true'; }} catch(e) {{}}
+      const isMobile = window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner && isMobile && !isStandalone && !dismissed) {{
+        banner.style.display = 'block';
+      }}
+    }}
+
+    function dismissPwaBanner() {{
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+      try {{ localStorage.setItem('pwa_banner_dismissed_' + TENANT_SLUG, 'true'); }} catch(e) {{}}
+    }}
+
     // ── PIPE SWITCHER ──
     function switchPipe(name, btn) {{
       document.querySelectorAll('.pipe-tab').forEach(t => t.classList.remove('active'));
@@ -4778,6 +5003,7 @@ class FastSiteBuilder:
     loadScript('{first_script_key}', null);
     loadInboundLeads();
     renderListingIntakeQueue();
+    checkPwaInstallState();
     if (window.location.hash === '#listings') {{
       const listingsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => (t.getAttribute('onclick') || '').includes("'listings'"));
       switchPanel('listings', listingsTab || null);

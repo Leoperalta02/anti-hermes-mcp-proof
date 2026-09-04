@@ -3,6 +3,7 @@ Automated Test Suite for Sovereign Realtor OS Lead Flow Integration
 Verifies front-door dossier submission wiring and portal CRM/Kanban reactive staging.
 """
 
+import json
 import os
 import sys
 import unittest
@@ -131,6 +132,33 @@ class TestLeadFlowIntegration(unittest.TestCase):
         self.assertIn("Vanderbilt Beachfront Haven", index_html)
         self.assertIn("estateModal", index_html)
         self.assertIn("openEstateModal", index_html)
+
+    def test_realtor_mobile_pwa_standalone_assets(self):
+        """Verify PWA manifest, Apple touch icons, and mobile install banner for phone access."""
+        site_dir = os.path.join(PUBLIC_SITES_DIR, self.rosie.subdomain_slug)
+        manifest_path = os.path.join(site_dir, "manifest.json")
+        icon192_path = os.path.join(site_dir, "icon-192.png")
+        icon512_path = os.path.join(site_dir, "icon-512.png")
+        icon_svg_path = os.path.join(site_dir, "icon.svg")
+        portal_path = os.path.join(site_dir, "portal.html")
+
+        self.assertTrue(os.path.exists(manifest_path), "manifest.json must exist in tenant site folder")
+        self.assertTrue(os.path.exists(icon192_path), "icon-192.png must exist for PWA touch icon")
+        self.assertTrue(os.path.exists(icon512_path), "icon-512.png must exist for splash/store icon")
+        self.assertTrue(os.path.exists(icon_svg_path), "icon.svg must exist for scalable luxury badge")
+
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest_data = json.load(f)
+        self.assertEqual(manifest_data.get("display"), "standalone")
+        self.assertEqual(manifest_data.get("start_url"), "portal.html")
+        self.assertIn("Rosie OS", manifest_data.get("short_name", ""))
+
+        with open(portal_path, "r", encoding="utf-8") as f:
+            portal_html = f.read()
+        self.assertIn("apple-mobile-web-app-capable", portal_html)
+        self.assertIn("black-translucent", portal_html)
+        self.assertIn("pwa-install-banner", portal_html)
+        self.assertIn("checkPwaInstallState", portal_html)
 
 
 if __name__ == "__main__":
