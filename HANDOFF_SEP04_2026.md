@@ -161,4 +161,9 @@ python apex_core/fast_site_builder.py
    - Synchronized prompt block into active Chief of Staff profile: `C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\anti-cos\SOUL.md`.
    - Created `apex_core/cos_triage_evaluator.py` supporting direct brief evaluation, 5-point checklist verification, and staged alert consumption from `evidence/brief_telegram_alert.json` with strict §12 false-claims assertions.
    - Verified via `tests/test_cos_triage_evaluator.py` (8/8 tests pass) and full Alienware test suite (49/49 tests pass).
-6. [ ] **Hermes Tenant Skeleton under `hermes-state/profiles/real-estate-copilot/` (W4)**: Verify directory + SOUL loaded for sovereign realtor co-pilot execution.
+6. [x] **Hermes Tenant Skeleton under `hermes-state/profiles/real-estate-copilot/` (W4)**:
+   - Built `apex_core/tenant_skeleton_manager.py` managing tenant skeletons under `hermes-state/profiles/real-estate-copilot/tenants/`.
+   - Seeded canonical template under `tenants/skeleton/` and provisioned isolated Rosie Rivera tenant skeleton under `tenants/rosie/` with `TENANT_MANIFEST.json`, `SOUL.md`, and specialist draft directories (`harbor/`, `keystone/`, `quill/`).
+   - Synchronized `real-estate-copilot/SOUL.md` with §8 specialist delegation boundaries and strict §12 false-claims rules.
+   - Verified via `tests/test_tenant_skeleton.py` (6/6 tests pass) and full Alienware test suite (55/55 tests pass).
+7. [ ] **Hermes Internal Delegation Sandbox Channel (W5)**: Configure isolated internal delegation sandbox channel for multi-agent dry-run execution (§8 & §9 SOP).
