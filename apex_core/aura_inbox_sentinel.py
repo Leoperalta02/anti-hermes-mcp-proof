@@ -326,6 +326,77 @@ class AuraInboxSentinel:
         print(f"[Aura Temp Cleaner] Purged {cleaned_count} stale temporary files from {temp_dir}.")
         return cleaned_count
 
+    # ── Folder Organization, Clean Labeling & Desktop Hygiene ──────────────────
+
+    def organize_and_label_vault(self) -> Dict[str, int]:
+        """Categorize, rename, and sort all offloaded files on Samsung Drive into labeled, alphabetical folders."""
+        import re
+        import shutil
+
+        categories = {
+            "01_Contracts_and_Agreements": ["contract", "purchase agreement", "offer", "as-is", "closing", "addendum"],
+            "02_Legal_and_Foreclosures": ["foreclosure", "demand", "n.o.i", "legal", "notice", "case numbers"],
+            "03_Insurance_and_Quotes": ["insurance", "indication", "quote", "flood", "coverage", "coi", "peninsula", "integrity"],
+            "04_HOA_and_Architecture": ["hoa", "arc", "design", "survey", "permit", "engineer", "lot survey", "affected area"],
+            "05_Utilities_and_Invoices": ["utility", "utilities", "invoice", "receipt", "bill", "newaccount", "leegov"],
+            "06_Photos_and_Media": [".jpg", ".jpeg", ".png", ".webp", ".heic", "birdview", "3dview", "image"],
+        }
+
+        counts = {cat: 0 for cat in categories}
+        counts["07_General_Documents"] = 0
+
+        if not ATTACHMENTS_DIR.exists():
+            return counts
+
+        for f in list(ATTACHMENTS_DIR.glob("*")):
+            if not f.is_file():
+                continue
+
+            name_lower = f.name.lower()
+            clean_name = re.sub(r"^\d{8}_[a-f0-9]{8}_", "", f.name)
+            clean_name = clean_name.replace("$", "USD_").replace("..", ".").strip()
+
+            target_cat = "07_General_Documents"
+            for cat, keywords in categories.items():
+                if any(kw in name_lower for kw in keywords):
+                    target_cat = cat
+                    break
+
+            cat_dir = ARCHIVE_BASE_DIR / target_cat
+            cat_dir.mkdir(parents=True, exist_ok=True)
+            
+            dest_file = cat_dir / clean_name
+            try:
+                shutil.move(str(f), str(dest_file))
+                counts[target_cat] += 1
+            except Exception as e:
+                print(f"[Aura Organize Error] Move failed for {f.name}: {e}")
+
+        print(f"[Aura Vault Organizer] Organized files into labeled categories on D:\\: {counts}")
+        return counts
+
+    def clean_and_organize_desktop(self) -> int:
+        """Organize Windows Desktop: move loose avatars/assets into labeled folder, keeping desktop clean and alphabetical."""
+        import shutil
+        desktop_dir = Path(r"C:\Users\leope\Desktop")
+        avatars_dir = desktop_dir / "BuzzAvatars"
+        avatars_dir.mkdir(parents=True, exist_ok=True)
+        moved = 0
+
+        # Move loose image files that belong in BuzzAvatars
+        for img in desktop_dir.glob("*.*"):
+            if img.is_file() and img.suffix.lower() in [".png", ".jpg", ".jpeg"]:
+                if any(kw in img.name.lower() for kw in ["avatar", "fizz", "hermes", "honey", "pollen", "leo_"]):
+                    try:
+                        dest = avatars_dir / img.name
+                        shutil.move(str(img), str(dest))
+                        moved += 1
+                    except Exception as e:
+                        print(f"[Aura Desktop Error] {e}")
+
+        print(f"[Aura Desktop Organizer] Moved {moved} loose avatar files into {avatars_dir}. Desktop is clean & alphabetical.")
+        return moved
+
     def run_heartbeat_cycle(self) -> Dict[str, Any]:
         """Execute one complete heartbeat maintenance cycle."""
         timestamp = datetime.now(timezone.utc).isoformat()
@@ -359,6 +430,12 @@ class AuraInboxSentinel:
         # 5. Purge stale temp files
         temp_cleaned = self.clean_hq_temp_files()
 
+        # 6. Organize and label offloaded files on Samsung Drive D:\ into category folders
+        vault_stats = self.organize_and_label_vault()
+
+        # 7. Desktop hygiene: keep desktop spotless and alphabetical
+        desktop_cleaned = self.clean_and_organize_desktop()
+
         mem_after = self.get_system_memory_gb()
         print(f"[Aura Heartbeat] Memory after reap: Free RAM {mem_after.get('free_gb')} GB / {mem_after.get('total_gb')} GB")
 
@@ -370,6 +447,8 @@ class AuraInboxSentinel:
             "unsub_detected": len(clean_res.get("unsubscribe_records", [])),
             "processes_reaped": reaped,
             "temp_files_cleaned": temp_cleaned,
+            "vault_categorized": vault_stats,
+            "desktop_cleaned": desktop_cleaned,
             "free_ram_gb": mem_after.get("free_gb"),
         }
         print(f"[Aura Heartbeat] Cycle finished: {result}")
@@ -378,7 +457,7 @@ class AuraInboxSentinel:
         log_path = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof\evidence\aura_heartbeat.log")
         log_path.parent.mkdir(parents=True, exist_ok=True)
         with open(log_path, "a", encoding="utf-8") as lf:
-            lf.write(f"{timestamp} [HEARTBEAT] offloaded={len(offloaded_files)} trashed={clean_res.get('trashed_count', 0)} reaped_procs={reaped} free_ram={mem_after.get('free_gb')}GB\n")
+            lf.write(f"{timestamp} [HEARTBEAT] offloaded={len(offloaded_files)} trashed={clean_res.get('trashed_count', 0)} reaped_procs={reaped} desktop={desktop_cleaned} free_ram={mem_after.get('free_gb')}GB\n")
 
         return result
 
