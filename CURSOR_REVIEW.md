@@ -48,3 +48,20 @@ _managed_tool = importlib.import_module("tools.managed_agent_tool")  # try/excep
 4. [ ] **`APPROVE PROVISION` for first real realtor**: Pending live onboarding trigger.
 
 Audit recorded and synchronized by Anti IDE.
+
+---
+
+# Role Switch (Sep 04, 2026 - 3:08 PM EDT)
+
+**Division of Labor:**
+- **Code Author:** Cursor
+- **Auditor & Host Gatekeeper:** Antigravity (Anti)
+
+### Active Mission: Listing & Media Intake Agent (`apex_core/listing_media_agent.py`)
+- Full spec detailed in [`CURSOR_MISSION_LISTING_AGENT.md`](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/CURSOR_MISSION_LISTING_AGENT.md).
+- Once Cursor commits and pushes to `github/main`, Anti will:
+  1. Pull commit and inspect diff against SOP §12 zero false claims.
+  2. Run Alienware host test suite (`python -m unittest discover -s tests`).
+  3. Perform visual browser verification of showcase sync.
+  4. Issue audit verdict in this document.
+
