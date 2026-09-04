@@ -5,10 +5,10 @@
 **Date:** 2026-09-04  
 **Decision:** **APPROVE SOPs** (both documents)
 
-| Document | Status |
-|----------|--------|
+| Document                  | Status        |
+| ------------------------- | ------------- |
 | `ROSIE_ONBOARDING_SOP.md` | APPROVED v1.0 |
-| `COS_PROACTIVE_SOP.md` | APPROVED v1.0 |
+| `COS_PROACTIVE_SOP.md`    | APPROVED v1.0 |
 
 ---
 
@@ -17,7 +17,7 @@
 Anti reported A1–A3 + A5 **PASS** (`053aee7`). A4 72h watch **in progress**.
 
 | Checkpoint | Cursor audit |
-|------------|--------------|
+| ------------ | -------------- |
 | Gateway PID 37056 + Scheduled Task | Accept pending 72h log |
 | Lease guardian + 27/27 tests | Accept — review `apex_core/lease_guardian.py` on pull |
 | Electron git patch | Accept — source verified by Anti |

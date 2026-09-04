@@ -9,12 +9,14 @@
 ## 1. Visual DNA & Token Foundations
 
 ### Palette & Materials
+
 * **Canvas Background:** Deep Obsidian (`#000000` / `#050507`), secondary surface (`#101014`).
 * **Frosted Materials:** `rgba(255, 255, 255, 0.04)` to `rgba(255, 255, 255, 0.08)`, backed by `-webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);`.
 * **Border Lines:** Hairline borders only: `1px solid rgba(255, 255, 255, 0.08)` (never heavy solid borders or neon glows).
 * **Accent & Metal:** Restrained Champagne Gold (`#e5c890` / `#d4af37`), muted Slate (`#86868b`), and crisp White (`#f5f5f7`).
 
 ### Typography & Spatial Hierarchy
+
 * **Font Family Stack:** `-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif`.
 * **Headline Tracking:** Tight negative tracking (`letter-spacing: -0.025em`) for display titles.
 * **Lead Scale:**
@@ -28,11 +30,13 @@
 ## 2. Interactive Primitives
 
 ### Apple Pill Buttons
+
 * `border-radius: 980px` (standard Apple pill).
 * Subtle hover reaction: `transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);` with `transform: scale(1.02);`.
 * Secondary links use text + arrow: `Explore the portfolio ›` in accent gold or Apple blue (`#2997ff`).
 
 ### Bento Cards & Micro-Surfaces
+
 * Rounded corners: `border-radius: 28px`.
 * Generous internal breathing space: `padding: 2.5rem – 3rem`.
 * Content stack: Category label → Punchy headline statement → Concise descriptive copy → Interactive preview.

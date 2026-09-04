@@ -99,16 +99,14 @@ class TestListingIntake(unittest.TestCase):
         self.assertIn("listing-intake-form", html)
         self.assertIn("SOP §12", html)
 
-    def test_front_door_listing_media_modal(self):
+    def test_front_door_excludes_listing_media_modal(self):
         rosie = tenant_manager.get_tenant_by_slug("rosie")
         builder = FastSiteBuilder()
         html = builder._generate_luxury_realty_html(rosie)
-        self.assertIn("listingMediaModal", html)
-        self.assertIn("openListingMediaModal", html)
-        self.assertIn("submitListingMedia", html)
-        self.assertIn("/api/listing/submit", html)
-        self.assertIn("portal.html#listings", html)
-        self.assertIn("STAGED ONLY", html)
+        # Listing intake is an internal back-office tool, strictly excluded from public front door
+        self.assertNotIn("listingMediaModal", html)
+        self.assertNotIn("openListingMediaModal", html)
+        self.assertNotIn("submitListingMedia", html)
 
 
 if __name__ == "__main__":

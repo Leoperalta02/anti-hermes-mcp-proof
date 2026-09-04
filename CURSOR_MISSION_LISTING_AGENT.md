@@ -1,6 +1,7 @@
 # Cursor Mission: Listing & Media Intake Agent (`apex_core/listing_media_agent.py`)
 
 **Role Division (effective Sep 04, 2026 — 7:24 PM UTC):**
+
 - **Code Author:** Antigravity (Anti) — **local Alienware IDE only**; avoid cloud-agent runs to preserve credits
 - **Auditor & Gatekeeper:** Cursor — cloud VM: diff review, `python -m unittest discover`, browser/showcase verification, `CURSOR_REVIEW.md` verdicts
 - **Authority:** `ROSIE_ONBOARDING_SOP.md` §8 & §12, `ANTI_STATUS.md`
@@ -10,6 +11,7 @@
 ---
 
 ## 1. Context & Objective
+
 Leo noted:
 > *"also do we have the agent that handles listings, when the realtor sends pictures/videos of homes, sold, for sale etc etc and the nice home should apple style scroll more nice homes or actual listed homes... Rosies Brokerage is eXp Realty in a mentor team team leader Bradley Dohack (Gulf Pointe Properties in Estero FL)."*
 
@@ -20,6 +22,7 @@ You are building the **Listing & Media Intake Engine** (`apex_core/listing_media
 ## 2. Technical Specification
 
 ### A. Module: `apex_core/listing_media_agent.py`
+
 Create a clean, typed Python module with:
 
 1. **`PropertyListingMedia` Dataclass**:
@@ -52,7 +55,9 @@ Create a clean, typed Python module with:
      - Strict SOP §12: Sets `claims.mls_connected = False` and `claims.published_live = False`.
 
 ### B. Test Suite: `tests/test_listing_media_agent.py`
+
 Write thorough unittests covering:
+
 1. `test_valid_ingest_and_validation`: Ingest complete listing with photos/videos.
 2. `test_quill_and_keystone_enrichment`: Asserts $/sqft calculation and Quill copy generated.
 3. `test_credential_rejection`: Fails safely if password/API key is present in submission.
@@ -62,6 +67,7 @@ Write thorough unittests covering:
 ---
 
 ## 3. Governance Guardrails (Mandatory)
+
 - **HOLD Active on `#Alienware-hq`**: Do not remove or bypass.
 - **Fail-Closed Sandbox**: Any multi-agent delegation must stay inside `#rosie-onboarding-sandbox` or `#wellington-canary`.
 - **Zero False Claims**: All `claims.*` flags remain `false`.
@@ -70,4 +76,5 @@ Write thorough unittests covering:
 ---
 
 ## 4. When Complete
+
 Push your commit to `github/main`. **Cursor** (Auditor) will inspect the diff, run tests, perform browser verification, and record the verdict in `CURSOR_REVIEW.md`. Anti does **not** re-audit unless Leo explicitly requests a host-only spot-check.

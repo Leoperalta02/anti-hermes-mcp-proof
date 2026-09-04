@@ -1,23 +1,21 @@
 # Anti Status — Hermes / Rosie Ops
 
-**Updated:** 2026-09-04 8:34 PM UTC  
-**Anti host:** **DARK / UNAVAILABLE** — Alienware IDE not responding  
-**Fallback:** Cursor cloud agent covering code + docs until Anti returns
+**Updated:** 2026-09-04 6:53 PM EDT (22:53 UTC)  
+**Anti host:** **ONLINE & ACTIVE** — Alienware IDE operational  
+**Division of labor:** Cursor (Cloud Code Author / Architect) · Anti (Alienware Host Gatekeeper & Runtime Auditor)
 
 ---
 
-## Anti Dark — Contingency (Leo / Cursor)
+## Contingency Reconciliation Completed
 
-| Was Anti's lane | Blocked on Alienware? | Cursor fallback |
+| Item | Host Action | Status |
 | --- | --- | --- |
-| A4 72h gateway watch | Yes — needs local PID supervision | Leo: check gateway PID 37056 + Lease Guardian manually |
-| `update_managed_agent_tool_governance.py` | Yes — writes to `hermes-agent/tools/` | Leo runs after pull, or wait for Anti |
-| `APEX_TELEGRAM_BOT_TOKEN` on host | Yes | Leo sets env on Alienware gateway shell |
-| Mobile portal nav ≤680px | No — code in repo | **Cursor picked up** — hamburger drawer in `fast_site_builder.py` |
-| Anti audits (`CURSOR_REVIEW.md`) | Partial | Cursor self-records; Leo signs when Anti returns |
-| First live `--provision-approved` | Needs Alienware briefs dir | Leo can run on Alienware after pull |
-
-**Executive gate:** Leo **APPROVE PROVISION** + operator gates open — see `evidence/operator_gates.json`.
+| Live Tool Governance | `update_managed_agent_tool_governance.py` executed on Alienware | **PASS** (HQ HOLD lifted in tool) |
+| Gateway Supervision | PID **37056** confirmed up and healthy; zero crashes | **PASS** |
+| Front-Door Listing Separation | Purged intake modal from front door; enclosed in portal | **PASS** |
+| Mobile Portal Nav (≤680px) | Visual Browser audit at 390×844 | **PASS** (hamburger drawer & tab switch) |
+| Cursor Commits Audit | `CURSOR_REVIEW.md` signed off through `034e16b` | **PASS** |
+| Executive gate | Leo **APPROVE PROVISION** live — `evidence/operator_gates.json` | **OPEN** |
 
 ---
 
@@ -128,4 +126,3 @@ Listing agent `f818e11` audit **PASS** (Anti, 3:24 PM EDT) — final audit under
 ## QUEUED (from Leo / Hermes)
 
 _None._
-

@@ -31,6 +31,7 @@ Your Cursor MCP integration is **100% active and connected** with green indicato
 ## 🚀 3. Major Milestones Achieved Today (Sep 4, 2026)
 
 ### A. The Stripe × Apple Luxury Design Benchmark
+
 * **Documented in:** [**`docs/STRIPE_APPLE_DESIGN_SYSTEM.md`**](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/docs/STRIPE_APPLE_DESIGN_SYSTEM.md)
 * **Visual Synthesis:**
   * **Stripe (The Engine):** Technical discipline, multi-stop ambient radiant gradient cones behind canvas, 8/16px strict spatial grid, modular bento cards with illuminated micro-hover hairlines.
@@ -40,12 +41,14 @@ Your Cursor MCP integration is **100% active and connected** with green indicato
   * Navigating to "Intelligence" or "Advisory" smoothly drops down a 3-column frosted glass mega-menu and dims the page with `.apple-page-scrim`.
 
 ### B. The Two-Door Architecture (Front Door + Back Door Portal)
+
 * **The Front Door (`public_sites/<tenant>/index.html`):** Public luxury real estate experience with interactive CMA valuation slider and confidential brief intake.
 * **The Back Door Portal (`public_sites/<tenant>/portal.html`):**
   1. **Staged Deliverables Queue:** Human-in-the-loop signoff cards for Keystone (CMA models), Quill (MLS remarks), and Harbor (leads). Clicking `[✓ Approve]` locks the model and updates the ledger.
   2. **Personal Sovereign AI Copilot Console:** Embedded chat card in portal allowing the realtor to query her local/cloud assistant with prompt chips (`📐 Explain CMA`, `💬 Draft SMS`).
 
 ### C. Autonomous End-to-End Onboarding Pipeline
+
 * **Engine:** [**`apex_core/onboarding_pipeline.py`**](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/apex_core/onboarding_pipeline.py)
 * **Simulation Result:**
   * Verified $499 Stripe charge simulation (`RCPT-20260904-ROSIE`).

@@ -18,6 +18,7 @@
 ---
 
 ## 1. Visual Style & Materials (Liquid Glass + Gradient Cones)
+
 * **Obsidian Canvas:** `#000000` base with Stripe-style multi-stop background cones:
   `radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 200, 144, 0.15), transparent 70%)`
 * **Liquid Glass Surfaces:**
@@ -30,6 +31,7 @@
 ---
 
 ## 2. Typography & Hierarchy (Airy + Bold Editorial)
+
 * **Display Titles:** Bold, editorial, clamp sizing (`clamp(2.8rem, 5.5vw, 4.8rem)`), line-height `1.05`, tight tracking (`-0.03em`).
 * **Micro-Labels (Stripe Style):** Monospace or high-tracking small caps (`font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #e5c890; font-weight: 600;`).
 * **Airy Body (Stripe Style):** Generous line height `1.6`, muted slate `#86868b`, max-width `640px` for effortless reading.
@@ -37,6 +39,7 @@
 ---
 
 ## 3. Motion & Micro-Interactions
+
 * **Stripe Pill Buttons:** Pill shape (`980px`), crisp tactile active state (`transform: scale(0.98)` on click, `scale(1.02)` on hover), 200ms cubic bezier.
 * **Apple Link Chevrons:** Micro-animated arrow displacement on hover (`gap: 0.35rem` -> `gap: 0.6rem`).
 * **Reactive Telemetry (Keystone):** Smooth real-time number rolling with `font-variant-numeric: tabular-nums`.
@@ -44,5 +47,6 @@
 ---
 
 ## 4. Modular Bento Layout (8/16px Discipline)
+
 * Strict 8px / 16px grid units for margins, paddings, and gap spacing (`gap: 1.5rem` = 24px, `padding: 2.5rem` = 40px).
 * Asymmetric bento cards (2-column span anchor card + 1-column detail cards).

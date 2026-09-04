@@ -18,6 +18,7 @@ This SOP replaces ad-hoc handoffs. Hermes executes it; Anti wires infrastructure
 ## 2. Scope & boundaries
 
 ### In scope
+
 - Apex landing page discovery form (`landing_page/index.html`)
 - Local staged brief receiver (`landing_page/brief_receiver.py` → `onboarding-briefs/`)
 - Hermes CoS triage and Leo approval
@@ -27,6 +28,7 @@ This SOP replaces ad-hoc handoffs. Hermes executes it; Anti wires infrastructure
 - Dry-run mock lead before first real client
 
 ### Out of scope (until Leo explicitly approves)
+
 - Public HTTPS host / `*.apexluxuryai.com` portal
 - MLS / IDX / ShowingTime / CRM OAuth connections
 - Live Vapi voice lines (`apex_core/vapi_bilingual_pipeline.py` — prompts ready, webhooks HOLD)
@@ -40,7 +42,7 @@ This SOP replaces ad-hoc handoffs. Hermes executes it; Anti wires infrastructure
 Do **not** start Rosie onboarding wiring until all pass:
 
 | Gate | Owner | Pass criteria |
-|------|-------|---------------|
+| ------ | ------- | --------------- |
 | A1 | Anti | Gateway supervised daemon survives reboot; single PID |
 | A2 | Anti | Desktop `Hermes.exe` loads session; `:9119` reachable |
 | A3 | Anti | SQLite lease guardian deployed; no stale lease >24h |
@@ -54,7 +56,7 @@ Cursor drafts this SOP during Phase A. Anti wires after A4.
 ## 4. Actors & authority
 
 | Actor | Role in onboarding |
-|-------|-------------------|
+| ------- | ------------------- |
 | **Leo** | Sole authority to approve provision, public host, voice, first real client |
 | **Hermes** | CoS — triages briefs, assigns work, surfaces blockers, never auto-provisions |
 | **Anti** | Infrastructure — receiver, alerts, cron, profiles, gateway |
@@ -108,15 +110,18 @@ Within **15 minutes** of brief landing (cron or folder watch), Hermes must:
 **Location:** `C:\LEO-LAB-ANTIGRAVITY\business-scope\onboarding-briefs\`
 
 **Files created by receiver:**
+
 - `{timestamp}-{slug}.json` — machine-readable
 - `{timestamp}-{slug}.md` — human-readable
 
 **Required JSON fields (from form):**
+
 - `answers.full_name`, `answers.brokerage`, `answers.market`, `answers.email`
 - `answers.needs[]` — intake, follow_up, appointments, copy, dates
 - `status: "staged"` — immutable until Leo gate
 
 **Hermes must append** (after triage):
+
 - `hermes_triage_at`, `hermes_stage`, `leo_decision`, `assigned_tenant_slug` (if approved)
 
 ---
@@ -126,13 +131,14 @@ Within **15 minutes** of brief landing (cron or folder watch), Hermes must:
 After Leo approves provision, Hermes may delegate **draft** work only:
 
 | Task type | Delegate | Output | Send gate |
-|-----------|----------|--------|-----------|
+| ----------- | ---------- | -------- | ----------- |
 | Follow-up queue setup | Harbor | Draft queue JSON / notes | Leo + realtor |
 | CMA / consult packet | Keystone | Draft packet (comps TBD) | Leo + realtor |
 | Listing / social copy | Quill | Draft copy in tenant folder | Leo + realtor |
 | CoS coordination | Hermes | Status in daily standup | Leo |
 
 **Rules:**
+
 - Use `send_managed_agent` with **non-empty** `target_agent` and `content` (kwargs merge patch required)
 - No client-facing send without explicit approver from brief (`approver` field)
 - Sandbox channel only until Leo lifts HOLD on production client comms
@@ -163,7 +169,7 @@ After Leo approves provision, Hermes may delegate **draft** work only:
 ## 10. Anti wiring tasks (post Leo approval of this SOP)
 
 | # | Task | Verification |
-|---|------|--------------|
+| --- | ------ | -------------- |
 | W1 | Folder watch or cron: new `onboarding-briefs/*.json` → Hermes task | Test file triggers alert |
 | W2 | Telegram alert template (no false claims) | Leo receives structured ping |
 | W3 | Hermes triage prompt block in CoS profile | Mock brief → correct checklist |
@@ -175,7 +181,7 @@ After Leo approves provision, Hermes may delegate **draft** work only:
 ## 11. Cursor audit tasks
 
 | # | Task |
-|---|------|
+| --- | ------ |
 | C1 | Review `brief_receiver.py` — no credential acceptance, loopback default |
 | C2 | Review Vapi pipeline — locked PIP strings if accident module reused |
 | C3 | Sign off dry-run transcript |
@@ -207,7 +213,7 @@ Approved language: **"Staged brief received"**, **"Draft ready for your review"*
 ## 14. Approval
 
 | Role | Name | Date | Signature |
-|------|------|------|-----------|
+| ------ | ------ | ------ | ----------- |
 | Executive | Leo Peralta | 2026-09-04 | **APPROVE SOPs** |
 | Infrastructure | Anti | ______ | WIRED (pending Phase A + W1–W5) |
 | Audit | Cursor | 2026-09-04 | DRAFT COMPLETE |

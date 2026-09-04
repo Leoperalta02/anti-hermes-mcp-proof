@@ -30,5 +30,6 @@
     },
     "message_preview": "\ud83d\ude80 [APEX ONBOARDING SUCCESS]\n\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83d\udcb3 Payment: $499/mo PAID (RCPT-20260904-ROSIE)\n\n\ud83c\udf10 Front Door: public_sites/rosie/index.html\n\ud83d\udd10 Back Door: public_s",
     "reason": "APEX_TELEGRAM_LIVE=1 but APEX_TELEGRAM_BOT_TOKEN missing"
-  }
+  },
+  "staged_at": "2026-09-04T22:25:01.137136+00:00"
 }

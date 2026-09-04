@@ -51,20 +51,23 @@ Audit recorded and synchronized by Anti IDE.
 
 ---
 
-# Role Switch (Sep 04, 2026 - 3:08 PM EDT)
+## Role Switch (Sep 04, 2026 - 3:08 PM EDT)
 
 **Division of Labor:**
+
 - **Code Author:** Cursor
 - **Auditor & Host Gatekeeper:** Antigravity (Anti)
 
 ### Active Mission: Listing & Media Intake Agent (`apex_core/listing_media_agent.py`)
+
 - Full spec detailed in [`CURSOR_MISSION_LISTING_AGENT.md`](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/CURSOR_MISSION_LISTING_AGENT.md).
 
-## Audit Verdict: **PASS** — Commit `f818e11`
-**Audited by Anti IDE on Alienware host (Sep 04, 2026 - 3:24 PM EDT)**
+### Audit Verdict: **PASS** — Commit `f818e11`
+
+*Audited by Anti IDE on Alienware host (Sep 04, 2026 - 3:24 PM EDT).*
 
 | Check | Specification | Result |
-|---|---|---|
+| --- | --- | --- |
 | **1. Ingest & Validation** | `ingest_property_submission` rejects missing fields, enforces `VALID_STATUSES` | **PASS** |
 | **2. Security & Anti-Leak** | Rejects passwords, API keys, tokens via `SECRET_RE` per SOP §12 | **PASS** |
 | **3. Keystone Benchmark** | Calculates $/sqft and ±5% comp corridor with Florida submarket benchmarks | **PASS** |
@@ -75,6 +78,7 @@ Audit recorded and synchronized by Anti IDE.
 | **8. Visual Browser Audit** | Front door kinetic carousel & Apple Lightbox Dossier Modal verified | **PASS** |
 
 **Artifacts Generated & Verified:**
+
 - Test Suite: `tests/test_listing_media_agent.py` (**5/5 PASS**, 0.053s)
 - Browser Recording: `audit_listing_showcase_1788549685795.webp`
 - Browser Screenshot: `estate_dossier_modal_1788549738369.png`
@@ -83,13 +87,14 @@ Audit synchronized and approved by Anti IDE.
 
 ---
 
-# Audit Verdict: **PASS** — Commit `a5393a2`
-**Audited by Anti IDE on Alienware host (Sep 04, 2026 - 3:36 PM EDT)**
+## Audit Verdict: **PASS** — Commit `a5393a2`
+
+*Audited by Anti IDE on Alienware host (Sep 04, 2026 - 3:36 PM EDT).*
 
 ### Mission: Media & Listing Intake Form + Sovereign Portal Queue Integration
 
 | Check | Specification | Result | Evidence |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **1. Intake Server** | `apex_core/listing_intake_server.py` (`GET /`, `POST /api/listing/submit`, `POST /api/listing/approve`) | **PASS** | HTTP server on port 8765 binds cleanly |
 | **2. Portal Queue UI** | `public_sites/rosie/portal.html` — `Listings` nav tab with intake form & pending queue | **PASS** | Browser-verified on `:8000/public_sites/rosie/portal.html` |
 | **3. Specialist Staging** | Displays Keystone calculated $/sqft, comp corridor spread, and Quill luxury copy | **PASS** | Staged under `tenants/{slug}/` with 1-click `✓ Approve for Showcase` |
@@ -103,14 +108,16 @@ Audit synchronized and approved by Anti IDE.
 
 ## Cursor Implementation — Commit `531e58f` (pending Anti audit)
 
-**Gated Telegram Dispatch (W2 live path)**
+### Gated Telegram Dispatch (W2 live path)
+
 - `apex_core/telegram_dispatch.py` — stages alerts to `evidence/telegram_dispatch_latest.json`; live send only when `APEX_TELEGRAM_LIVE=1` + `APEX_TELEGRAM_BOT_TOKEN`
 - Wired into `apex_core/brief_watcher.py` after alert staging
 - Tests: `tests/test_telegram_dispatch.py` — 6/6 PASS
 
 ## Cursor Implementation — provision gate + onboarding dispatch (pending commit)
 
-**Leo Provision Gate (SOP §6.5)**
+### Leo Provision Gate (SOP §6.5)
+
 - `apex_core/provision_gate.py` — fail-closed gate: DRYRUN allowed on `APPROVE PROVISION DRYRUN`; live requires `APPROVE PROVISION` + `APEX_A4_WATCH_COMPLETE=1`
 - `apex_core/onboarding_pipeline.py` — requires `leo_decision` in payload; Hermes alert routed through `telegram_dispatch`
 - Tests: `tests/test_provision_gate.py` — 7/7 PASS; onboarding pipeline updated for gate + dispatch
@@ -120,6 +127,7 @@ Audit synchronized and approved by Anti IDE.
 ## Operator Gate Lift — Sep 04, 2026 (Leo Peralta)
 
 Recorded in `evidence/operator_gates.json`:
+
 - `a4_watch_complete`: **true**
 - `live_provision_enabled`: **true**
 - `telegram_live_enabled`: **true**
@@ -134,11 +142,38 @@ Live `APPROVE PROVISION` now passes gate check. Telegram live send still require
 **HQ HOLD:** **LIFTED** (`alienware_hq_hold_active: false` in operator_gates.json)  
 **Governance:** `update_managed_agent_tool_governance.py` now reads operator_gates for conditional HQ block — Anti must re-run patch on Alienware.
 
-## Cursor Implementation — provision executor (pending commit)
+## Cursor Implementation — provision executor (commits `0f188e7`–`034e16b`)
 
-**Gated Provision Executor (§6.5 & §8)**
+### Gated Provision Executor (§6.5 & §8)
+
 - `apex_core/provision_executor.py` — shared gated skeleton provisioning; portable briefs/tenants dir resolution
 - `execute_dryrun_lead.py` refactored to use executor + gate
 - `brief_watcher.py` — triage payloads include `provision_gate`; `--provision-approved` CLI scans and provisions approved briefs
 - Tests: `tests/test_provision_executor.py` — 6/6 PASS; brief_watcher + dryrun updated
+- `apex_core/apex_cli.py` — unified host/status/dev/dryrun/brief/gates CLI for cloud + Alienware
 
+---
+
+## Audit Verdict: **PASS** — Commits `0f188e7` through `034e16b` + Mobile Nav Audit
+
+*Audited by Anti IDE on Alienware host (Sep 04, 2026 - 6:52 PM EDT).*
+
+### Verification Summary
+
+| Check | Target | Result | Evidence |
+| --- | --- | --- | --- |
+| **1. Provision Executor** | `apex_core/provision_executor.py` | **PASS** | Gated skeleton creation verified; fails closed if unapproved |
+| **2. Operator Gates** | `evidence/operator_gates.json` | **PASS** | `APPROVE PROVISION` live; HQ HOLD lifted; A4 watch gate cleared |
+| **3. Fail-Closed Tool** | `managed_agent_tool.py` | **PASS** | Live patch applied on Alienware via `update_managed_agent_tool_governance.py` |
+| **4. Unified Apex CLI** | `apex_core/apex_cli.py` | **PASS** | `python -m apex_core.apex_cli status` runs cleanly on Alienware host |
+| **5. Mobile Portal Nav (≤680px)** | `public_sites/rosie/portal.html` | **PASS** | Tested at 390×844 via Browser Agent; hamburger opens frosted drawer; tab switching to `#panel-listings` verified |
+| **6. Front-Door Intake Separation** | `apex_core/fast_site_builder.py` | **PASS** | Removed listing media modal and nav button from front door; strictly enclosed in portal back-office |
+| **7. Unit Test Suite** | `tests/test_listing_intake.py` + `test_listing_media_agent.py` | **PASS** | 11/11 tests PASS (0.19s) |
+
+**Artifacts Generated & Verified:**
+
+- Browser Recording: `mobile_portal_audit_1788562138564.webp`
+- Screenshot (Mobile Drawer Open): `mobile_nav_drawer_open_1788562209355.png`
+- Screenshot (Mobile Listings Panel): `mobile_listings_panel_1788562216186.png`
+
+Audit synchronized and approved by Anti IDE on Alienware HQ.

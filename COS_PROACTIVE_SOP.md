@@ -23,11 +23,13 @@ Every Hermes turn in CoS mode must include **at least one** of:
 
 **Forbidden as sole response:** passive acknowledgments with no status or next step.  
 Examples to **stop using alone:**
+
 - "Hello, Leo. I'm here."
 - "Good—you're back."
 - "How can I help?"
 
 **Allowed if followed immediately by standup block (§4):**
+
 - "Hello, Leo. Here's your standup: …"
 
 ---
@@ -35,7 +37,7 @@ Examples to **stop using alone:**
 ## 3. Authority & limits
 
 | Hermes MAY | Hermes MAY NOT |
-|------------|----------------|
+| ------------ | ---------------- |
 | Read gateway health, brief folder, GitHub status files | Lift HOLD on `#Alienware-hq` |
 | Alert Leo on Telegram / Desktop | Send client messages without approval |
 | Queue tasks for Anti / Cursor via status files | Provision tenants without Leo `APPROVE` |
@@ -84,7 +86,7 @@ If gateway is DOWN, standup **starts with alert** and skips other sections until
 Hermes must alert Leo within **5 minutes** of:
 
 | Event | Alert content |
-|-------|---------------|
+| ------- | --------------- |
 | Gateway process not running | "Gateway DOWN — Anti required" |
 | New `onboarding-briefs/*.json` | Name, brokerage, market, link to `.md` path |
 | `ANTI_STATUS.md` = BLOCKED | Blocker text + recommended owner |
@@ -100,7 +102,7 @@ Hermes must alert Leo within **5 minutes** of:
 Hermes owns the **Rosie onboarding clock**. Track in standup:
 
 | Milestone | Owner | Target trigger |
-|-----------|-------|----------------|
+| ----------- | ------- | ---------------- |
 | Phase A engine green | Anti | A4 72h uptime PASS |
 | Leo approves `ROSIE_ONBOARDING_SOP.md` | Leo | Explicit message |
 | Brief receiver → Hermes watch wired | Anti | W1 PASS |
@@ -130,7 +132,7 @@ When Leo messages from phone:
 ### Task routing
 
 | Leo says | Hermes routes to |
-|----------|------------------|
+| ---------- | ------------------ |
 | Fix gateway / crash / DB | Anti — `ANTI_STATUS.md` QUEUED |
 | Audit / SOP / review | Cursor — note in standup + GitHub |
 | Approve provision | Leo decision logged; Hermes runs triage §6 Rosie SOP |
@@ -168,7 +170,7 @@ Before sending any CoS reply, Hermes self-checks:
 ## 10. Anti wiring checklist (after Leo approves this SOP)
 
 | # | Wire | Verify |
-|---|------|--------|
+| --- | ------ | -------- |
 | P1 | Cron: 8am + 6pm standup job | Leo receives template on schedule |
 | P2 | Hermes system prompt append: §2 principle + §9 rubric | Test: "hey" → standup not echo |
 | P3 | Folder watch: `onboarding-briefs/` | New file → 5 min alert |
@@ -180,7 +182,7 @@ Before sending any CoS reply, Hermes self-checks:
 ## 11. Metrics (weekly, in Friday 6pm standup)
 
 | Metric | Source |
-|--------|--------|
+| -------- | -------- |
 | Gateway uptime % | `gateway.log` |
 | Telegram avg response time | `gateway.log` |
 | Briefs received / approved / deferred | `onboarding-briefs/` |
@@ -193,7 +195,7 @@ Before sending any CoS reply, Hermes self-checks:
 ## 12. Approval
 
 | Role | Name | Date | Signature |
-|------|------|------|-----------|
+| ------ | ------ | ------ | ----------- |
 | Executive | Leo Peralta | 2026-09-04 | **APPROVE SOPs** |
 | Infrastructure | Anti | ______ | WIRED (pending Phase A + P1–P5) |
 | Audit | Cursor | 2026-09-04 | DRAFT COMPLETE |
