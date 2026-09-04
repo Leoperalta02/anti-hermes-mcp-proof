@@ -305,13 +305,15 @@ class AuraInboxSentinel:
             return 0
 
     def clean_hq_temp_files(self) -> int:
-        """Clean orphaned crash dumps and temporary files from Windows Temp directory."""
+        """Clean orphaned crash dumps, residual install caches, and temporary files from Windows."""
         import tempfile
         import time
+        import os
         temp_dir = Path(tempfile.gettempdir())
         cleaned_count = 0
         cutoff = time.time() - (86400 * 2)  # 2 days old
         
+        # 1. Purge Temp .tmp files
         try:
             for item in temp_dir.glob("*.tmp"):
                 try:
@@ -323,8 +325,19 @@ class AuraInboxSentinel:
         except Exception as e:
             print(f"[Aura Temp Cleaner Error] {e}")
             
-        print(f"[Aura Temp Cleaner] Purged {cleaned_count} stale temporary files from {temp_dir}.")
+        # 2. Purge CrashDumps (.dmp files)
+        crash_dir = Path(os.environ.get("LOCALAPPDATA", "")) / "CrashDumps"
+        if crash_dir.exists():
+            for dmp in crash_dir.glob("*.dmp"):
+                try:
+                    dmp.unlink(missing_ok=True)
+                    cleaned_count += 1
+                except Exception:
+                    continue
+
+        print(f"[Aura Temp Cleaner] Purged {cleaned_count} stale residual files (Temp & CrashDumps).")
         return cleaned_count
+
 
     # ── Folder Organization, Clean Labeling & Desktop Hygiene ──────────────────
 
