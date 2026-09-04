@@ -10,6 +10,7 @@
 ## 1. Executive Summary of Accomplishments
 
 ### A. Front-Door UI Bugs Completely Fixed & Verified ✅
+
 Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py` → `public_sites/rosie/index.html` & `public_sites/vance/index.html`) have been completely resolved and browser-verified:
 
 1. **AI Chatbot (Concierge Launcher) Visibility & Tactility**
@@ -38,7 +39,9 @@ Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py
 ---
 
 ### B. Sovereign Realtor OS Portal Deployed (7 Full Panels) ✅
+
 `_generate_portal_html` in `apex_core/fast_site_builder.py` provides a comprehensive real estate operating system:
+
 1. **Dashboard**: $14.2M pipeline KPI bar, "Who Needs Contact Today" CRM queue (Hot/Warm/Cold tags, contact buttons), staged AI deliverables, Copilot quick-chat.
 2. **Pipeline**: Dual Kanban boards — Listing (9 stages from Pre-Listing to Closed) + Buyer (8 stages).
 3. **Net Sheets**: Live Florida Seller Net Proceeds (Florida Doc Stamps calculated at $0.70 per $100, real estate commission, title, loan payoff) + Buyer Cash-to-Close (down payment, 3-month escrow cushion, prepaid interest).
@@ -48,6 +51,7 @@ Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py
 7. **Transactions (Contract Tracker)**: Florida As-Is contract milestone tracker with visual countdown pills (EMD, Inspection, Loan, Title, Walkthrough, Closing).
 
 ### C. Lead Flow Integration (Front Door → Portal) ✅
+
 - **Front-Door Dossier Submission (`index.html`)**:
   - Captures Full Name, Direct Phone/Email, Property Interest/Address, and Calculated Valuation Target.
   - Generates structured lead record with ISO timestamp and `HOT` priority badge.
@@ -66,12 +70,14 @@ Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py
 ## 2. Quota & Environment Telemetry Snapshot
 
 ### A. Cursor Pro ($20/mo)
+
 - **Cursor Models (Cursor Grok & Composer)**: **17% used** (Ample room)
 - **Other Models**: **22% used**
 - **On-Demand Spending**: Disabled (Safe, no unexpected charges)
 - **Reset Date**: September 29 (25 days remaining)
 
 ### B. Antigravity IDE (Google AI Pro)
+
 - **Gemini Models**:
   - Weekly Limit: **73% remaining** (Plenty of headroom)
   - 5-Hour Limit: **10% remaining** (Refreshed during this turn)
@@ -85,9 +91,11 @@ Both reported bugs on the luxury front-door landing pages (`fast_site_builder.py
 ## 3. Build & Multi-Tenant Status
 
 All 4 tenant configurations compile cleanly with zero errors:
+
 ```bash
 python apex_core/fast_site_builder.py
 ```
+
 - **Sofia Lanz**: `public_sites/sofia/index.html` & `public_sites/sofia/portal.html`
 - **John 'Toki' Grullon**: `public_sites/toki/index.html` & `public_sites/toki/portal.html`
 - **Priscilla Vance**: `public_sites/vance/index.html` & `public_sites/vance/portal.html`
