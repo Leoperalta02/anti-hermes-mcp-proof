@@ -42,12 +42,24 @@
    - Verified `allowUnsafeCustomBinary: true` in `git-review-ops.ts` (line 59) preventing space-in-path unhandled exceptions.
    - Hermes desktop running cleanly without GUI crash.
 
-5. **Rosie Dry-Run Lead Verification (§9 ROSIE_ONBOARDING_SOP.md):**
-   - Executive approval: Leo Peralta sent `APPROVED PROVISION DRYRUN`.
+5. **Rosie Dry-Run Lead Verification & Wiring Stack (§9 & §10 ROSIE_ONBOARDING_SOP.md):**
+   - Executive approval: Leo Peralta recorded **`all provisions are approved`** (and prior `APPROVED PROVISION DRYRUN`).
+   - W1–W5 Hermes onboarding stack fully verified:
+     - W1: `brief_watcher.py` triage & folder monitoring.
+     - W2: Telegram alert payload in `evidence/brief_telegram_alert.json`.
+     - W3: `COS_TRIAGE_PROMPT_BLOCK` synced into `anti-cos/SOUL.md`.
+     - W4: `tenant_skeleton_manager.py` deployed with template & `tenants/rosie/` sandbox.
+     - W5: `delegation_sandbox.py` dispatcher with draft posture and mock multi-agent delegation.
    - Executed mock lead intake via `apex_core/execute_dryrun_lead.py`: **PASS**.
    - Generated staged briefs and tenant skeleton (`dryrun-rosie-test`) with drafts from Harbor, Keystone, and Quill.
    - Zero external sends, zero false claims.
 
-6. **Test Suite Verification:**
-   - `python -m unittest discover -s tests` → **28/28 PASS** (0 failures, 0 errors).
+6. **Tool Governance & Sandboxing Enforcement:**
+   - Patched `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`:
+     - `#panel-advisors` hard blocked with `[STOP — TOOL DENY]`.
+     - `#Alienware-hq` hard blocked with `[STOP — HOLD ACTIVE]`.
+     - Specialists (`Harbor`, `Keystone`, `Quill`, `Rosie`) restricted strictly to `#rosie-onboarding-sandbox` and `#wellington-canary` with `[STOP — SANDBOX VIOLATION]`.
+
+7. **Test Suite Verification:**
+   - `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors in 0.51s).
 

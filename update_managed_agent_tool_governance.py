@@ -87,6 +87,14 @@ def send_managed_agent(raw_args: Any) -> str:
         logger.warning("PANEL TOOL DENY: send_managed_agent called in panel-advisors channel — blocked.")
         return block_msg
 
+    ch_val = _current_channel_ctx.get()
+    if ch_val:
+        ch_name, _ = ch_val
+        if ch_name in {"alienware-hq", "#alienware-hq"}:
+            block_msg = "[STOP — HOLD ACTIVE] send_managed_agent is blocked in #Alienware-hq. Practice hops only in #wellington-canary or #rosie-onboarding-sandbox."
+            logger.warning("HOLD ACTIVE DENY: send_managed_agent called in #Alienware-hq — blocked.")
+            return block_msg
+
     parsed_args: dict = {}
     if isinstance(raw_args, str):
         try:
@@ -103,6 +111,14 @@ def send_managed_agent(raw_args: Any) -> str:
 
     if not target_clean or not content_clean:
         return "Error: target_agent and content parameters are required."
+
+    _SANDBOX_CHANNELS = {"wellington-canary", "#wellington-canary", "rosie-onboarding-sandbox", "#rosie-onboarding-sandbox"}
+    _SPECIALIST_AGENTS = {"harbor", "keystone", "quill", "rosie"}
+    if target_clean.lower() in _SPECIALIST_AGENTS:
+        if ch_val and ch_val[0].lower() not in _SANDBOX_CHANNELS:
+            block_msg = f"[STOP — SANDBOX VIOLATION] Specialist '{target_clean}' can only be delegated to in sandbox channels: {_SANDBOX_CHANNELS}."
+            logger.warning(block_msg)
+            return block_msg
 
     from acp_adapter.server import get_acp_requester
     requester = get_acp_requester()
@@ -261,6 +277,6 @@ registry.register(
 
 target_file = r'C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py'
 with open(target_file, 'w', encoding='utf-8') as f:
-    f.write(content)
+    f.write(code)
 
 print('Successfully wrote fail-closed managed_agent_tool.py!')

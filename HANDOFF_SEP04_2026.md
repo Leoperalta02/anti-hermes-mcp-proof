@@ -172,3 +172,21 @@ python apex_core/fast_site_builder.py
    - Enforces §8 & §12 rules: internal draft outputs only (`DRAFT_PENDING_REALTOR_APPROVAL`), zero external send, and zero false claims across all specialist dispatches (Harbor, Keystone, Quill, Rosie).
    - Automated multi-agent dry-run orchestration (§9 SOP) verified via `tests/test_delegation_sandbox.py` (9/9 tests pass) and full Alienware test suite (64/64 tests pass).
    - **All 5 Wiring Tasks (W1, W2, W3, W4, W5) Complete**: Full Sovereign Realtor OS onboarding stack is staged, wired, and verified.
+8. [x] **Executive Provision Approval & Tool Governance Hardening**:
+   - Operator Gate: Leo Peralta sent **`all provisions are approved`**.
+   - Wired live tool governance into `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`:
+     - Hard HOLD enforcement: `send_managed_agent` blocked on `#Alienware-hq` with `[STOP — HOLD ACTIVE]`.
+     - Specialist sandbox isolation: delegation to `Harbor`, `Keystone`, `Quill`, and `Rosie` strictly limited to `#rosie-onboarding-sandbox` and `#wellington-canary` (`[STOP — SANDBOX VIOLATION]`).
+     - `#panel-advisors` remains hard-blocked with `[STOP — TOOL DENY]`.
+   - Updated `update_managed_agent_tool_governance.py` and `tests/test_mention_tool.py`.
+   - Verified via unit test suite: **67/67 PASS** (0 failures, 0 errors in 0.51s).
+
+---
+
+## 7. Current System State Summary
+
+- **HOLD on `#Alienware-hq`**: STRICTLY PRESERVED & ENFORCED.
+- **Specialist Sandbox Channels**: Authorized in `#rosie-onboarding-sandbox` and `#wellington-canary`.
+- **SOP §12 Compliance**: Zero false claims; `claims.*` strictly `false` across all alerts and manifests until real deployment.
+- **Hermes Fleet**: Detached Gateway daemon PID 37056 + Lease Guardian daemon PID 32880 active.
+- **Workspace Test Suite**: 67/67 tests passing.

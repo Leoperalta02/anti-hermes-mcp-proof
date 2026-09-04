@@ -54,5 +54,18 @@ class TestMentionAgentToolGovernance(unittest.TestCase):
         set_active_round_seats({"grok 2"})
         # Tested at unit level: if event_id evaluates to unknown/none, returns [STOP — NO EVENT ID]
 
+    def test_send_managed_agent_blocked_in_alienware_hq(self):
+        """Rule 6: HOLD Enforcement — send_managed_agent blocked on #Alienware-hq."""
+        set_current_channel("alienware-hq", "alienware-hq-id")
+        res = send_managed_agent({"target_agent": "Pollen", "content": "test"})
+        self.assertIn("[STOP — HOLD ACTIVE]", res)
+
+    def test_send_managed_agent_specialist_sandbox_guard(self):
+        """Rule 7: Onboarding Isolation — Specialists only reachable in sandbox channels."""
+        set_current_channel("general", "general-channel-id")
+        res = send_managed_agent({"target_agent": "Harbor", "content": "test"})
+        self.assertIn("[STOP — SANDBOX VIOLATION]", res)
+
+
 if __name__ == '__main__':
     unittest.main()

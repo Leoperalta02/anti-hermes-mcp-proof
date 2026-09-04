@@ -21,21 +21,19 @@
 
 ---
 
-## Phase B — Wiring (authorized after A4 green)
+## Phase B — Wiring (Authorized & Complete)
 
-Leo **APPROVE SOPs** — specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS_PROACTIVE_SOP.md`.
+Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS_PROACTIVE_SOP.md`, `DELEGATION_SANDBOX_SPEC.md`.
 
-**Start W1–W5 + P1–P5 when A4 passes.** Prep/scaffold OK; no dry-run until wiring verified.
+### Rosie (`ROSIE_ONBOARDING_SOP.md` §10) — ALL W1–W5 VERIFIED & PASS ✅
 
-### Rosie (`ROSIE_ONBOARDING_SOP.md` §10)
-
-| # | Task | Verify |
-|---|------|--------|
-| W1 | Folder watch/cron: `onboarding-briefs/*.json` → Hermes task | Test file triggers alert |
-| W2 | Telegram alert template (no false claims) | Leo receives structured ping |
-| W3 | Hermes triage prompt block in CoS profile | Mock brief → checklist |
-| W4 | Tenant skeleton under `hermes-state/profiles/real-estate-copilot/` | SOUL loaded |
-| W5 | Internal delegation sandbox | Dry-run §9 passes |
+| # | Task | Verify | Status |
+|---|------|--------|--------|
+| W1 | Folder watch/cron: `onboarding-briefs/*.json` → Hermes task | Test file triggers alert (`test_brief_watcher.py`) | **PASS** |
+| W2 | Telegram alert template (no false claims) | Structured alert in `evidence/brief_telegram_alert.json` | **PASS** (Staged) |
+| W3 | Hermes triage prompt block in CoS profile | Synced into `anti-cos/SOUL.md`; `cos_triage_evaluator.py` | **PASS** |
+| W4 | Tenant skeleton under `hermes-state/profiles/real-estate-copilot/` | `tenant_skeleton_manager.py`; Rosie tenant & SOUL.md synced | **PASS** |
+| W5 | Internal delegation sandbox | `delegation_sandbox.py`; multi-agent dry-run §9 passes; `send_managed_agent` sandbox guard | **PASS** |
 
 ### CoS (`COS_PROACTIVE_SOP.md` §10)
 
@@ -49,10 +47,20 @@ Leo **APPROVE SOPs** — specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS
 
 ---
 
+## Tool Governance & Sandboxing Updates
+
+- **`send_managed_agent` Channel Guards**:
+  - `#panel-advisors` — hard blocked with `[STOP — TOOL DENY]`
+  - `#Alienware-hq` — hard blocked with `[STOP — HOLD ACTIVE]`
+  - Specialist agents (`Harbor`, `Keystone`, `Quill`, `Rosie`) — hard blocked to sandbox channels (`#rosie-onboarding-sandbox`, `#wellington-canary`) with `[STOP — SANDBOX VIOLATION]`
+- **Live Sync**: Synced to `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`
+
+---
+
 ## Dry-Run Verification (§9 ROSIE_ONBOARDING_SOP.md) — PASS
 
-- **Executive Approval:** Leo Peralta sent **`APPROVED PROVISION DRYRUN`**
-- **Execution Script:** `apex_core/execute_dryrun_lead.py`
+- **Executive Approval:** Leo Peralta sent **`all provisions are approved`** (and prior **`APPROVED PROVISION DRYRUN`**)
+- **Execution Script:** `apex_core/execute_dryrun_lead.py` & `DelegationSandbox.run_mock_delegation()`
 - **Result:** **PASS** (Zero external sends, all false-claim boundaries respected)
 - **Lead Name:** `DRYRUN Rosie Test` (Apex Staging Brokerage, Estero FL)
 - **Staged Brief:** `business-scope/onboarding-briefs/20260904T003033Z-dryrun-rosie-test.json` (.md included)
@@ -61,7 +69,7 @@ Leo **APPROVE SOPs** — specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS
   - **Harbor:** `business-scope/tenants/dryrun-rosie-test/harbor/follow_up_queue.json` & protocol
   - **Keystone:** `business-scope/tenants/dryrun-rosie-test/keystone/cma_market_consult.md`
   - **Quill:** `business-scope/tenants/dryrun-rosie-test/quill/listing_marketing_drafts.md`
-- **Test Suite:** `python -m unittest discover -s tests` → **28/28 PASS** (0 failures, 0 errors)
+- **Test Suite:** `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors)
 
 ---
 

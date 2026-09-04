@@ -41,11 +41,12 @@ Full repo on Alienware local: **65/65 PASS** (45/56 runnable in Cursor cloud due
 - Harbor queue now accumulates entries as a list in `follow_up_queue.json` across multiple dispatches.
 - Default tenant root is Alienware path; tests correctly use isolated temp directories.
 
-### Next operator gates
+### Operator gates progression
 
-1. Leo runs §9 dry-run and sends `APPROVE PROVISION DRYRUN`
-2. Wire `send_managed_agent` → sandbox channel guard
-3. A4 72h gateway watch
-4. `APPROVE PROVISION` for first real realtor
+1. [x] **Leo §9 dry-run approval**: Leo sent **`all provisions are approved`** (and prior `APPROVED PROVISION DRYRUN`); mock delegation passes clean with zero external sends.
+2. [x] **Wire `send_managed_agent` sandbox channel guard**: Live tool `managed_agent_tool.py` updated with HOLD check on `#Alienware-hq` and specialist isolation guard (`[STOP — SANDBOX VIOLATION]`). Unit tests: 7/7 PASS (`test_mention_tool.py`).
+3. [ ] **A4 72h gateway watch**: 12h+ clean, ongoing supervision.
+4. [ ] **`APPROVE PROVISION` for first real realtor**: Pending live onboarding trigger.
 
-Audit written to `CURSOR_REVIEW.md` and pushed to Cursor origin (`dd45a29`). Synced to GitHub by Anti IDE.
+Full repo on Alienware local: **67/67 PASS**.
+Audit updated and tracked by Anti IDE.
