@@ -4660,14 +4660,15 @@ class FastSiteBuilder:
       try {{
         const res = await fetch(LISTING_INTAKE_API + '/api/listing/approve', {{
           method: 'POST', headers: {{ 'Content-Type': 'application/json' }},
-          body: JSON.stringify({{ listing_id: listingId }})
+          body: JSON.stringify({{ listing_id: listingId, tenant_slug: TENANT_SLUG }})
         }});
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Approve failed');
         if (card) {{
           card.style.borderColor = 'var(--success)';
+          const rebuildNote = data.rebuild ? ' Front door rebuilt.' : '';
           card.querySelector('.lq-actions').innerHTML =
-            '<div style="color:var(--success);font-weight:600;font-size:0.82rem;">✓ Approved for Apple showcase — rebuild front door to reflect.</div>';
+            '<div style="color:var(--success);font-weight:600;font-size:0.82rem;">✓ Approved for Apple showcase.' + rebuildNote + ' <a href="index.html#estates" target="_blank" style="color:var(--gold-accent);">View carousel ↗</a></div>';
         }}
         listingIntakeQueue = listingIntakeQueue.filter(e => e.listing_id !== listingId);
         renderListingIntakeQueue();

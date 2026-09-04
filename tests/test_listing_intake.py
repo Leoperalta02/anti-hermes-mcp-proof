@@ -59,11 +59,14 @@ class TestListingIntake(unittest.TestCase):
     def test_approve_stages_showcase(self):
         handle_request("POST", "/api/listing/submit", SAMPLE_PAYLOAD, agent=self.agent)
         status, body = handle_request(
-            "POST", "/api/listing/approve", {"listing_id": "gp-intake-202"}, agent=self.agent
+            "POST", "/api/listing/approve", {"listing_id": "gp-intake-202", "tenant_slug": "rosie"}, agent=self.agent
         )
         self.assertEqual(status, 200)
         self.assertEqual(body["status"], "APPROVED_FOR_SHOWCASE")
         self.assertTrue(self.listings_path.exists())
+        self.assertIn("rebuild", body)
+        self.assertEqual(body["rebuild"]["status"], "SHOWCASE_REBUILT")
+        self.assertFalse(body["rebuild"]["claims"]["published_live"])
 
         listings = json.loads(self.listings_path.read_text(encoding="utf-8"))
         self.assertEqual(listings[0]["id"], "gp-intake-202")

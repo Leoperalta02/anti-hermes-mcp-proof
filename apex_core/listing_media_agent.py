@@ -474,6 +474,28 @@ class ListingMediaAgent:
             "timestamp": utc_now_iso(),
         }
 
+    def rebuild_front_door(self, tenant_slug: str = DEFAULT_TENANT_SLUG) -> Dict[str, Any]:
+        """Rebuild tenant index.html + portal.html so kinetic showcase reflects office_listings.json."""
+        from apex_core.fast_site_builder import FastSiteBuilder
+        from apex_core.tenant_manager import tenant_manager
+
+        slug = tenant_slug.strip().lower()
+        tenant = tenant_manager.get_tenant_by_slug(slug)
+        if not tenant:
+            raise ValueError(f"Tenant '{tenant_slug}' not found for showcase rebuild.")
+
+        builder = FastSiteBuilder()
+        index_path = builder.build_site(tenant)
+
+        return {
+            "status": "SHOWCASE_REBUILT",
+            "tenant_slug": slug,
+            "index_path": index_path,
+            "listings_count": len(builder.load_listings()),
+            "claims": dict(DEFAULT_CLAIMS),
+            "timestamp": utc_now_iso(),
+        }
+
     def process_submission(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         """Full pipeline: ingest → enrich → queue (use approve_for_showcase to publish)."""
         return self.process_intake_submission(payload)

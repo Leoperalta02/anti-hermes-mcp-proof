@@ -6,7 +6,8 @@ Endpoints:
   GET  /                      — intake form (HTML)
   GET  /api/listing/queue     — pending queue entries (?tenant=rosie)
   POST /api/listing/submit    — JSON payload → process_intake_submission()
-  POST /api/listing/approve   — JSON {listing_id} → approve_for_showcase()
+  POST /api/listing/approve   — JSON {listing_id, tenant_slug?} → approve_for_showcase() + rebuild front door
+  POST /api/listing/rebuild   — JSON {tenant_slug?} → rebuild front door from office_listings.json
 """
 
 from __future__ import annotations
@@ -180,11 +181,22 @@ class ListingIntakeHandler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/listing/approve":
             listing_id = str(body.get("listing_id", "")).strip()
+            tenant_slug = str(body.get("tenant_slug") or "rosie").strip()
             if not listing_id:
                 _json_response(self, 400, {"error": "listing_id required"})
                 return
             try:
                 result = self.agent.approve_for_showcase(listing_id)
+                result["rebuild"] = self.agent.rebuild_front_door(tenant_slug)
+                _json_response(self, 200, result)
+            except ValueError as exc:
+                _json_response(self, 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)})
+            return
+
+        if parsed.path == "/api/listing/rebuild":
+            tenant_slug = str(body.get("tenant_slug") or "rosie").strip()
+            try:
+                result = self.agent.rebuild_front_door(tenant_slug)
                 _json_response(self, 200, result)
             except ValueError as exc:
                 _json_response(self, 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)})
@@ -224,10 +236,21 @@ def handle_request(
 
     if method == "POST" and parsed.path == "/api/listing/approve":
         listing_id = str((body or {}).get("listing_id", "")).strip()
+        tenant_slug = str((body or {}).get("tenant_slug") or "rosie").strip()
         if not listing_id:
             return 400, {"error": "listing_id required"}
         try:
-            return 200, agent.approve_for_showcase(listing_id)
+            result = agent.approve_for_showcase(listing_id)
+            rebuild = agent.rebuild_front_door(tenant_slug)
+            result["rebuild"] = rebuild
+            return 200, result
+        except ValueError as exc:
+            return 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)}
+
+    if method == "POST" and parsed.path == "/api/listing/rebuild":
+        tenant_slug = str((body or {}).get("tenant_slug") or "rosie").strip()
+        try:
+            return 200, agent.rebuild_front_door(tenant_slug)
         except ValueError as exc:
             return 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)}
 
