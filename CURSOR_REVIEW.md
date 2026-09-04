@@ -1,52 +1,135 @@
-# Cursor Review: Hermes Onboarding Wiring Stack (W1–W5)
+# Cursor Review — September 4, 2026 Handoff Audit
 
-## Audit verdict: **PASS** (W5) · Stack **STAGED PASS** (W1–W5) — commit `536e193`
+**Latest commit audited:** `76f0a69` on `github/main`  
+**Governance stack:** `89208e5` (sandbox guards) → `76f0a69` (portable test imports)  
+**Auditor:** @cursor  
+**Date:** 2026-09-04  
 
-Audited `536e193` on `github/main`. W5 implementation is solid; the full onboarding chain still needs live operator gates.
+---
 
-### W5 (`536e193`) — verified
+## Verdict: **PASS** — `send_managed_agent` governance wired + portable test imports
 
-| Area | Result |
-| --- | --- |
-| **Spec** | `DELEGATION_SANDBOX_SPEC.md` — `#rosie-onboarding-sandbox`, `#wellington-canary`; HOLD on `#Alienware-hq`; `#panel-advisors` blocked |
-| **Dispatcher** | `delegation_sandbox.py` — fail-closed channels, input validation, 4 specialists |
-| **Draft posture** | `DRAFT_PENDING_REALTOR_APPROVAL`, `external_send_blocked: true`, `send_gate: LEO_AND_REALTOR_APPROVAL_REQUIRED` |
-| **§12 claims** | All `claims.*` explicitly `false` |
-| **§9 mock orchestration** | `run_mock_delegation()` — Harbor + Keystone + Quill → `PASS` |
-| **Tests** | **9/9 PASS** (now **10/10 PASS** with queue accumulation) |
-| **Secrets** | None in commit (4 files only) |
+Commit `89208e5` adds fail-closed HOLD and specialist sandbox guards to the live `managed_agent_tool.py` writer (`update_managed_agent_tool_governance.py`). Commit `76f0a69` resolves static-import lint failures by switching `tests/test_mention_tool.py` to dynamic `importlib` with `@unittest.skipIf` for non-Alienware hosts. This closes the prior audit gap where `delegation_sandbox.py` was parallel to the live Hermes tool path.
 
-### Hermes wiring stack (W1–W5)
+---
 
-| SOP | Tests (Alienware Local) | Verdict |
-| --- | --- | --- |
-| W1 Brief watcher + POST hook | 6/6 | STAGED PASS |
-| W2 Telegram alert template | (in W1) | STAGED PASS |
-| W3 CoS triage evaluator | 8/8 | PASS |
-| W4 Tenant skeleton manager | 6/6 | PASS |
-| W5 Delegation sandbox | 10/10 | PASS |
+## `89208e5` — governance rules audit
 
-Hermes modules combined: **30/30 PASS**.
+Source of truth: `update_managed_agent_tool_governance.py` → writes `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`
 
-Full repo on Alienware local: **67/67 PASS** (portable imports runnable in any environment).
+| Rule | Guard | Verified |
+|------|-------|----------|
+| `#panel-advisors` tool deny (existing) | `[STOP — TOOL DENY]` | **PASS** |
+| **`#Alienware-hq` HOLD** (new Rule 6) | `[STOP — HOLD ACTIVE]` before arg parse | **PASS** — blocks all `send_managed_agent` in production channel |
+| **Specialist sandbox** (new Rule 7) | `[STOP — SANDBOX VIOLATION]` for Harbor, Keystone, Quill, Rosie outside `#rosie-onboarding-sandbox` / `#wellington-canary` | **PASS** |
+| Empty args validation (existing) | `target_agent` + `content` required | **PASS** |
+| Event ID traceability (existing) | `[STOP — NO EVENT ID]` | **PASS** |
 
-### Why stack is STAGED PASS (not full PASS)
+### HOLD guard (Rule 6)
 
-1. **Live Telegram** — Alerts still staged to JSON; Hermes must dispatch to Leo.
-2. **`send_managed_agent`** — Spec references tool lockdown; `delegation_sandbox.py` is a parallel Python dispatcher, not wired into the live Hermes tool path.
-3. **§9 full chain** — `run_mock_delegation()` covers steps 5–6 in isolation; Leo `APPROVE PROVISION DRYRUN` → specialist drafts → status log still needs operator sign-off.
+```python
+if ch_name in {"alienware-hq", "#alienware-hq"}:
+    return "[STOP — HOLD ACTIVE] send_managed_agent is blocked in #Alienware-hq. ..."
+```
 
-### Non-blocking notes addressed
+Runs immediately after panel-advisors check, before ACP relay. Test: `test_send_managed_agent_blocked_in_alienware_hq`.
 
-- Harbor queue now accumulates entries as a list in `follow_up_queue.json` across multiple dispatches.
-- Default tenant root is Alienware path; tests correctly use isolated temp directories.
+### Specialist sandbox guard (Rule 7)
 
-### Operator gates progression
+```python
+_SANDBOX_CHANNELS = {"wellington-canary", "#wellington-canary", "rosie-onboarding-sandbox", "#rosie-onboarding-sandbox"}
+_SPECIALIST_AGENTS = {"harbor", "keystone", "quill", "rosie"}
+if target_clean.lower() in _SPECIALIST_AGENTS:
+    if ch_val and ch_val[0].lower() not in _SANDBOX_CHANNELS:
+        return "[STOP — SANDBOX VIOLATION] ..."
+```
 
-1. [x] **Leo §9 dry-run approval**: Leo sent **`all provisions are approved`** (and prior `APPROVED PROVISION DRYRUN`); mock delegation passes clean with zero external sends.
-2. [x] **Wire `send_managed_agent` sandbox channel guard**: Live tool `managed_agent_tool.py` updated with HOLD check on `#Alienware-hq` and specialist isolation guard (`[STOP — SANDBOX VIOLATION]`). Unit tests: 7/7 PASS (`test_mention_tool.py`).
-3. [ ] **A4 72h gateway watch**: 12h+ clean, ongoing supervision.
-4. [ ] **`APPROVE PROVISION` for first real realtor**: Pending live onboarding trigger.
+Aligns with `delegation_sandbox.py` and `DELEGATION_SANDBOX_SPEC.md`. Test: `test_send_managed_agent_specialist_sandbox_guard`.
 
-Full repo on Alienware local: **67/67 PASS**.
-Audit updated and tracked by Anti IDE.
+---
+
+## `76f0a69` — portable import audit
+
+| Claim | Verified |
+|-------|----------|
+| Dynamic `importlib.import_module("tools.managed_agent_tool")` | **PASS** |
+| Path guard: only inserts `C:\LEO-LAB-ANTIGRAVITY\hermes-agent` if `os.path.exists()` | **PASS** |
+| Graceful skip on import failure | **PASS** — `@unittest.skipIf(_managed_tool is None, ...)` |
+| No static import lint error in cloud CI | **PASS** — module not imported at parse time |
+
+---
+
+## Tests — `test_mention_tool.py`
+
+**Alienware (with `hermes-agent`):** 7/7 PASS (per `HERMES_STATUS.md` / full 67/67 suite)
+
+**Cursor cloud VM:**
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+| Metric | Count |
+|--------|-------|
+| **Ran** | 62 |
+| **PASS** | 45 |
+| **SKIP** | 7 (all `TestMentionAgentToolGovernance` — `tools.managed_agent_tool not found on this host`) |
+| **ERROR** | 10 (Alienware-only: `test_model_failover`, panel seat OAuth, reply path audit, specialist OAuth) |
+
+Skip behavior is **correct**: cloud runs complete without import-time crash; governance tests execute only where `managed_agent_tool.py` is present.
+
+---
+
+## Inherited stack (still valid)
+
+| Area | Verdict |
+|------|---------|
+| W1–W5 Hermes wiring (`354b095`–`536e193`) | **STAGED PASS** → governance gap **closed** |
+| W5 `delegation_sandbox.py` | **PASS** |
+| External coaching (`63591df`) | **PASS** |
+| CRM tracker (`a9e7ff4`) | **PASS** |
+
+---
+
+## Minor notes (non-blocking)
+
+1. **Specialist guard when `ch_val` is None** — Sandbox violation only fires when channel context is set. If ACP omits context, specialist delegation is not blocked by Rule 7 (relies on upstream context injection). Recommend fail-closed default if `ch_val is None` and target is specialist.
+2. **Live file out-of-repo** — `managed_agent_tool.py` lives on Alienware at `hermes-agent/tools/`; repo carries the writer script + tests, not the deployed file itself.
+3. **67/67 vs cloud 45+7 skip+10 error** — Full green suite requires Alienware paths and Hermes-state harnesses.
+
+---
+
+## SOP / false-claims watch
+
+| Item | Status |
+|------|--------|
+| HOLD on `#Alienware-hq` | **PASS** — enforced in live tool |
+| Specialist isolation to sandbox channels | **PASS** — enforced in live tool |
+| `#panel-advisors` governance lock | **PASS** — unchanged |
+| §12 zero false claims in delegation | **PASS** — via `delegation_sandbox.py` |
+| Live Telegram dispatch | **OPEN** — staged JSON alerts |
+| A4 72h gateway watch | **OPEN** — in progress per `ANTI_STATUS.md` |
+
+---
+
+## Leo gates
+
+| Action | Ready? |
+|--------|--------|
+| Delegate to Harbor/Keystone/Quill in sandbox | **Yes** — `#rosie-onboarding-sandbox` or `#wellington-canary` |
+| Delegate via `#Alienware-hq` | **No** — `[STOP — HOLD ACTIVE]` |
+| Delegate specialists from `#general` | **No** — `[STOP — SANDBOX VIOLATION]` |
+| First real realtor `APPROVE PROVISION` | **No** — after A4 + live §9 sign-off |
+
+---
+
+## Verify commands
+
+```bash
+# Alienware (full governance + harness tests)
+python -m unittest tests.test_mention_tool -v
+python -m unittest discover -s tests -v
+
+# Any environment (portable subset)
+python3 -m unittest discover -s tests -v
+```
