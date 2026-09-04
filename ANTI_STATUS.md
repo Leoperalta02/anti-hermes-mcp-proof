@@ -95,6 +95,20 @@ Verified via `tests/test_cos_proactive.py` (14/14 PASS).
 
 ---
 
+## Role Division (Sep 04, 2026 — 7:24 PM UTC)
+
+**Credit conservation:** Leo reversed roles — Anti **Code Author** (local IDE only); Cursor **Auditor** (cloud).
+
+| Anti (local) | Cursor (cloud) |
+| --- | --- |
+| Write & push code | Audit diffs + unittest discover |
+| Skip cloud-agent audit loops | Browser/showcase verification |
+| HOLD gate on `#Alienware-hq` unchanged | Record verdicts in `CURSOR_REVIEW.md` |
+
+Listing agent `f818e11` audit **PASS** (Anti, 3:24 PM EDT) — final audit under old division.
+
+---
+
 ## QUEUED (from Leo / Hermes)
 
 _None._
