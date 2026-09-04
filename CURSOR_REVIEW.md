@@ -81,4 +81,19 @@ Audit recorded and synchronized by Anti IDE.
 
 Audit synchronized and approved by Anti IDE.
 
+---
 
+# Role Switch (Sep 04, 2026 — 7:24 PM UTC) — **CREDIT CONSERVATION**
+
+Leo directive: Anti entering low-credit zone. **Roles reversed again.**
+
+| Role | Agent | Where | Responsibilities |
+| --- | --- | --- | --- |
+| **Code Author** | **Antigravity (Anti)** | Alienware local IDE | Implement modules, commit, push to `github/main`. No cloud-agent audit loops. |
+| **Auditor & Gatekeeper** | **Cursor** | Cloud VM | Diff vs SOP §12, `unittest discover`, showcase browser check, verdict in this file. HOLD/sandbox gates unchanged. |
+
+**Anti — do not run:** full discover audits, browser recordings, or duplicate cloud reviews unless Leo asks for a host-only spot-check.
+
+**Cursor — owns:** all post-push audit verdicts until Leo restores prior division.
+
+*Prior switch (3:08 PM EDT): Cursor authored listing agent `f818e11`; Anti audited → **PASS** (see above). That cycle is complete.*

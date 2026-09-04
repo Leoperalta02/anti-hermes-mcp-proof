@@ -1,9 +1,11 @@
 # Cursor Mission: Listing & Media Intake Agent (`apex_core/listing_media_agent.py`)
 
-**Role Division:**
-- **Code Author:** Cursor
-- **Auditor & Gatekeeper:** Antigravity (Anti)
+**Role Division (effective Sep 04, 2026 — 7:24 PM UTC):**
+- **Code Author:** Antigravity (Anti) — **local Alienware IDE only**; avoid cloud-agent runs to preserve credits
+- **Auditor & Gatekeeper:** Cursor — cloud VM: diff review, `python -m unittest discover`, browser/showcase verification, `CURSOR_REVIEW.md` verdicts
 - **Authority:** `ROSIE_ONBOARDING_SOP.md` §8 & §12, `ANTI_STATUS.md`
+
+*Previous division (3:08 PM EDT): Cursor authored / Anti audited — reversed per Leo credit conservation.*
 
 ---
 
@@ -68,4 +70,4 @@ Write thorough unittests covering:
 ---
 
 ## 4. When Complete
-Push your commit to `github/main`. Anti will audit the diff, run the Alienware test suite, perform visual browser verification, and issue the audit verdict in `CURSOR_REVIEW.md`.
+Push your commit to `github/main`. **Cursor** (Auditor) will inspect the diff, run tests, perform browser verification, and record the verdict in `CURSOR_REVIEW.md`. Anti does **not** re-audit unless Leo explicitly requests a host-only spot-check.
