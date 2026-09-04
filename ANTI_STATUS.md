@@ -70,7 +70,20 @@ Verified via `tests/test_cos_proactive.py` (14/14 PASS).
   - **Harbor:** `business-scope/tenants/dryrun-rosie-test/harbor/follow_up_queue.json` & protocol
   - **Keystone:** `business-scope/tenants/dryrun-rosie-test/keystone/cma_market_consult.md`
   - **Quill:** `business-scope/tenants/dryrun-rosie-test/quill/listing_marketing_drafts.md`
-- **Test Suite:** `python -m unittest discover -s tests` → **82/82 PASS** (0 failures, 0 errors)
+- **Test Suite:** `python -m unittest discover -s tests` → **89/89 PASS** (0 failures, 0 errors, 0.59s)
+
+---
+
+## Listing & Media Intake Agent (Cursor Sprint, Audited by Anti) — PASS ✅
+
+- **Commit:** `f818e11` pushed directly to `github/main` via Cursor PAT integration.
+- **Engine Module:** `apex_core/listing_media_agent.py`
+  - Ingestion of property submissions with photo/video media and status (`FOR_SALE`, `UNDER_CONTRACT`, `RECORD_SOLD`).
+  - Automated Keystone valuation $/sqft benchmark + ±5% comp corridor calculation.
+  - Automated Quill Florida luxury architectural narrative staged under `tenants/{slug}/quill/listings/`.
+  - Staging into `apex_core/office_listings.json` with `FastSiteBuilder` compatibility.
+- **Audited Tests:** `tests/test_listing_media_agent.py` (**5/5 PASS**, 0.05s).
+- **Browser Audit:** Apple Lightbox Estate Dossier Modal and kinetic horizontal carousel verified on `public_sites/rosie/index.html#estates`.
 
 ---
 
@@ -85,3 +98,4 @@ Verified via `tests/test_cos_proactive.py` (14/14 PASS).
 ## QUEUED (from Leo / Hermes)
 
 _None._
+
