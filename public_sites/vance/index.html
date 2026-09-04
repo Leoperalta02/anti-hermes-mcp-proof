@@ -100,9 +100,11 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.5rem 0;
+      padding: 0.85rem 0.5rem;
+      margin-bottom: -0.85rem;
       cursor: pointer;
       transition: color 0.2s ease;
+      position: relative;
     }
     .nav-link:hover, .nav-item-dropdown:hover .nav-link {
       color: var(--text-primary);
@@ -120,35 +122,38 @@
       top: 100%;
       left: 0;
       right: 0;
-      background: rgba(10, 10, 14, 0.96);
+      background: rgba(10, 10, 14, 0.97);
       backdrop-filter: blur(35px);
       -webkit-backdrop-filter: blur(35px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
       max-height: 0;
       opacity: 0;
+      visibility: hidden;
       transform: translateY(-8px);
-      overflow: hidden;
       pointer-events: none;
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
       z-index: 999;
     }
-    /* Hover buffer bridge */
+    /* Hover buffer bridge - uninterrupted invisible hit-catcher between nav and flyout */
     .apple-flyout::before {
       content: '';
       position: absolute;
-      top: -25px;
+      top: -35px;
       left: 0;
       right: 0;
-      height: 30px;
+      height: 40px;
       background: transparent;
+      z-index: 1001;
+      pointer-events: auto;
     }
     .nav-item-dropdown:hover .apple-flyout,
     .nav-item-dropdown:focus-within .apple-flyout,
     .apple-flyout:hover,
     .apple-flyout.is-open {
-      max-height: 460px;
+      max-height: 520px;
       opacity: 1;
+      visibility: visible;
       transform: translateY(0);
       pointer-events: auto;
     }
@@ -217,9 +222,6 @@
       pointer-events: none;
       transition: opacity 0.35s ease;
       z-index: 900;
-    }
-    .apple-nav:hover ~ .apple-page-scrim {
-      opacity: 1;
     }
 
     .pill-btn-small {
@@ -917,7 +919,10 @@
       const flyout = dd.querySelector('.apple-flyout');
 
       function openFlyout() {
-        if (closeTimer) clearTimeout(closeTimer);
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
         dropdowns.forEach(other => {
           const f = other.querySelector('.apple-flyout');
           if (f && f !== flyout) f.classList.remove('is-open');
@@ -930,28 +935,41 @@
       function closeFlyoutWithDelay() {
         if (closeTimer) clearTimeout(closeTimer);
         closeTimer = setTimeout(() => {
-          if (flyout && (flyout.matches(':hover') || dd.matches(':hover'))) return;
-          if (flyout) flyout.classList.remove('is-open');
+          const anyDropdownHovered = Array.from(dropdowns).some(d => d.matches(':hover'));
+          const anyFlyoutHovered = Array.from(document.querySelectorAll('.apple-flyout')).some(f => f.matches(':hover'));
+          if (anyDropdownHovered || anyFlyoutHovered) return;
+
+          document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
           const scrim = document.querySelector('.apple-page-scrim');
           if (scrim) scrim.style.opacity = '0';
-        }, 350);
+        }, 700);
       }
 
       dd.addEventListener('mouseenter', openFlyout);
       dd.addEventListener('mouseleave', closeFlyoutWithDelay);
 
       if (flyout) {
-        flyout.addEventListener('mouseenter', openFlyout);
-        flyout.addEventListener('mousemove', openFlyout);
+        flyout.addEventListener('mouseenter', () => {
+          if (closeTimer) {
+            clearTimeout(closeTimer);
+            closeTimer = null;
+          }
+        });
+        flyout.addEventListener('mousemove', () => {
+          if (closeTimer) {
+            clearTimeout(closeTimer);
+            closeTimer = null;
+          }
+        });
         flyout.addEventListener('mouseleave', closeFlyoutWithDelay);
       }
 
       if (link) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          const isOpen = flyout.classList.contains('is-open');
+          const isOpen = flyout && flyout.classList.contains('is-open');
           if (isOpen) {
-            flyout.classList.remove('is-open');
+            if (flyout) flyout.classList.remove('is-open');
             const scrim = document.querySelector('.apple-page-scrim');
             if (scrim) scrim.style.opacity = '0';
           } else {
@@ -994,57 +1012,88 @@
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      z-index: 850;
+      z-index: 9999;
       display: flex;
       align-items: center;
       gap: 0.85rem;
-      background: rgba(14, 14, 18, 0.85);
+      background: rgba(18, 18, 24, 0.94);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
-      border: 1px solid rgba(229, 200, 144, 0.35);
-      padding: 0.6rem 1.25rem 0.6rem 0.65rem;
+      border: 1.5px solid rgba(229, 200, 144, 0.65);
+      padding: 0.65rem 1.35rem 0.65rem 0.75rem;
       border-radius: var(--pill-radius);
       cursor: pointer;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 18px rgba(229, 200, 144, 0.15);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(229, 200, 144, 0.35);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      animation: conciergeEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both, conciergePulse 4s ease-in-out 1.5s infinite;
     }
     .concierge-launcher:hover {
-      transform: translateY(-3px) scale(1.02);
-      border-color: var(--gold-accent);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(229, 200, 144, 0.3);
+      transform: translateY(-4px) scale(1.03);
+      border-color: #ffd700;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9), 0 0 32px rgba(229, 200, 144, 0.6);
+    }
+    @keyframes conciergeEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    @keyframes conciergePulse {
+      0%, 100% {
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(229, 200, 144, 0.35);
+      }
+      50% {
+        box-shadow: 0 20px 44px rgba(0, 0, 0, 0.85), 0 0 32px rgba(229, 200, 144, 0.6);
+      }
     }
     .concierge-avatar-wrap {
       position: relative;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
     }
     .concierge-launcher-img {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       object-fit: cover;
-      border: 1.5px solid var(--gold-accent);
+      border: 2px solid var(--gold-accent);
     }
     .concierge-online-dot {
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       background: #34d399;
       border-radius: 50%;
-      border: 2px solid #000;
-      box-shadow: 0 0 8px #34d399;
+      border: 2px solid #111;
+      animation: dotPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+      }
     }
     .concierge-launcher-title {
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      color: var(--text-primary);
+      color: #ffffff;
+      line-height: 1.2;
     }
     .concierge-launcher-sub {
       font-size: 0.72rem;
       color: var(--gold-accent);
       letter-spacing: 0.02em;
+      font-weight: 500;
+      margin-top: 2px;
     }
 
     /* Concierge Chat Window */
@@ -1056,13 +1105,13 @@
       max-width: calc(100vw - 2.5rem);
       height: 540px;
       max-height: calc(100vh - 7rem);
-      background: rgba(12, 12, 16, 0.94);
+      background: rgba(12, 12, 16, 0.96);
       backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 200, 144, 0.1);
-      z-index: 860;
+      border: 1px solid rgba(229, 200, 144, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.95), 0 0 30px rgba(229, 200, 144, 0.15);
+      z-index: 10000;
       display: flex;
       flex-direction: column;
       overflow: hidden;

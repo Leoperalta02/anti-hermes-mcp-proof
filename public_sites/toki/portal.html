@@ -3,654 +3,1308 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>John 'Toki' Grullon • Executive Workforce Console & Private Portal</title>
-  
+  <title>John 'Toki' Grullon • Sovereign Realtor OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
   <style>
     :root {
       --bg-canvas: #000000;
       --bg-surface: #0a0a0d;
-      --bg-card: rgba(20, 20, 25, 0.72);
-      --bg-card-elevated: rgba(26, 26, 33, 0.85);
+      --bg-card: rgba(18, 18, 24, 0.75);
+      --bg-card-elevated: rgba(26, 26, 33, 0.88);
       --text-primary: #f5f5f7;
       --text-secondary: #86868b;
       --gold-accent: #e5c890;
-      --gold-gradient: linear-gradient(135deg, #f7e7c4 0%, #e5c890 50%, #b89547 100%);
-      --hairline: rgba(255, 255, 255, 0.08);
-      --hairline-hover: rgba(229, 200, 144, 0.35);
+      --gold-dim: rgba(229,200,144,0.15);
+      --hairline: rgba(255,255,255,0.08);
+      --hairline-gold: rgba(229,200,144,0.3);
       --success: #34d399;
-      --apple-radius: 20px;
-      --pill-radius: 980px;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --blue: #60a5fa;
+      --r: 20px;
+      --pill: 980px;
     }
-    
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
-      background-color: var(--bg-canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+      background: #000;
       color: var(--text-primary);
-      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      background-image: 
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 200, 144, 0.16) 0%, transparent 65%),
-        radial-gradient(ellipse 60% 40% at 90% 40%, rgba(41, 151, 255, 0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(229, 200, 144, 0.05) 0%, transparent 60%);
+      background-image:
+        radial-gradient(ellipse 90% 55% at 50% -15%, rgba(229,200,144,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 92% 45%, rgba(96,165,250,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 50% at 8% 85%, rgba(229,200,144,0.04) 0%, transparent 60%);
       background-attachment: fixed;
     }
 
-    .container {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    /* Liquid Glass Top Navigation */
+    /* ── NAV ── */
     .portal-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(0,0,0,0.82);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--hairline);
     }
     .nav-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.9rem 0;
+      max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 3.2rem;
     }
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .brand-mark {
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+    .brand { display: flex; align-items: center; gap: 0.65rem; }
     .brand-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--gold-accent);
-      box-shadow: 0 0 10px rgba(229, 200, 144, 0.6);
+      box-shadow: 0 0 10px rgba(229,200,144,0.7);
     }
-    .badge-scope {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--hairline);
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: var(--pill-radius);
+    .brand-name { font-size: 0.95rem; font-weight: 600; }
+    .badge {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--hairline);
+      color: var(--text-secondary); font-size: 0.7rem;
+      padding: 0.18rem 0.55rem; border-radius: var(--pill);
       font-family: 'JetBrains Mono', monospace;
     }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
+    .nav-tabs {
+      display: flex; gap: 0.2rem; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--hairline); border-radius: var(--pill);
+      padding: 0.22rem;
     }
-    .status-live {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--success);
-      font-weight: 500;
+    .nav-tab {
+      font-size: 0.78rem; font-weight: 500; padding: 0.3rem 0.85rem;
+      border-radius: var(--pill); cursor: pointer; border: none;
+      background: transparent; color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+    .nav-tab.active {
+      background: rgba(255,255,255,0.12); color: var(--text-primary);
+    }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .live-dot {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; color: var(--success); font-weight: 500;
     }
     .pulse-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 8px var(--success);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--success); box-shadow: 0 0 8px var(--success);
+      animation: pulse 2s infinite;
     }
-    .btn-frontdoor {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-      font-size: 0.82rem;
-      font-weight: 500;
-      padding: 0.45rem 1.1rem;
-      border-radius: var(--pill-radius);
-      text-decoration: none;
-      border: 1px solid var(--hairline);
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .btn-sm {
+      font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.85rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: rgba(255,255,255,0.06); color: var(--text-primary);
+      cursor: pointer; transition: all 0.2s ease; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.3rem;
     }
-    .btn-frontdoor:hover {
-      background: var(--text-primary);
-      color: #000;
+    .btn-sm:hover { background: var(--text-primary); color: #000; }
+
+    /* ── LAYOUT SHELL ── */
+    .os-shell {
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 2rem 4rem 2rem;
     }
 
-    /* Executive Hero Bar */
-    .portal-hero {
-      padding: 3rem 0 2rem 0;
-    }
-    .welcome-title {
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      font-weight: 600;
-      letter-spacing: -0.025em;
-      margin-bottom: 0.5rem;
-    }
-    .welcome-sub {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 700px;
-    }
+    /* ── PANEL VISIBILITY ── */
+    .os-panel { display: none; }
+    .os-panel.active { display: block; }
 
-    /* Stripe 8/16px Telemetry Bar */
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
-      margin: 2rem 0 2.5rem 0;
-    }
-    .stat-card {
+    /* ── CARDS ── */
+    .card {
       background: var(--bg-card);
       border: 1px solid var(--hairline);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      transition: all 0.2s ease;
+      border-radius: var(--r);
+      padding: 1.5rem 1.75rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .stat-card:hover {
-      border-color: var(--hairline-hover);
-      transform: translateY(-2px);
+    .card:hover { border-color: var(--hairline-gold); box-shadow: 0 12px 28px rgba(0,0,0,0.5); }
+    .card-title {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--gold-accent); font-weight: 600; margin-bottom: 0.5rem;
     }
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
+
+    /* ── KPI BAR ── */
+    .kpi-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem; margin: 1.75rem 0;
+    }
+    .kpi {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 1.1rem 1.25rem;
+      transition: all 0.2s ease; cursor: default;
+    }
+    .kpi:hover { border-color: var(--hairline-gold); transform: translateY(-2px); }
+    .kpi-num {
+      font-size: 1.7rem; font-weight: 600; letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
-      margin-bottom: 0.2rem;
     }
-    .stat-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gold-accent);
-      font-weight: 500;
-    }
-
-    /* Workspace 2-Column Split */
-    .workspace-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 0.85fr;
-      gap: 2rem;
-      margin-bottom: 4rem;
+    .kpi-num.gold { background: linear-gradient(135deg,#f7e7c4,#e5c890,#b89547); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .kpi-num.green { color: var(--success); }
+    .kpi-num.blue { color: var(--blue); }
+    .kpi-lbl {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-secondary); font-weight: 500; margin-top: 0.15rem;
     }
 
-    /* Left Column: Staged Queue */
-    .queue-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.015em;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* ── ACTION QUEUE ── */
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 2rem 0 1rem 0;
     }
-    .queue-badge {
-      font-size: 0.75rem;
-      background: rgba(229, 200, 144, 0.15);
-      color: var(--gold-accent);
-      padding: 0.2rem 0.6rem;
-      border-radius: var(--pill-radius);
-      border: 1px solid rgba(229, 200, 144, 0.3);
+    .section-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.015em; }
+    .count-pill {
+      background: var(--gold-dim); border: 1px solid var(--hairline-gold);
+      color: var(--gold-accent); font-size: 0.72rem; font-weight: 600;
+      padding: 0.2rem 0.65rem; border-radius: var(--pill);
     }
+    .contact-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 0.85rem 1.25rem;
+      margin-bottom: 0.65rem; transition: all 0.2s ease;
+    }
+    .contact-row:hover { border-color: var(--hairline-gold); background: var(--bg-card-elevated); }
+    .contact-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .av-hot { background: rgba(248,113,113,0.2); color: var(--danger); }
+    .av-warm { background: rgba(251,191,36,0.2); color: var(--warning); }
+    .av-cold { background: rgba(96,165,250,0.15); color: var(--blue); }
+    .contact-info { flex: 1; }
+    .contact-name { font-size: 0.88rem; font-weight: 600; }
+    .contact-meta { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.1rem; }
+    .contact-actions { display: flex; gap: 0.4rem; }
+    .btn-action {
+      font-size: 0.72rem; font-weight: 500; padding: 0.3rem 0.7rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: transparent; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-action.primary { background: var(--text-primary); color: #000; border-color: var(--text-primary); }
+    .btn-action:hover:not(.primary) { border-color: var(--gold-accent); color: var(--gold-accent); }
+    .heat-badge {
+      font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.5rem;
+      border-radius: var(--pill); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .heat-hot { background: rgba(248,113,113,0.15); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+    .heat-warm { background: rgba(251,191,36,0.15); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
+    .heat-cold { background: rgba(96,165,250,0.1); color: var(--blue); border: 1px solid rgba(96,165,250,0.25); }
 
-    .staged-card {
-      background: var(--bg-card);
-      border: 1px solid var(--hairline);
-      border-radius: var(--apple-radius);
-      padding: 1.75rem 2rem;
-      margin-bottom: 1.5rem;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: hidden;
+    /* ── PIPELINES ── */
+    .pipeline-tabs {
+      display: flex; gap: 0.3rem; margin-bottom: 1.25rem;
     }
-    .staged-card:hover {
-      border-color: var(--hairline-hover);
-      background: var(--bg-card-elevated);
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
-    }
-    .staged-tag {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    .specialist-badge {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gold-accent);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .timestamp {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .staged-headline {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-    .staged-body {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 1.25rem;
-    }
-    .staged-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-    .btn-approve {
-      background: var(--text-primary);
-      color: #000;
-      font-weight: 500;
-      font-size: 0.85rem;
-      padding: 0.55rem 1.25rem;
-      border-radius: var(--pill-radius);
-      border: none;
-      cursor: pointer;
+    .pipe-tab {
+      font-size: 0.82rem; font-weight: 500; padding: 0.5rem 1.1rem;
+      border-radius: var(--pill); border: 1px solid var(--hairline);
+      background: transparent; color: var(--text-secondary); cursor: pointer;
       transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
     }
-    .btn-approve:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    .pipe-tab.active { background: var(--text-primary); color: #000; border-color: var(--text-primary); }
+    .kanban-track {
+      overflow-x: auto; padding-bottom: 0.5rem;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
     }
-    .btn-revise {
-      background: rgba(255, 255, 255, 0.06);
+    .kanban {
+      display: flex; gap: 0.85rem; min-width: max-content;
+    }
+    .kanban-col {
+      width: 185px; flex-shrink: 0;
+    }
+    .kanban-stage {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--text-secondary); font-weight: 600;
+      padding: 0.5rem 0.75rem; margin-bottom: 0.5rem;
+      background: rgba(255,255,255,0.04); border-radius: 8px;
+    }
+    .deal-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 0.5rem;
+      cursor: grab; transition: all 0.2s ease;
+    }
+    .deal-card:hover { border-color: var(--hairline-gold); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+    .deal-name { font-size: 0.82rem; font-weight: 600; }
+    .deal-addr { font-size: 0.72rem; color: var(--text-secondary); margin: 0.2rem 0; }
+    .deal-val { font-size: 0.8rem; font-weight: 600; color: var(--gold-accent); }
+    .deal-days { font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.25rem; }
+    .kanban-add {
+      font-size: 0.75rem; color: var(--text-secondary); cursor: pointer;
+      padding: 0.5rem 0.75rem; text-align: center;
+      border: 1px dashed var(--hairline); border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .kanban-add:hover { border-color: var(--gold-accent); color: var(--gold-accent); }
+
+    /* ── NET SHEETS ── */
+    .net-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+    .net-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); padding: 1.5rem 1.75rem;
+    }
+    .net-title {
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--gold-accent); font-weight: 600; margin-bottom: 1rem;
+    }
+    .net-field { margin-bottom: 0.85rem; }
+    .net-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+    .net-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: 10px;
+      padding: 0.6rem 0.85rem; color: #fff; font-size: 0.88rem;
+      outline: none; font-family: inherit;
+    }
+    .net-input:focus { border-color: var(--gold-accent); }
+    .net-result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--hairline);
+      font-size: 0.82rem;
+    }
+    .net-result-row.total {
+      border-bottom: none; padding-top: 0.75rem; margin-top: 0.25rem;
+      font-weight: 700; font-size: 1rem;
+    }
+    .net-result-val { font-family: 'JetBrains Mono', monospace; }
+    .net-result-val.positive { color: var(--success); }
+    .net-result-val.negative { color: var(--danger); }
+    .btn-calc {
+      width: 100%; margin-top: 1rem; padding: 0.7rem 1rem;
+      background: var(--text-primary); color: #000; border: none;
+      border-radius: var(--pill); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-calc:hover { transform: scale(1.02); box-shadow: 0 6px 18px rgba(255,255,255,0.15); }
+
+    /* ── CMA PANEL ── */
+    .cma-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+    .cma-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); padding: 1.5rem 1.75rem;
+    }
+    .cma-board-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--gold-dim); border: 1px solid var(--hairline-gold);
+      color: var(--gold-accent); font-size: 0.72rem; font-weight: 600;
+      padding: 0.22rem 0.65rem; border-radius: var(--pill);
+      margin-bottom: 0.85rem; text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .comp-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--hairline);
+      font-size: 0.82rem;
+    }
+    .comp-row:last-child { border-bottom: none; }
+    .comp-addr { color: var(--text-secondary); font-size: 0.78rem; }
+    .comp-price { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+    .comp-status {
+      font-size: 0.65rem; padding: 0.18rem 0.5rem; border-radius: var(--pill);
+      font-weight: 600; text-transform: uppercase;
+    }
+    .status-sold { background: rgba(52,211,153,0.12); color: var(--success); }
+    .status-active { background: rgba(96,165,250,0.12); color: var(--blue); }
+    .status-pending { background: rgba(251,191,36,0.12); color: var(--warning); }
+    .cma-summary {
+      background: rgba(229,200,144,0.06); border: 1px solid var(--hairline-gold);
+      border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem;
+    }
+    .cma-summary-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-accent); margin-bottom: 0.5rem; }
+    .cma-price-tiers { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .cma-tier {
+      flex: 1; background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: 10px; padding: 0.75rem 0.9rem; text-align: center;
+    }
+    .cma-tier-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+    .cma-tier-price { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── FSBO / EXPIREDS ── */
+    .prospect-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 0.65rem;
+      transition: all 0.2s ease;
+    }
+    .prospect-card:hover { border-color: var(--hairline-gold); }
+    .prospect-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .prospect-name { font-size: 0.88rem; font-weight: 600; }
+    .prospect-addr { font-size: 0.75rem; color: var(--text-secondary); margin: 0.2rem 0; }
+    .prospect-tags { display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap; }
+    .ptag {
+      font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.18rem 0.5rem; border-radius: var(--pill);
+    }
+    .ptag-fsbo { background: rgba(251,191,36,0.12); color: var(--warning); border: 1px solid rgba(251,191,36,0.25); }
+    .ptag-exp { background: rgba(248,113,113,0.12); color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+    .ptag-follow { background: rgba(96,165,250,0.1); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
+    .prospect-actions { display: flex; gap: 0.4rem; margin-top: 0.6rem; }
+
+    /* ── PLAYBOOK ── */
+    .playbook-grid { display: grid; grid-template-columns: 240px 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+    .script-menu { display: flex; flex-direction: column; gap: 0.35rem; }
+    .script-item {
+      font-size: 0.82rem; font-weight: 500; padding: 0.6rem 0.9rem;
+      border-radius: 10px; border: 1px solid var(--hairline);
+      background: transparent; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.2s ease; text-align: left;
+    }
+    .script-item.active, .script-item:hover {
+      background: var(--gold-dim); border-color: var(--hairline-gold);
       color: var(--text-primary);
-      font-size: 0.85rem;
-      padding: 0.55rem 1.25rem;
-      border-radius: var(--pill-radius);
-      border: 1px solid var(--hairline);
-      cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .btn-revise:hover {
-      border-color: var(--gold-accent);
-      color: var(--gold-accent);
+    .script-viewer {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); padding: 1.5rem 1.75rem;
     }
+    .script-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .script-category { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-accent); margin-bottom: 1.25rem; }
+    .script-block {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--hairline);
+      border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+    }
+    .script-speaker {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em;
+      font-weight: 700; margin-bottom: 0.4rem;
+    }
+    .script-speaker.agent { color: var(--gold-accent); }
+    .script-speaker.prospect { color: var(--blue); }
+    .script-speaker.objection { color: var(--danger); }
+    .script-text { font-size: 0.85rem; line-height: 1.55; color: var(--text-primary); }
+    .objection-tip {
+      background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.8rem;
+      color: var(--text-secondary); margin-top: 0.75rem; line-height: 1.5;
+    }
+    .objection-tip strong { color: var(--danger); }
 
-    /* Right Column: Personal AI Copilot Console */
+    /* ── COPILOT ── */
+    .workspace-grid { display: grid; grid-template-columns: 1.4fr 0.85fr; gap: 1.75rem; margin-bottom: 3rem; }
     .copilot-card {
-      background: var(--bg-card);
-      border: 1px solid var(--hairline);
-      border-radius: var(--apple-radius);
-      display: flex;
-      flex-direction: column;
-      height: 680px;
-      position: sticky;
-      top: 5rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); display: flex; flex-direction: column;
+      height: 600px; position: sticky; top: 4rem;
     }
     .copilot-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--hairline);
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .copilot-agent {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .copilot-agent { display: flex; align-items: center; gap: 0.75rem; }
     .copilot-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1.5px solid var(--gold-accent);
-      object-fit: cover;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--gold-accent); object-fit: cover;
     }
-    .copilot-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-    .copilot-sub {
-      font-size: 0.75rem;
-      color: var(--success);
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
+    .copilot-name { font-size: 0.9rem; font-weight: 600; }
+    .copilot-sub { font-size: 0.7rem; color: var(--success); display: flex; align-items: center; gap: 0.3rem; }
     .copilot-feed {
-      flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      flex: 1; padding: 1.25rem; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 0.85rem;
     }
-    .msg-bubble {
-      padding: 0.9rem 1.1rem;
-      border-radius: 14px;
-      font-size: 0.88rem;
-      line-height: 1.45;
-      max-width: 90%;
-    }
-    .msg-agent {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--hairline);
-      align-self: flex-start;
-      color: var(--text-primary);
-    }
-    .msg-user {
-      background: var(--gold-accent);
-      color: #000;
-      align-self: flex-end;
-      font-weight: 500;
-    }
-    
-    .copilot-chips {
-      display: flex;
-      gap: 0.5rem;
-      padding: 0 1.25rem 0.75rem 1.25rem;
-      flex-wrap: wrap;
-    }
+    .msg-bubble { padding: 0.8rem 1rem; border-radius: 14px; font-size: 0.84rem; line-height: 1.45; max-width: 92%; }
+    .msg-agent { background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); align-self: flex-start; }
+    .msg-user { background: var(--gold-accent); color: #000; font-weight: 500; align-self: flex-end; }
+    .copilot-chips { display: flex; gap: 0.4rem; padding: 0 1.25rem 0.6rem; overflow-x: auto; scrollbar-width: none; flex-wrap: wrap; }
     .chip {
-      font-size: 0.75rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--hairline);
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--pill-radius);
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
+      font-size: 0.72rem; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline);
+      padding: 0.3rem 0.7rem; border-radius: var(--pill); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
     }
-    .chip:hover {
-      color: var(--text-primary);
-      border-color: var(--gold-accent);
-      background: rgba(229, 200, 144, 0.08);
-    }
-
-    .copilot-input-box {
-      padding: 1.25rem;
-      border-top: 1px solid var(--hairline);
-      display: flex;
-      gap: 0.75rem;
-    }
+    .chip:hover { color: var(--text-primary); border-color: var(--gold-accent); background: rgba(229,200,144,0.08); }
+    .copilot-input-box { padding: 1rem 1.25rem; border-top: 1px solid var(--hairline); display: flex; gap: 0.65rem; }
     .copilot-input {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--hairline);
-      border-radius: 12px;
-      padding: 0.75rem 1rem;
-      color: #fff;
-      font-size: 0.88rem;
-      outline: none;
-      font-family: inherit;
+      flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--hairline);
+      border-radius: 10px; padding: 0.65rem 0.9rem; color: #fff; font-size: 0.84rem;
+      outline: none; font-family: inherit;
     }
-    .copilot-input:focus {
-      border-color: var(--gold-accent);
-    }
+    .copilot-input:focus { border-color: var(--gold-accent); }
     .btn-send {
-      background: var(--text-primary);
-      color: #000;
-      border: none;
-      padding: 0.75rem 1.25rem;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s ease;
+      background: var(--text-primary); color: #000; border: none;
+      padding: 0.65rem 1.1rem; border-radius: 10px; font-weight: 600;
+      cursor: pointer; transition: transform 0.15s ease;
     }
-    .btn-send:hover {
-      transform: scale(1.03);
-    }
+    .btn-send:hover { transform: scale(1.03); }
 
-    /* Footer */
+    /* ── STAGED QUEUE ── */
+    .staged-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); padding: 1.5rem 1.75rem; margin-bottom: 1.25rem;
+      transition: all 0.25s ease;
+    }
+    .staged-card:hover { border-color: var(--hairline-gold); background: var(--bg-card-elevated); box-shadow: 0 12px 28px rgba(0,0,0,0.5); }
+    .staged-tag { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+    .specialist-badge {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--gold-accent); font-weight: 700;
+    }
+    .timestamp { font-size: 0.72rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+    .staged-headline { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .staged-body { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem; }
+    .staged-actions { display: flex; gap: 0.65rem; }
+    .btn-approve {
+      background: var(--text-primary); color: #000; font-weight: 600; font-size: 0.8rem;
+      padding: 0.45rem 1.1rem; border-radius: var(--pill); border: none;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-approve:hover { transform: scale(1.03); }
+    .btn-revise {
+      background: transparent; color: var(--text-secondary); font-size: 0.8rem;
+      padding: 0.45rem 1.1rem; border-radius: var(--pill);
+      border: 1px solid var(--hairline); cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-revise:hover { border-color: var(--gold-accent); color: var(--gold-accent); }
+
+    /* ── TRANSACTION TRACKER ── */
+    .txn-card {
+      background: var(--bg-card); border: 1px solid var(--hairline);
+      border-radius: var(--r); padding: 1.5rem 1.75rem; margin-bottom: 1rem;
+    }
+    .txn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .txn-address { font-size: 1rem; font-weight: 600; }
+    .txn-price { font-size: 0.95rem; font-weight: 700; color: var(--gold-accent); font-family: 'JetBrains Mono', monospace; }
+    .milestone-row {
+      display: flex; align-items: center; gap: 0.85rem;
+      padding: 0.65rem 0; border-bottom: 1px solid var(--hairline);
+    }
+    .milestone-row:last-child { border-bottom: none; }
+    .milestone-icon {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+    }
+    .m-done { background: rgba(52,211,153,0.15); color: var(--success); }
+    .m-active { background: rgba(251,191,36,0.15); color: var(--warning); }
+    .m-pending { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+    .milestone-name { font-size: 0.84rem; font-weight: 500; flex: 1; }
+    .milestone-date { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+    .milestone-countdown { font-size: 0.72rem; font-weight: 600; padding: 0.18rem 0.5rem; border-radius: var(--pill); }
+    .cd-urgent { background: rgba(248,113,113,0.12); color: var(--danger); }
+    .cd-ok { background: rgba(52,211,153,0.1); color: var(--success); }
+
+    /* ── FOOTER ── */
     .portal-footer {
-      padding: 2.5rem 0;
-      border-top: 1px solid var(--hairline);
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-secondary);
-      font-size: 0.78rem;
+      border-top: 1px solid var(--hairline); padding: 1.75rem 2rem;
+      max-width: 1400px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      color: var(--text-secondary); font-size: 0.75rem;
     }
 
-    @media (max-width: 960px) {
-      .workspace-grid { grid-template-columns: 1fr; }
-      .stats-bar { grid-template-columns: 1fr 1fr; }
-      .copilot-card { position: static; height: 500px; }
+    @media (max-width: 1100px) {
+      .kpi-bar { grid-template-columns: repeat(3, 1fr); }
+      .workspace-grid, .net-grid, .cma-grid { grid-template-columns: 1fr; }
+      .playbook-grid { grid-template-columns: 1fr; }
+      .copilot-card { position: static; height: 480px; }
+    }
+    @media (max-width: 680px) {
+      .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+      .nav-tabs { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Liquid Glass Nav -->
+  <!-- LIQUID GLASS NAV -->
   <header class="portal-nav">
-    <div class="container nav-inner">
-      <div class="brand-group">
-        <div class="brand-mark">
-          <span class="brand-dot"></span>
-          John 'Toki' Grullon
-        </div>
-        <span class="badge-scope">TENANT: toki</span>
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">John 'Toki' Grullon</span>
+        <span class="badge">TENANT: toki</span>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchPanel('dashboard', this)">Dashboard</button>
+        <button class="nav-tab" onclick="switchPanel('pipeline', this)">Pipeline</button>
+        <button class="nav-tab" onclick="switchPanel('netsheets', this)">Net Sheets</button>
+        <button class="nav-tab" onclick="switchPanel('cma', this)">CMA</button>
+        <button class="nav-tab" onclick="switchPanel('prospects', this)">FSBO / Expired</button>
+        <button class="nav-tab" onclick="switchPanel('playbook', this)">Playbook</button>
+        <button class="nav-tab" onclick="switchPanel('transactions', this)">Transactions</button>
       </div>
 
       <div class="nav-right">
-        <div class="status-live">
-          <span class="pulse-dot"></span>
-          Fleet Active • Zero Cloud Leaks
-        </div>
-        <a href="index.html" class="btn-frontdoor" target="_blank">
-          View Public Front Door ↗
-        </a>
+        <div class="live-dot"><span class="pulse-dot"></span>Fleet Active</div>
+        <a href="index.html" class="btn-sm" target="_blank">Front Door ↗</a>
       </div>
     </div>
   </header>
 
-  <main class="container">
-    <!-- Hero Header -->
-    <div class="portal-hero">
-      <h1 class="welcome-title">Executive Workforce Console</h1>
-      <p class="welcome-sub">Your private co-pilot and 3 specialist agents (Harbor, Keystone, Quill) are operating under your direct supervision.</p>
-    </div>
+  <div class="os-shell">
 
-    <!-- Stripe 8/16px Telemetry Cards -->
-    <div class="stats-bar">
-      <div class="stat-card">
-        <div class="stat-number">3</div>
-        <div class="stat-label">Staged Drafts Pending Review</div>
+    <!-- ═══════════════════════════════════════════════
+         PANEL 1: EXECUTIVE DASHBOARD
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-dashboard" class="os-panel active">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:clamp(1.6rem,3vw,2.2rem); font-weight:600; letter-spacing:-0.025em;">Executive Workspace</h1>
+        <p style="font-size:0.95rem; color:var(--text-secondary); margin-top:0.35rem;">Southwest Florida • Harbor, Keystone & Quill operating under your supervision.</p>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">$565K</div>
-        <div class="stat-label">Estero Target CMA Value</div>
+
+      <!-- KPI BAR -->
+      <div class="kpi-bar">
+        <div class="kpi">
+          <div class="kpi-num gold">$14.2M</div>
+          <div class="kpi-lbl">Pipeline Value</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-num gold">$284K</div>
+          <div class="kpi-lbl">Projected GCI</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-num green">7</div>
+          <div class="kpi-lbl">Active Listings</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-num green">3</div>
+          <div class="kpi-lbl">Pending Closings</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-num blue" id="kpi-calls">12</div>
+          <div class="kpi-lbl">Calls Today</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-num" id="kpi-appts">4</div>
+          <div class="kpi-lbl">Appointments Set</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">1</div>
-        <div class="stat-label">New Front-Door Lead</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">0.00s</div>
-        <div class="stat-label">Autonomous Delivery Latency</div>
-      </div>
-    </div>
 
-    <!-- Two-Column Workspace -->
-    <div class="workspace-grid">
-      
-      <!-- Staged Deliverables Queue -->
-      <section>
-        <div class="queue-title">
-          <span>Staged Deliverables Queue</span>
-          <span class="queue-badge">Human-in-the-Loop Signoff</span>
-        </div>
+      <!-- WORKSPACE: QUEUE + COPILOT -->
+      <div class="workspace-grid">
+        <section>
+          <!-- ACTION QUEUE -->
+          <div class="section-header">
+            <span class="section-title">🔥 Who Needs Contact Today</span>
+            <span class="count-pill">5 Pending</span>
+          </div>
 
-        <!-- Keystone CMA Card -->
-        <div class="staged-card" id="card-cma">
-          <div class="staged-tag">
-            <span class="specialist-badge">📐 KEYSTONE • TRANSACTION & CMA LEAD</span>
-            <span class="timestamp">Today 10:21 AM</span>
+          <div class="contact-row">
+            <div class="contact-avatar av-hot">MR</div>
+            <div class="contact-info">
+              <div class="contact-name">Maria Rodriguez <span class="heat-badge heat-hot">HOT</span></div>
+              <div class="contact-meta">Buyer — Pre-approved $680K • Last contact: 3 days ago • Showing: Bella Terra</div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn-action primary" onclick="logAction(this,'Called Maria')">📞 Call</button>
+              <button class="btn-action" onclick="logAction(this,'SMS Drafted')">✉ Text</button>
+            </div>
           </div>
-          <h3 class="staged-headline">Comparative Market Analysis: Estero Corridor</h3>
-          <p class="staged-body">
-            Calculated micro-neighborhood baseline ($260–$320/sqft) with +$45K screened pool lanai premium and post-Ian roof valuation impact. Strategic list recommendation: <strong>$565,000</strong> (Target) with a 14-day liquidation tier of <strong>$525,000</strong>.
-          </p>
-          <div class="staged-actions">
-            <button class="btn-approve" onclick="approveAction('card-cma', 'CMA Valuation Model Approved & Locked')">✓ Approve Valuation</button>
-            <button class="btn-revise" onclick="alert('Adjustment request sent to Keystone analyst.')">✎ Request Revision</button>
-          </div>
-        </div>
 
-        <!-- Quill Marketing Card -->
-        <div class="staged-card" id="card-copy">
-          <div class="staged-tag">
-            <span class="specialist-badge">✍️ QUILL • LUXURY COPY & MLS LEAD</span>
-            <span class="timestamp">Today 10:21 AM</span>
+          <div class="contact-row">
+            <div class="contact-avatar av-hot">DW</div>
+            <div class="contact-info">
+              <div class="contact-name">David & Karen Walsh <span class="heat-badge heat-hot">HOT</span></div>
+              <div class="contact-meta">Seller — 22001 West Bay Blvd • CMA delivered yesterday, no response</div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn-action primary" onclick="logAction(this,'Called Walsh')">📞 Call</button>
+              <button class="btn-action" onclick="logAction(this,'Email Drafted')">✉ Email</button>
+            </div>
           </div>
-          <h3 class="staged-headline">MLS Public Remarks & Instagram Launch Draft</h3>
-          <p class="staged-body">
-            <em>"Welcome to your Southwest Florida sanctuary in the heart of Estero! Featuring an expansive screened lanai overlooking tranquil water views, brand-new roof, and open-concept chef's kitchen..."</em>
-          </p>
-          <div class="staged-actions">
-            <button class="btn-approve" onclick="approveAction('card-copy', 'Marketing Copy Approved for Syndication')">✓ Approve Copy</button>
-            <button class="btn-revise" onclick="alert('Revision prompt opened with Quill.')">✎ Edit Text</button>
-          </div>
-        </div>
 
-        <!-- Harbor Lead Card -->
-        <div class="staged-card" id="card-lead">
-          <div class="staged-tag">
-            <span class="specialist-badge">🧭 HARBOR • INTAKE & RELATIONSHIPS</span>
-            <span class="timestamp">Today 09:55 AM</span>
+          <div class="contact-row">
+            <div class="contact-avatar av-warm">JL</div>
+            <div class="contact-info">
+              <div class="contact-name">Jennifer Liu <span class="heat-badge heat-warm">WARM</span></div>
+              <div class="contact-meta">Referral Lead — Relocating from Chicago • Follow-up due today</div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn-action primary" onclick="logAction(this,'Called Liu')">📞 Call</button>
+              <button class="btn-action" onclick="logAction(this,'Snoozed 3 days')">⏰ Snooze</button>
+            </div>
           </div>
-          <h3 class="staged-headline">Confidential Inquiry: Leo Peralta (1646 Heritage)</h3>
-          <p class="staged-body">
-            Captured from Front Door CMA calculator. Property: Estero Single-Family • Staged valuation requested: $2.15M. Ready for personalized seller briefing dispatch.
-          </p>
-          <div class="staged-actions">
-            <button class="btn-approve" onclick="approveAction('card-lead', 'Calendar Consultation Dispatched')">✓ Dispatch Brief</button>
-            <button class="btn-revise" onclick="alert('Lead flagged for manual phone follow-up.')">✎ Snooze / Call First</button>
+
+          <div class="contact-row">
+            <div class="contact-avatar av-warm">TC</div>
+            <div class="contact-info">
+              <div class="contact-name">Thomas Cruz <span class="heat-badge heat-warm">WARM</span></div>
+              <div class="contact-meta">FSBO — 3812 Stoneybrook • Owner not listed with agent yet</div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn-action primary" onclick="logAction(this,'Called Cruz')">📞 Call</button>
+              <button class="btn-action" onclick="logAction(this,'Door knock logged')">🚪 Door Knock</button>
+            </div>
           </div>
-        </div>
 
-      </section>
+          <div class="contact-row">
+            <div class="contact-avatar av-cold">BP</div>
+            <div class="contact-info">
+              <div class="contact-name">Beth & Paul Nguyen <span class="heat-badge heat-cold">COLD</span></div>
+              <div class="contact-meta">Sphere — Past clients 2022 • Anniversary check-in (3 yr)</div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn-action" onclick="logAction(this,'Texted Nguyen')">✉ Text</button>
+              <button class="btn-action" onclick="logAction(this,'Moved to nurture')">💌 Nurture</button>
+            </div>
+          </div>
 
-      <!-- Personal AI Copilot Console -->
-      <aside>
-        <div class="copilot-card">
-          <div class="copilot-header">
-            <div class="copilot-agent">
-              <img src="assets/headshot.png" alt="Copilot" class="copilot-avatar" onerror="this.src='assets/Rosie.png'">
-              <div>
-                <div class="copilot-name">John 'Toki' Grullon Copilot</div>
-                <div class="copilot-sub"><span class="pulse-dot"></span> Online • Local Qwen 9B</div>
+          <!-- STAGED QUEUE -->
+          <div class="section-header" style="margin-top:2rem;">
+            <span class="section-title">Staged Deliverables</span>
+            <span class="count-pill">Human-in-the-Loop</span>
+          </div>
+
+          <div class="staged-card" id="card-cma">
+            <div class="staged-tag">
+              <span class="specialist-badge">📐 KEYSTONE • CMA LEAD</span>
+              <span class="timestamp">Today 10:21 AM</span>
+            </div>
+            <h3 class="staged-headline">Comparative Market Analysis: Estero Corridor</h3>
+            <p class="staged-body">Micro-neighborhood baseline $310/sqft with +$80K pool & roof adjustment. Strategic list recommendation: <strong>$848,800</strong> — Alpha spread vs Zillow: +$286,400.</p>
+            <div class="staged-actions">
+              <button class="btn-approve" onclick="approveCard('card-cma','CMA Valuation Approved & Locked')">✓ Approve Valuation</button>
+              <button class="btn-revise" onclick="alert('Revision sent to Keystone.')">✎ Revise</button>
+            </div>
+          </div>
+
+          <div class="staged-card" id="card-copy">
+            <div class="staged-tag">
+              <span class="specialist-badge">✍️ QUILL • MLS COPY LEAD</span>
+              <span class="timestamp">Today 10:21 AM</span>
+            </div>
+            <h3 class="staged-headline">MLS Remarks & Social Launch Draft</h3>
+            <p class="staged-body"><em>"Welcome to your Southwest Florida sanctuary in Estero! Expansive screened lanai overlooking tranquil water views, brand-new 2023 tile roof, open-concept chef's kitchen..."</em></p>
+            <div class="staged-actions">
+              <button class="btn-approve" onclick="approveCard('card-copy','Copy Approved for MLS Syndication')">✓ Approve Copy</button>
+              <button class="btn-revise" onclick="alert('Editing in Quill...')">✎ Edit</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- COPILOT -->
+        <aside>
+          <div class="copilot-card">
+            <div class="copilot-header">
+              <div class="copilot-agent">
+                <img src="assets/headshot.png" class="copilot-avatar" alt="Copilot" onerror="this.style.display='none'">
+                <div>
+                  <div class="copilot-name">John 'Toki' Grullon Copilot</div>
+                  <div class="copilot-sub"><span class="pulse-dot"></span>Online • Apex Agent</div>
+                </div>
               </div>
+              <span class="badge">SOVEREIGN</span>
             </div>
-            <span class="badge-scope">SOVEREIGN</span>
-          </div>
-
-          <div class="copilot-feed" id="chat-feed">
-            <div class="msg-bubble msg-agent">
-              Good morning John 'Toki' Grullon. Harbor, Keystone, and Quill have completed 3 staged tasks for your review. No outgoing communications will occur until you approve them in the queue.
+            <div class="copilot-feed" id="chat-feed">
+              <div class="msg-bubble msg-agent">Good morning John 'Toki' Grullon. You have 5 contacts needing outreach today and 2 deliverables pending approval. No messages will be sent without your sign-off.</div>
+              <div class="msg-bubble msg-agent">How can I assist with your Southwest Florida pipeline today?</div>
             </div>
-            <div class="msg-bubble msg-agent">
-              How can I assist you with your Estero or Naples pipeline today?
+            <div class="copilot-chips">
+              <span class="chip" onclick="quickMsg('Draft follow-up SMS for Maria Rodriguez')">💬 Draft SMS</span>
+              <span class="chip" onclick="quickMsg('Summarize todays action queue')">📋 Today Summary</span>
+              <span class="chip" onclick="quickMsg('What is my projected GCI at current pipeline?')">💰 GCI Calc</span>
+              <span class="chip" onclick="quickMsg('Explain Keystone CMA breakdown')">📐 Explain CMA</span>
             </div>
+            <form class="copilot-input-box" onsubmit="sendMsg(event)">
+              <input type="text" class="copilot-input" id="chat-input" placeholder="Ask your copilot..." autocomplete="off">
+              <button type="submit" class="btn-send">Send</button>
+            </form>
           </div>
-
-          <div class="copilot-chips">
-            <span class="chip" onclick="sendQuickPrompt('Explain Keystone CMA $/sqft breakdown')">📐 Explain CMA</span>
-            <span class="chip" onclick="sendQuickPrompt('Draft a welcome SMS for Leo Peralta')">💬 Draft SMS</span>
-            <span class="chip" onclick="sendQuickPrompt('Review pending tasks')">📋 Review Tasks</span>
-          </div>
-
-          <form class="copilot-input-box" onsubmit="handleChatSubmit(event)">
-            <input type="text" class="copilot-input" id="user-msg-input" placeholder="Ask your copilot anything..." autocomplete="off">
-            <button type="submit" class="btn-send">Send</button>
-          </form>
-        </div>
-      </aside>
-
+        </aside>
+      </div>
     </div>
-  </main>
 
-  <footer class="portal-footer container">
-    <div>&copy; 2026 The No Fault Group • Protected Client Workspace</div>
-    <div>Sovereign Autonomous Node • Powered by Apex Luxury AI Architecture</div>
+    <!-- ═══════════════════════════════════════════════
+         PANEL 2: DUAL PIPELINE
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-pipeline" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">Deal Pipelines</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Listing & Buyer Kanban — drag cards to advance stages</p>
+      </div>
+      <div class="pipeline-tabs">
+        <button class="pipe-tab active" onclick="switchPipe('listing', this)">🏡 Listing Pipeline</button>
+        <button class="pipe-tab" onclick="switchPipe('buyer', this)">👤 Buyer Pipeline</button>
+      </div>
+
+      <!-- LISTING KANBAN -->
+      <div id="pipe-listing">
+        <div class="kanban-track">
+          <div class="kanban">
+            <div class="kanban-col"><div class="kanban-stage">Prospect</div>
+              <div class="deal-card"><div class="deal-name">Thomas Cruz</div><div class="deal-addr">3812 Stoneybrook Dr</div><div class="deal-val">~$525K</div><div class="deal-days">FSBO • Day 1</div></div>
+              <div class="kanban-add" onclick="alert('Add new prospect...')">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Contacted</div>
+              <div class="deal-card"><div class="deal-name">K. Hoffman</div><div class="deal-addr">21088 Bella Terra</div><div class="deal-val">~$610K</div><div class="deal-days">Contacted • Day 3</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Follow-Up</div>
+              <div class="deal-card"><div class="deal-name">D & K Walsh</div><div class="deal-addr">22001 West Bay Blvd</div><div class="deal-val">$1.89M</div><div class="deal-days">CMA Sent • Day 5</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Appt Set</div>
+              <div class="deal-card"><div class="deal-name">A. Petrov</div><div class="deal-addr">14220 Riva Del Lago</div><div class="deal-val">~$790K</div><div class="deal-days">Fri 2PM</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">CMA Prepared</div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Listing Presentation</div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Signed</div>
+              <div class="deal-card"><div class="deal-name">E. Nakamura</div><div class="deal-addr">9120 Corsea Del Fontana</div><div class="deal-val">$548K</div><div class="deal-days">Active MLS</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Under Contract</div>
+              <div class="deal-card" style="border-color:rgba(251,191,36,0.35)"><div class="deal-name">Peralta LLC</div><div class="deal-addr">1646 Heritage Dr</div><div class="deal-val">$515K</div><div class="deal-days">Closes Oct 15</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Closed 🎉</div>
+              <div class="deal-card" style="border-color:rgba(52,211,153,0.35)"><div class="deal-name">R. Okonkwo</div><div class="deal-addr">20125 Hammocks Ln</div><div class="deal-val">$592K</div><div class="deal-days">Sep 2 • +$17,760 GCI</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUYER KANBAN -->
+      <div id="pipe-buyer" style="display:none;">
+        <div class="kanban-track">
+          <div class="kanban">
+            <div class="kanban-col"><div class="kanban-stage">New Lead</div>
+              <div class="deal-card"><div class="deal-name">J. Liu</div><div class="deal-addr">Relocating from Chicago</div><div class="deal-val">Budget $650K</div><div class="deal-days">Referral • Day 1</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Qualified</div>
+              <div class="deal-card"><div class="deal-name">The Park Family</div><div class="deal-addr">Golf community pref</div><div class="deal-val">Budget $1.2M</div><div class="deal-days">Day 4</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Consultation</div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Pre-Approval</div>
+              <div class="deal-card"><div class="deal-name">M. Rodriguez</div><div class="deal-addr">Estero / Bella Terra</div><div class="deal-val">Approved $680K</div><div class="deal-days">Day 12</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Showings</div>
+              <div class="deal-card"><div class="deal-name">S. & T. Brennan</div><div class="deal-addr">West Bay Club area</div><div class="deal-val">Budget $890K</div><div class="deal-days">3 showings done</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Offer</div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Under Contract</div>
+              <div class="deal-card" style="border-color:rgba(251,191,36,0.35)"><div class="deal-name">C. & L. Dumont</div><div class="deal-addr">21450 Bella Terra Blvd</div><div class="deal-val">$848,800</div><div class="deal-days">Closes Oct 29</div></div>
+              <div class="kanban-add">+ Add</div>
+            </div>
+            <div class="kanban-col"><div class="kanban-stage">Closed 🎉</div>
+              <div class="deal-card" style="border-color:rgba(52,211,153,0.35)"><div class="deal-name">A. Fernandez</div><div class="deal-addr">9301 Estero River Cir</div><div class="deal-val">$472K</div><div class="deal-days">Aug 28 • +$7,080 GCI</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL 3: NET SHEETS
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-netsheets" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">Financial Net Sheets</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Florida-calibrated • Use during listing appointments & buyer consultations</p>
+      </div>
+      <div class="net-grid">
+
+        <!-- SELLER NET SHEET -->
+        <div class="net-card">
+          <div class="net-title">🏡 Seller Estimated Net Proceeds (Florida)</div>
+          <div class="net-field">
+            <div class="net-label">List / Sale Price</div>
+            <input type="number" class="net-input" id="s-price" placeholder="848800" oninput="calcSeller()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">Brokerage Commission (%)</div>
+            <input type="number" class="net-input" id="s-comm" placeholder="5.5" step="0.1" oninput="calcSeller()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">Estimated Mortgage Payoff ($)</div>
+            <input type="number" class="net-input" id="s-mort" placeholder="94000" oninput="calcSeller()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">HOA Estoppel / Prorations ($)</div>
+            <input type="number" class="net-input" id="s-hoa" placeholder="750" oninput="calcSeller()">
+          </div>
+          <button class="btn-calc" onclick="calcSeller()">Calculate Net Proceeds</button>
+
+          <div style="margin-top:1.25rem;" id="seller-results"></div>
+        </div>
+
+        <!-- BUYER CASH-TO-CLOSE -->
+        <div class="net-card">
+          <div class="net-title">🔑 Buyer Estimated Cash-to-Close (Florida)</div>
+          <div class="net-field">
+            <div class="net-label">Purchase Price</div>
+            <input type="number" class="net-input" id="b-price" placeholder="680000" oninput="calcBuyer()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">Down Payment (%)</div>
+            <input type="number" class="net-input" id="b-down" placeholder="20" step="1" oninput="calcBuyer()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">Loan Origination / Lender Fees ($)</div>
+            <input type="number" class="net-input" id="b-lender" placeholder="3500" oninput="calcBuyer()">
+          </div>
+          <div class="net-field">
+            <div class="net-label">Annual Property Tax (for escrow)</div>
+            <input type="number" class="net-input" id="b-tax" placeholder="6240" oninput="calcBuyer()">
+          </div>
+          <button class="btn-calc" onclick="calcBuyer()">Calculate Cash-to-Close</button>
+
+          <div style="margin-top:1.25rem;" id="buyer-results"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL 4: CMA SYSTEM
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-cma" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">CMA Reports</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Dual market boards: Royal Palm Coast (SWFL) & Miami REALTORS®</p>
+      </div>
+      <div class="cma-grid">
+
+        <!-- RPCRA CMA -->
+        <div class="cma-card">
+          <div class="cma-board-badge">📍 Royal Palm Coast (RPCRA)</div>
+          <div style="font-size:0.95rem; font-weight:600; margin-bottom:1rem;">Bella Terra Subdivision — Estero, FL</div>
+          <div class="comp-row"><span class="comp-addr">21390 Bella Terra Blvd</span><span class="comp-status status-sold">Sold</span><span class="comp-price">$579K</span></div>
+          <div class="comp-row"><span class="comp-addr">21502 Bella Terra Blvd</span><span class="comp-status status-sold">Sold</span><span class="comp-price">$592K</span></div>
+          <div class="comp-row"><span class="comp-addr">21620 Bella Terra Blvd</span><span class="comp-status status-active">Active</span><span class="comp-price">$615K</span></div>
+          <div class="comp-row"><span class="comp-addr">21285 Bella Terra Blvd</span><span class="comp-status status-pending">Pending</span><span class="comp-price">$588K</span></div>
+          <div class="cma-summary">
+            <div class="cma-summary-title">Keystone Recommendation — 21450 Bella Terra</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Adjustments: +$50K Pool • +$30K Post-Ian Roof • Baseline $310/sqft</div>
+            <div class="cma-price-tiers">
+              <div class="cma-tier"><div class="cma-tier-label">14-Day Fast</div><div class="cma-tier-price">$789K</div></div>
+              <div class="cma-tier"><div class="cma-tier-label">Recommended</div><div class="cma-tier-price">$849K</div></div>
+              <div class="cma-tier"><div class="cma-tier-label">Stretch</div><div class="cma-tier-price">$900K</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MIAMI REALTORS CMA -->
+        <div class="cma-card">
+          <div class="cma-board-badge">📍 Miami REALTORS®</div>
+          <div style="font-size:0.95rem; font-weight:600; margin-bottom:1rem;">Brickell / Edgewater — Miami, FL</div>
+          <div class="comp-row"><span class="comp-addr">1000 Brickell Plaza #3205</span><span class="comp-status status-sold">Sold</span><span class="comp-price">$1.12M</span></div>
+          <div class="comp-row"><span class="comp-addr">88 SW 7th St #4802</span><span class="comp-status status-sold">Sold</span><span class="comp-price">$945K</span></div>
+          <div class="comp-row"><span class="comp-addr">Brickell City Centre Unit 18C</span><span class="comp-status status-active">Active</span><span class="comp-price">$1.29M</span></div>
+          <div class="comp-row"><span class="comp-addr">2 Biscayne Blvd #5501</span><span class="comp-status status-pending">Pending</span><span class="comp-price">$1.05M</span></div>
+          <div class="cma-summary">
+            <div class="cma-summary-title">Keystone Miami Benchmark</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.5rem;">Waterfront premium $650/sqft • Bay view +15%</div>
+            <div class="cma-price-tiers">
+              <div class="cma-tier"><div class="cma-tier-label">Below Market</div><div class="cma-tier-price">$985K</div></div>
+              <div class="cma-tier"><div class="cma-tier-label">Target</div><div class="cma-tier-price">$1.08M</div></div>
+              <div class="cma-tier"><div class="cma-tier-label">Ceiling</div><div class="cma-tier-price">$1.22M</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL 5: FSBO / EXPIREDS
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-prospects" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">FSBO & Expired Listings</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Owner contacts, property data, and call/door-knock tracking</p>
+      </div>
+      <div class="section-header">
+        <span class="section-title">Active Prospect List</span>
+        <span class="count-pill">6 Properties</span>
+      </div>
+
+      <div class="prospect-card">
+        <div class="prospect-header">
+          <div>
+            <div class="prospect-name">Thomas & Angela Cruz</div>
+            <div class="prospect-addr">3812 Stoneybrook Dr, Estero, FL 33928</div>
+            <div class="prospect-tags">
+              <span class="ptag ptag-fsbo">FSBO</span>
+              <span class="ptag ptag-follow">Call Today</span>
+            </div>
+          </div>
+          <div style="text-align:right; font-size:0.78rem; color:var(--text-secondary);">
+            List Ask: $499K<br>Est. Value: $521K<br>Equity: ~78%
+          </div>
+        </div>
+        <div class="prospect-actions">
+          <button class="btn-action primary" onclick="logAction(this,'Called Cruz — attempt 2')">📞 Call</button>
+          <button class="btn-action" onclick="logAction(this,'Door knock logged')">🚪 Door Knock</button>
+          <button class="btn-action" onclick="logAction(this,'Added to CRM')">+ Add to CRM</button>
+          <button class="btn-action" onclick="logAction(this,'Scheduled follow-up')">⏰ Schedule</button>
+        </div>
+      </div>
+
+      <div class="prospect-card">
+        <div class="prospect-header">
+          <div>
+            <div class="prospect-name">Linda Kaufman (Trust Owner)</div>
+            <div class="prospect-addr">21450 Bella Terra Blvd, Estero, FL 33928</div>
+            <div class="prospect-tags">
+              <span class="ptag ptag-exp">Expired 47 Days</span>
+              <span class="ptag ptag-follow">High Equity 83%</span>
+            </div>
+          </div>
+          <div style="text-align:right; font-size:0.78rem; color:var(--text-secondary);">
+            Prev List: $585K<br>Keystone: $849K<br>Absentee: OH
+          </div>
+        </div>
+        <div class="prospect-actions">
+          <button class="btn-action primary" onclick="logAction(this,'Called Kaufman Trust')">📞 Call</button>
+          <button class="btn-action" onclick="logAction(this,'Mailer sent')">📬 Mailer</button>
+          <button class="btn-action" onclick="logAction(this,'Added to CRM')">+ Add to CRM</button>
+        </div>
+      </div>
+
+      <div class="prospect-card">
+        <div class="prospect-header">
+          <div>
+            <div class="prospect-name">Robert & Mary Oguike</div>
+            <div class="prospect-addr">9844 Portside Terrace, Estero, FL 33928</div>
+            <div class="prospect-tags">
+              <span class="ptag ptag-exp">Expired 22 Days</span>
+              <span class="ptag ptag-follow">Follow-Up Fri</span>
+            </div>
+          </div>
+          <div style="text-align:right; font-size:0.78rem; color:var(--text-secondary);">
+            Prev List: $540K<br>Est. Value: $568K<br>DOM: 91
+          </div>
+        </div>
+        <div class="prospect-actions">
+          <button class="btn-action primary" onclick="logAction(this,'Called Oguike')">📞 Call</button>
+          <button class="btn-action" onclick="logAction(this,'Added to CRM')">+ Add to CRM</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL 6: COACHING PLAYBOOK
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-playbook" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">Coaching & Objection Playbook</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Office Coaching Playbook • One organized vault for all call scripts and objection handlers</p>
+      </div>
+      <div class="playbook-grid">
+        <div class="script-menu">
+          <button class="script-item active" onclick="loadScript('fsbo', this)">📞 FSBO First Call</button>
+          <button class="script-item" onclick="loadScript('expired', this)">📋 Expired Recovery</button>
+          <button class="script-item" onclick="loadScript('buyer', this)">👤 Buyer Lead Call</button>
+          <button class="script-item" onclick="loadScript('seller', this)">🏡 Seller Lead Call</button>
+          <button class="script-item" onclick="loadScript('commission', this)">💰 Commission Defense</button>
+          <button class="script-item" onclick="loadScript('lowball', this)">📉 Lowball Offer</button>
+          <button class="script-item" onclick="loadScript('apptset', this)">📅 Appointment Setting</button>
+          <button class="script-item" onclick="loadScript('followup', this)">🔁 Long-Term Follow-Up</button>
+        </div>
+        <div class="script-viewer" id="script-viewer">
+          <!-- Default script loaded -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL 7: TRANSACTIONS
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-transactions" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">Transaction Deadlines</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">Florida As-Is Contract milestone tracking — never miss a contingency date</p>
+      </div>
+
+      <div class="txn-card">
+        <div class="txn-header">
+          <div>
+            <div class="txn-address">21450 Bella Terra Blvd, Estero, FL</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem;">Buyer: C. & L. Dumont • Effective Date: Sep 5, 2026</div>
+          </div>
+          <div class="txn-price">$848,800</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-done">✓</div>
+          <div class="milestone-name">Initial Deposit (EMD)</div>
+          <div class="milestone-date">Sep 7, 2026</div>
+          <div class="milestone-countdown cd-ok">Received</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-active">!</div>
+          <div class="milestone-name">Inspection Period Ends</div>
+          <div class="milestone-date">Sep 20, 2026</div>
+          <div class="milestone-countdown cd-urgent">16 days left</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-active">!</div>
+          <div class="milestone-name">Loan Application Submitted</div>
+          <div class="milestone-date">Sep 12, 2026</div>
+          <div class="milestone-countdown cd-urgent">8 days left</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-pending">○</div>
+          <div class="milestone-name">Appraisal Ordered</div>
+          <div class="milestone-date">Sep 25, 2026</div>
+          <div class="milestone-countdown cd-ok">21 days</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-pending">○</div>
+          <div class="milestone-name">Title Commitment & HOA Estoppel</div>
+          <div class="milestone-date">Oct 10, 2026</div>
+          <div class="milestone-countdown cd-ok">36 days</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-pending">○</div>
+          <div class="milestone-name">Financing Contingency Waiver / Approval</div>
+          <div class="milestone-date">Oct 5, 2026</div>
+          <div class="milestone-countdown cd-ok">31 days</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-pending">○</div>
+          <div class="milestone-name">Final Walkthrough</div>
+          <div class="milestone-date">Oct 28, 2026</div>
+          <div class="milestone-countdown cd-ok">54 days</div>
+        </div>
+        <div class="milestone-row">
+          <div class="milestone-icon m-pending">🏆</div>
+          <div class="milestone-name">Closing Day</div>
+          <div class="milestone-date">Oct 29, 2026</div>
+          <div class="milestone-countdown cd-ok">55 days</div>
+        </div>
+      </div>
+
+      <div class="txn-card">
+        <div class="txn-header">
+          <div>
+            <div class="txn-address">1646 Heritage Dr, Estero, FL</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem;">Buyer: Peralta Properties LLC • Effective Date: Aug 28, 2026</div>
+          </div>
+          <div class="txn-price">$515,000</div>
+        </div>
+        <div class="milestone-row"><div class="milestone-icon m-done">✓</div><div class="milestone-name">Initial Deposit</div><div class="milestone-date">Aug 30</div><div class="milestone-countdown cd-ok">Received</div></div>
+        <div class="milestone-row"><div class="milestone-icon m-done">✓</div><div class="milestone-name">Inspection Period</div><div class="milestone-date">Sep 12</div><div class="milestone-countdown cd-ok">Cleared</div></div>
+        <div class="milestone-row"><div class="milestone-icon m-active">!</div><div class="milestone-name">Loan Approval</div><div class="milestone-date">Sep 28</div><div class="milestone-countdown cd-urgent">24 days</div></div>
+        <div class="milestone-row"><div class="milestone-icon m-pending">○</div><div class="milestone-name">Closing Day</div><div class="milestone-date">Oct 15, 2026</div><div class="milestone-countdown cd-ok">41 days</div></div>
+      </div>
+    </div>
+
+  </div><!-- /os-shell -->
+
+  <footer class="portal-footer">
+    <div>© 2026 The No Fault Group • Sovereign Client Workspace</div>
+    <div>Powered by Apex Luxury AI • Multi-Agent Fleet Active</div>
   </footer>
 
   <script>
-    function approveAction(cardId, confirmationText) {
-      const card = document.getElementById(cardId);
+    // ── PANEL SWITCHER ──
+    function switchPanel(name, btn) {
+      document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+      if (btn) btn.classList.add('active');
+      if (name === 'playbook') loadScript('fsbo', document.querySelector('.script-item'));
+    }
+
+    // ── PIPE SWITCHER ──
+    function switchPipe(name, btn) {
+      document.querySelectorAll('.pipe-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pipe-listing').style.display = name === 'listing' ? '' : 'none';
+      document.getElementById('pipe-buyer').style.display = name === 'buyer' ? '' : 'none';
+    }
+
+    // ── CARD APPROVALS ──
+    function approveCard(id, msg) {
+      const card = document.getElementById(id);
       card.style.borderColor = 'var(--success)';
-      card.style.background = 'rgba(52, 211, 153, 0.06)';
-      card.querySelector('.staged-actions').innerHTML = 
-        '<div style="color: var(--success); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">' +
-        '<span>✓</span> ' + confirmationText +
-        '</div>';
-      
-      // Post notification to chat feed
+      card.style.background = 'rgba(52,211,153,0.05)';
+      card.querySelector('.staged-actions').innerHTML =
+        '<div style="color:var(--success);font-weight:600;font-size:0.82rem;display:flex;align-items:center;gap:0.4rem;">✓ ' + msg + '</div>';
+      addMsg(msg + ' — logged to tenant ledger.', 'agent');
+    }
+
+    // ── ACTION LOG ──
+    function logAction(btn, msg) {
+      btn.innerText = '✓ ' + msg.split('—')[0].trim();
+      btn.classList.add('primary');
+      btn.disabled = true;
+    }
+
+    // ── NET SHEET: SELLER ──
+    function calcSeller() {
+      const price = parseFloat(document.getElementById('s-price').value) || 0;
+      const commRate = parseFloat(document.getElementById('s-comm').value) || 5.5;
+      const mort = parseFloat(document.getElementById('s-mort').value) || 0;
+      const hoa = parseFloat(document.getElementById('s-hoa').value) || 0;
+
+      if (!price) return;
+      const comm = price * (commRate / 100);
+      const docStamp = price * 0.007; // FL $0.70/$100
+      const titleFees = 1050;
+      const totalDeductions = comm + docStamp + titleFees + mort + hoa;
+      const net = price - totalDeductions;
+
+      document.getElementById('seller-results').innerHTML = `
+        <div class="net-result-row"><span>Sale Price</span><span class="net-result-val">$${fmt(price)}</span></div>
+        <div class="net-result-row"><span>Brokerage Commission (${commRate}%)</span><span class="net-result-val negative">-$${fmt(comm)}</span></div>
+        <div class="net-result-row"><span>FL Doc Stamp Tax ($0.70/$100)</span><span class="net-result-val negative">-$${fmt(docStamp)}</span></div>
+        <div class="net-result-row"><span>Title & Closing Agent Fees</span><span class="net-result-val negative">-$${fmt(titleFees)}</span></div>
+        <div class="net-result-row"><span>Mortgage Payoff</span><span class="net-result-val negative">-$${fmt(mort)}</span></div>
+        <div class="net-result-row"><span>HOA / Prorations</span><span class="net-result-val negative">-$${fmt(hoa)}</span></div>
+        <div class="net-result-row total"><span>Estimated Net Wire to Seller</span><span class="net-result-val positive">$${fmt(net)}</span></div>
+      `;
+    }
+
+    // ── NET SHEET: BUYER ──
+    function calcBuyer() {
+      const price = parseFloat(document.getElementById('b-price').value) || 0;
+      const downPct = parseFloat(document.getElementById('b-down').value) || 20;
+      const lender = parseFloat(document.getElementById('b-lender').value) || 3500;
+      const annualTax = parseFloat(document.getElementById('b-tax').value) || 6240;
+
+      if (!price) return;
+      const downAmt = price * (downPct / 100);
+      const loanAmt = price - downAmt;
+      const titleBuyer = 850;
+      const intlInsurance = price * 0.004; // homeowners est
+      const escrowTax = (annualTax / 12) * 3; // 3-mo escrow cushion
+      const escrowIns = intlInsurance / 4;
+      const prepaidInt = loanAmt * 0.065 / 365 * 15; // 15 days prepaid
+      const total = downAmt + lender + titleBuyer + escrowTax + escrowIns + prepaidInt;
+
+      document.getElementById('buyer-results').innerHTML = `
+        <div class="net-result-row"><span>Down Payment (${downPct}%)</span><span class="net-result-val">$${fmt(downAmt)}</span></div>
+        <div class="net-result-row"><span>Lender Origination & Fees</span><span class="net-result-val">$${fmt(lender)}</span></div>
+        <div class="net-result-row"><span>Title Insurance (Buyer's)</span><span class="net-result-val">$${fmt(titleBuyer)}</span></div>
+        <div class="net-result-row"><span>Property Tax Escrow (3 mo)</span><span class="net-result-val">$${fmt(escrowTax)}</span></div>
+        <div class="net-result-row"><span>Homeowners Ins. Escrow</span><span class="net-result-val">$${fmt(escrowIns)}</span></div>
+        <div class="net-result-row"><span>Prepaid Interest (15 days)</span><span class="net-result-val">$${fmt(prepaidInt)}</span></div>
+        <div class="net-result-row total"><span>Total Cash Required at Closing</span><span class="net-result-val positive">$${fmt(total)}</span></div>
+      `;
+    }
+
+    function fmt(n) { return Math.round(n).toLocaleString(); }
+
+    // ── PLAYBOOK SCRIPTS ──
+    const scripts = {
+      fsbo: {
+        title: 'FSBO First Call',
+        cat: 'For Sale By Owner • Value-First Approach',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">YOU (Opening)</div><div class="script-text">Hi, this is [Your Name] with [Brokerage]. I noticed your home at [Address] is listed for sale — beautiful property in [Neighborhood]. I'm not calling to list your home; I actually help FSBO owners get the most accurate market data so you can price it right. Do you have 90 seconds?</div></div>
+          <div class="script-block"><div class="script-speaker prospect">IF THEY SAY: "I don't want to pay a commission."</div></div>
+          <div class="script-block"><div class="script-speaker agent">YOUR RESPONSE</div><div class="script-text">I completely understand — and honestly, if you can sell it yourself, you should. My question is: do you know what buyers are actually paying for homes like yours in the last 90 days? Because the gap between what FSBO sellers think they can get and what buyers are pre-approved for is usually the #1 reason deals fall apart. Can I send you a quick data sheet — no charge?</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> Do not pitch your commission on the first call. Your goal is a 15-minute CMA appointment — nothing more. Let the data do the heavy lifting.</div>
+        `
+      },
+      expired: {
+        title: 'Expired Listing Recovery Call',
+        cat: 'Expired Listings • Recovery & Trust Rebuilding',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">YOU (Opening)</div><div class="script-text">Hi [Owner Name], this is [Your Name]. I'm calling because I noticed your listing at [Address] recently came off the market — and before you make any decisions about your next move, I wanted to reach out. I specialize in re-listing homes that didn't sell, and I have some specific data on why properties in [Neighborhood] sit without selling. Can I share that with you?</div></div>
+          <div class="script-block"><div class="script-speaker objection">COMMON OBJECTION: "We're just going to wait."</div></div>
+          <div class="script-block"><div class="script-speaker agent">YOUR RESPONSE</div><div class="script-text">That's a completely reasonable choice. Can I ask — what's the timeline you're working with? The reason I ask is that inventory in [Neighborhood] is [rising/falling] right now, and a 60-day wait could move your position significantly. I'd hate for you to wait and lose leverage. Would a quick 20-minute market update be worth your time this week?</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> Never attack the previous agent. Position the expired as a pricing/marketing problem, not a personal failure.</div>
+        `
+      },
+      commission: {
+        title: 'Commission Defense',
+        cat: 'Objection Handler • Seller Negotiations',
+        html: `
+          <div class="script-block"><div class="script-speaker objection">OBJECTION: "Will you cut your commission to 4%?"</div></div>
+          <div class="script-block"><div class="script-speaker agent">RESPONSE (Value Positioning)</div><div class="script-text">I appreciate you asking directly. Here's how I think about it: at [full commission]%, I'm bringing professional photography, MLS syndication to 500+ portals, and targeted digital advertising to your listing. At 4%, I'd need to cut the buyer-agent co-op, which means fewer agents showing your home. On a $600,000 sale, the difference in my fee is $12,000 — but if cutting that fee costs you one serious buyer, that's a $30,000 to $60,000 price reduction. Does that math work for you?</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> Never just say "no." Reframe the commission as an investment with a defined ROI, not a cost.</div>
+        `
+      },
+      buyer: {
+        title: 'Buyer Lead Call',
+        cat: 'Inbound Buyer • Qualification & Consultation',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">OPENING</div><div class="script-text">Hi [Name]! This is [Your Name] getting back to you — I saw you were looking at homes in [Area]. Great taste, by the way. A couple of quick questions so I can actually be useful to you: Are you renting currently or do you have a home to sell first? And have you had a chance to connect with a lender yet?</div></div>
+          <div class="script-block"><div class="script-speaker agent">IF PRE-APPROVED</div><div class="script-text">Perfect. With a pre-approval in hand, you're in the top 20% of buyers right now — most serious sellers won't even accept an offer without it. Let me send you 3 properties that hit your criteria today, and we can set up showings as early as [specific day]. Does that work?</div></div>
+        `
+      },
+      lowball: {
+        title: 'Lowball Offer Handler',
+        cat: 'Objection Handler • Negotiation',
+        html: `
+          <div class="script-block"><div class="script-speaker objection">SCENARIO: Buyer wants to offer $180K on a $220K listed property</div></div>
+          <div class="script-block"><div class="script-speaker agent">TO YOUR BUYER</div><div class="script-text">I want to get you this house — and I want to do it strategically. An offer at $180K on a $220K listing is going to get rejected immediately and could damage our negotiating position going forward. Here's what the data tells us: the seller has $94K in equity and this home has only been on market 11 days. They're not desperate yet. A $205K offer with a 15-day close and no contingencies? That's a conversation. Want to try that approach?</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> Use the Keystone Quadrant equity data to ground the conversation in facts, not feelings.</div>
+        `
+      },
+      seller: {
+        title: 'Seller Lead Call',
+        cat: 'Outbound Seller • Listing Presentation Setup',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">OPENING</div><div class="script-text">Hi [Name], this is [Your Name]. I specialize in [Neighborhood], and I noticed from public records that you've owned your home since [year]. I've been watching your area closely and there's actually a window in the market right now where sellers in your community are netting significantly above what Zillow estimates — I'm talking $40K to $100K more. Do you have 3 minutes so I can share what I'm seeing?</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> The Keystone alpha spread ($286K over Zillow on Bella Terra) is your most powerful opener with absentee/high-equity owners.</div>
+        `
+      },
+      apptset: {
+        title: 'Appointment Setting',
+        cat: 'Conversion Script • All Lead Types',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">ASSUMPTIVE CLOSE</div><div class="script-text">Based on everything you've told me, the next step that makes sense is a 20-minute no-pressure market review at your home — I'll bring the data, you ask every question you have. I'm in your area [Day 1] around 10 AM and [Day 2] at 3 PM. Which works better for you?</div></div>
+          <div class="script-block"><div class="script-speaker objection">IF "I need to think about it"</div></div>
+          <div class="script-block"><div class="script-speaker agent">RESPONSE</div><div class="script-text">Absolutely — what specifically would help you feel confident about meeting? Because if it's data, I can send that now. If it's references, I have 3 neighbors in [Subdivision] I closed for this year. What would make you comfortable?</div></div>
+        `
+      },
+      followup: {
+        title: 'Long-Term Nurture Follow-Up',
+        cat: 'Sphere / Past Clients / Cold Leads',
+        html: `
+          <div class="script-block"><div class="script-speaker agent">6-MONTH FOLLOW-UP TEXT</div><div class="script-text">Hi [Name]! This is [Your Name] — I was thinking about you because I just closed a home 2 streets over from yours at [Price]. Your neighborhood is absolutely on fire right now. No pressure at all, but if you're ever curious what your home could sell for in today's market, I'd love to pull the numbers. Hope you're doing great!</div></div>
+          <div class="script-block"><div class="script-speaker agent">ANNUAL HOMEOWNER VALUE CHECK-IN</div><div class="script-text">Happy home anniversary! 🏡 It's been [X] year(s) since you closed on [Address]. The great news: values in your area are up approximately [X]% since then. Your home could now be worth around [Keystone Estimate]. Want me to send a quick equity snapshot? No strings attached — just useful intel.</div></div>
+          <div class="objection-tip"><strong>Tip:</strong> Past clients are your highest-conversion source. A 1-year and 3-year follow-up calendar should be set immediately at every closing.</div>
+        `
+      }
+    };
+
+    function loadScript(key, btn) {
+      const s = scripts[key];
+      if (!s) return;
+      document.querySelectorAll('.script-item').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.getElementById('script-viewer').innerHTML = `
+        <div class="script-title">${s.title}</div>
+        <div class="script-category">${s.cat}</div>
+        ${s.html}
+      `;
+    }
+
+    // ── COPILOT ──
+    function quickMsg(txt) {
+      document.getElementById('chat-input').value = txt;
+      sendMsg(new Event('submit'));
+    }
+    function sendMsg(e) {
+      e.preventDefault();
+      const inp = document.getElementById('chat-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      addMsg(val, 'user');
+      inp.value = '';
+      setTimeout(() => {
+        const q = val.toLowerCase();
+        let reply;
+        if (q.includes('gci') || q.includes('pipeline')) reply = "Current pipeline value: <strong>$14.2M</strong>. At 2% average net commission: projected GCI = <strong>$284,000</strong>. Top opportunity: Walsh listing at $1.89M = ~$52K GCI.";
+        else if (q.includes('sms') || q.includes('maria')) reply = '<em>Draft SMS — Maria Rodriguez:</em><br>"Hi Maria! This is John 'Toki' Grullon. Just wanted to follow up on our Bella Terra conversation — I have 2 new listings that just hit the market today that match exactly what you're looking for. Can we chat this afternoon?"';
+        else if (q.includes('cma') || q.includes('sqft')) reply = "Keystone benchmark: Bella Terra at <strong>$310/sqft</strong> + $80K adjustments = <strong>$848,800</strong> recommended list. Zillow Zestimate delta: +$286,400 in seller favor.";
+        else if (q.includes('today') || q.includes('queue')) reply = "Today's priority actions:<br>1. 🔴 Call Maria Rodriguez (Buyer — 3 days cold)<br>2. 🔴 Call Walsh couple (Seller — CMA delivered, no reply)<br>3. 🟡 Approve Keystone CMA in queue<br>4. 🟡 Follow up Jennifer Liu<br>5. 🟢 Annual check-in Beth & Paul Nguyen";
+        else reply = "Understood. Logged directive to the Apex fleet. All actions stage in your queue for final sign-off — nothing leaves without your approval.";
+        addMsg(reply, 'agent');
+      }, 380);
+    }
+    function addMsg(html, role) {
       const feed = document.getElementById('chat-feed');
-      const note = document.createElement('div');
-      note.className = 'msg-bubble msg-agent';
-      note.innerHTML = '<strong>Action Recorded:</strong> ' + confirmationText + '. Transmitted to tenant ledger.';
-      feed.appendChild(note);
+      const el = document.createElement('div');
+      el.className = 'msg-bubble msg-' + role;
+      el.innerHTML = html;
+      feed.appendChild(el);
       feed.scrollTop = feed.scrollHeight;
     }
 
-    function sendQuickPrompt(text) {
-      document.getElementById('user-msg-input').value = text;
-      handleChatSubmit(new Event('submit'));
-    }
-
-    function handleChatSubmit(e) {
-      e.preventDefault();
-      const input = document.getElementById('user-msg-input');
-      const val = input.value.trim();
-      if (!val) return;
-
-      const feed = document.getElementById('chat-feed');
-
-      // User bubble
-      const uMsg = document.createElement('div');
-      uMsg.className = 'msg-bubble msg-user';
-      uMsg.innerText = val;
-      feed.appendChild(uMsg);
-      input.value = '';
-
-      // Simulated agent response
-      setTimeout(() => {
-        const aMsg = document.createElement('div');
-        aMsg.className = 'msg-bubble msg-agent';
-
-        if (val.toLowerCase().includes('cma') || val.toLowerCase().includes('sqft')) {
-          aMsg.innerHTML = "Keystone's Estero model applies $290/sqft baseline for Copper Oaks & Bella Terra. Homes with post-2022 roofs command +8.5% premium due to insurance underwriting advantages.";
-        } else if (val.toLowerCase().includes('sms') || val.toLowerCase().includes('draft')) {
-          aMsg.innerHTML = "<em>Draft SMS for Leo Peralta:</em><br>&ldquo;Hi Leo, Rosie Rivera here. I received your confidential Estero brief. I have prepared your private valuation dossier and would love to review the comp analysis whenever convenient today.&rdquo;";
-        } else {
-          aMsg.innerHTML = "Understood. I have logged this directive with the specialist fleet. All updates will stage in your queue for final sign-off.";
-        }
-
-        feed.appendChild(aMsg);
-        feed.scrollTop = feed.scrollHeight;
-      }, 500);
-    }
+    // ── INIT ──
+    loadScript('fsbo', null);
   </script>
 </body>
 </html>
