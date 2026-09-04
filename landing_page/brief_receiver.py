@@ -197,6 +197,13 @@ class BriefHandler(BaseHTTPRequestHandler):
         json_path.write_text(json.dumps(brief, indent=2), encoding="utf-8")
         md_path.write_text(markdown_for(brief, stem), encoding="utf-8")
 
+        # Trigger Hermes brief triage & Telegram alert staging (W1 & W2 SOP hook)
+        try:
+            from apex_core.brief_watcher import brief_watcher
+            brief_watcher.triage_brief(json_path)
+        except Exception as err:
+            self.log_message("Hermes triage hook warning: %s", err)
+
         self._send(
             201,
             {
