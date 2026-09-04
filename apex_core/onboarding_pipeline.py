@@ -18,6 +18,7 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 from apex_core.tenant_manager import tenant_manager, Tenant
 from apex_core.fast_site_builder import fast_builder
+from apex_core.property_data_adapter import property_adapter
 
 BUSINESS_SCOPE_DIR = r"C:\LEO-LAB-ANTIGRAVITY\business-scope"
 BRIEFS_DIR = os.path.join(BUSINESS_SCOPE_DIR, "onboarding-briefs")
@@ -125,29 +126,45 @@ class RealtorOnboardingPipeline:
         print(f"🧭 [4. Harbor Specialist] Seeded Initial Lead Routing & Triage Protocol")
 
         # ----------------------------------------------------
-        # 5. KEYSTONE: INITIAL MICRO-COMP ANALYSIS (Estero / Naples)
+        # 5. KEYSTONE: INITIAL MICRO-COMP ANALYSIS (MLS × Zillow × County Records)
         # ----------------------------------------------------
+        benchmark_target = "21450 Bella Terra Blvd, Estero, FL"
+        prop_intel = property_adapter.lookup_property(benchmark_target)
+        mls_info = prop_intel.get("mls", {})
+        consumer_info = prop_intel.get("consumer", {})
+        county_info = prop_intel.get("county_records", {})
+        keystone_info = prop_intel.get("keystone_valuation", {})
+
         keystone_cma = f"""# Keystone Comparative Market Analysis Baseline ({market})
 
 **Tenant:** {name} ({brokerage})
-**Target Corridor:** Estero, FL (Stoneybrook / West Bay / Bella Terra)
-**Calculated Baseline Rate:** $290 - $340 / sq.ft
+**Target Corridor:** {prop_intel.get('submarket', 'Estero, FL')}
+**Benchmark Asset:** {prop_intel.get('address')}
+**Calculated Baseline Rate:** ${keystone_info.get('rate_per_sqft', 310)} / sq.ft
 
-### Structural Value Adjustments Applied:
-- Heated Pool & Screened Lanai: +$45,000 to +$60,000
-- Post-Ian Roof (Metal / Tile 2022-2024): +$30,000 (Substantial insurance underwriting discount)
-- Preserve / Water View Premium: +$25,000 to +$45,000
+### Real Estate Data Quadrant Integration:
+- **MLS Feed (RESO API):** ID #{mls_info.get('mls_id', 'N/A')} • Status: {mls_info.get('status', 'ACTIVE')} • Recent Comps Tracked: {len(mls_info.get('active_subdivision_comps', []))}
+- **Consumer Telemetry (Zillow):** Zestimate: ${consumer_info.get('zestimate', 0):,} • 30-Day Views: {consumer_info.get('zillow_page_views_30d', 0)}
+- **County Property Appraiser ({county_info.get('county', 'LeePA')}):** Parcel #{county_info.get('parcel_id', 'N/A')}
+- **Deed & Equity Intelligence:** Owner: {county_info.get('owner_name', 'Private Owner')} ({county_info.get('owner_type', 'HOMESTEAD')}) • Est. Equity: ${county_info.get('estimated_equity', 0):,} ({county_info.get('equity_percentage', 0)}%)
+- **FEMA Flood Rating:** {county_info.get('flood_zone', 'Zone X')} • Roof Permit: {county_info.get('roof_permit_year', 'Standard')}
 
-### Strategic List Price Recommendations:
-1. **Conservative / 14-Day Fast Liquidation:** $525,000
-2. **Target Recommended List Price:** $565,000
-3. **High-Demand / Low-Inventory Test:** $595,000
+### Strategic Keystone Pricing Recommendations:
+1. **Conservative / 14-Day Fast Liquidation:** ${keystone_info.get('liquidation_14d_price', 525000):,}
+2. **Target Recommended List Price:** ${keystone_info.get('target_recommended_price', 565000):,} (Alpha Spread vs Zestimate: +${keystone_info.get('zestimate_spread', 0):,})
+3. **High-Demand / Low-Inventory Test:** ${keystone_info.get('high_inventory_test_price', 595000):,}
+
+### Seller Motivation Profile:
+- **Index:** {keystone_info.get('seller_motivation_score', 85)} / 100
+- **Signals:** {', '.join(keystone_info.get('seller_motivation_indicators', ['High Equity']))}
 
 *Prepared autonomously by Keystone Real Estate Analytics for {name}.*
 """
         with open(os.path.join(tenant_dir, "keystone", "cma_market_consult.md"), "w", encoding="utf-8") as f:
             f.write(keystone_cma)
-        print(f"📐 [5. Keystone Specialist] Computed Strategic CMA Tiers ($525K / $565K / $595K)")
+        with open(os.path.join(tenant_dir, "keystone", "property_intelligence.json"), "w", encoding="utf-8") as f:
+            json.dump(prop_intel, f, indent=2)
+        print(f"📐 [5. Keystone Specialist] Computed Strategic CMA & Quadrant Intel (${keystone_info.get('liquidation_14d_price', 525000):,} - ${keystone_info.get('high_inventory_test_price', 595000):,})")
 
         # ----------------------------------------------------
         # 6. QUILL: LUXURY COPY & OFFICIAL WELCOME DISPATCH
