@@ -33,7 +33,12 @@ DEFAULT_GATEWAY_URL = "http://127.0.0.1:9119"
 EVIDENCE_DIR = WORKSPACE_ROOT / "evidence"
 STANDUP_EVIDENCE = EVIDENCE_DIR / "cos_standup_latest.json"
 
-ET = ZoneInfo("America/New_York")
+try:
+    from zoneinfo import ZoneInfo
+    ET = ZoneInfo("America/New_York")
+except Exception:
+    from datetime import timezone, timedelta
+    ET = timezone(timedelta(hours=-4))
 
 COS_PROACTIVE_PROMPT_BLOCK = """
 ## Proactive Chief of Staff Operating Protocol (COS_PROACTIVE_SOP.md §2 & §9)

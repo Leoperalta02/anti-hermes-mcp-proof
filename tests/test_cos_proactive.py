@@ -6,13 +6,12 @@ Per COS_PROACTIVE_SOP.md §2, §4, §9 & §10.
 import json
 import os
 import shutil
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
-import sys
-
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 

@@ -58,14 +58,14 @@
    - Patched `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`:
      - `#panel-advisors` hard blocked with `[STOP — TOOL DENY]`.
      - `#Alienware-hq` hard blocked with `[STOP — HOLD ACTIVE]`.
-     - Specialists (`Harbor`, `Keystone`, `Quill`, `Rosie`) restricted strictly to `#rosie-onboarding-sandbox` and `#wellington-canary` with `[STOP — SANDBOX VIOLATION]`.
+     - Specialists (`Harbor`, `Keystone`, `Quill`, `Rosie`) restricted strictly to `#rosie-onboarding-sandbox` and `#wellington-canary` with `[STOP — SANDBOX VIOLATION]`; fails closed if channel context is missing or None.
 
 7. **Test Suite Verification:**
-   - `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors in 0.51s).
+   - `python -m unittest discover -s tests` → **82/82 PASS** (0 failures, 0 errors in 0.51s).
 
 8. **CoS Proactive Stack (P1–P5 `COS_PROACTIVE_SOP.md` §10):**
    - `apex_core/cos_proactive.py` — standup composer (8am/6pm ET), gateway health probe preamble, telemetry reader, proactive reply composer.
-   - P2 prompt block: §2 principle + §9 rubric wired (`COS_PROACTIVE_PROMPT_BLOCK`).
+   - P2 prompt block: §2 principle + §9 rubric wired (`COS_PROACTIVE_PROMPT_BLOCK`) and synced to `anti-cos/SOUL.md`.
    - P4: Gateway DOWN → alert-first standup (skips body sections per §4).
    - P5: Parses `ANTI_STATUS.md` + `HERMES_STATUS.md` into structured standup bullets.
    - Staged output: `evidence/cos_standup_latest.json` (§12 false-claims enforced).

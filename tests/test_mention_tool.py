@@ -74,6 +74,12 @@ class TestMentionAgentToolGovernance(unittest.TestCase):
         res = send_managed_agent({"target_agent": "Harbor", "content": "test"})
         self.assertIn("[STOP — SANDBOX VIOLATION]", res)
 
+    def test_send_managed_agent_specialist_sandbox_guard_missing_channel(self):
+        """Rule 7b: Fail-Closed Onboarding Isolation — Specialist blocked if channel context is missing."""
+        set_current_channel("", "")
+        res = send_managed_agent({"target_agent": "Keystone", "content": "test"})
+        self.assertIn("[STOP — SANDBOX VIOLATION]", res)
+
 
 if __name__ == '__main__':
     unittest.main()

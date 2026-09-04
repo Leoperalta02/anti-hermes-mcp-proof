@@ -34,6 +34,19 @@ class FastSiteBuilder:
                 print(f"[FastSiteBuilder] Warning reading {playbook_path}: {e}")
         return {}
 
+    @staticmethod
+    def load_listings() -> list:
+        listings_path = os.path.join(os.path.dirname(__file__), "office_listings.json")
+        if os.path.exists(listings_path):
+            try:
+                with open(listings_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list) and data:
+                        return data
+            except Exception as e:
+                print(f"[FastSiteBuilder] Warning reading {listings_path}: {e}")
+        return []
+
     def build_site(self, tenant: Tenant) -> str:
         site_folder = os.path.join(self.output_dir, tenant.subdomain_slug)
         os.makedirs(site_folder, exist_ok=True)
@@ -305,6 +318,41 @@ class FastSiteBuilder:
 </html>"""
 
     def _generate_luxury_realty_html(self, t: Tenant) -> str:
+        listings = self.load_listings()
+        estate_cards_html = ""
+        for item in listings:
+            status_cls = item.get("status_pill_class", "status-for-sale")
+            sqft_fmt = f"{item['sqft']:,}"
+            waterfront_txt = item.get("waterfront", "Prime Location")
+            estate_cards_html += f"""
+        <div class="estate-card" data-category="{item['status']}" data-id="{item['id']}" onclick="openEstateModal('{item['id']}')">
+          <div class="estate-media-wrap">
+            <img src="{item['primary_image']}" alt="{item['title']}" class="estate-card-img" loading="lazy">
+            <div class="estate-status-badge {status_cls}">{item['status_label']}</div>
+            <div class="estate-price-pill">{item['price']}</div>
+          </div>
+          <div class="estate-card-body">
+            <h3 class="estate-title">{item['title']}</h3>
+            <div class="estate-submarket">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {item['neighborhood']}
+            </div>
+            <div class="estate-specs-grid">
+              <span class="spec-pill">{item['beds']} Beds</span>
+              <span class="spec-pill">{item['baths']} Baths</span>
+              <span class="spec-pill">{sqft_fmt} SqFt</span>
+              <span class="spec-pill">{waterfront_txt}</span>
+            </div>
+            <p class="estate-brief">{item['tagline']}</p>
+            <div class="estate-action-row">
+              <span class="estate-explore-link">Explore Dossier <span>›</span></span>
+              <button class="estate-card-btn" onclick="event.stopPropagation(); openEstateModal('{item['id']}')">View Estate</button>
+            </div>
+          </div>
+        </div>"""
+
+        listings_json_str = json.dumps(listings)
+
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -915,6 +963,432 @@ class FastSiteBuilder:
       .hero-cta-group {{ flex-direction: column; }}
       .stage-overlay {{ flex-direction: column; align-items: flex-start; gap: 1rem; }}
     }}
+    /* =========================================================
+       Apple-Style Kinetic Estates Showcase
+       ========================================================= */
+    .estates-section {{
+      padding: 6rem 0 7rem 0;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #000000 0%, #08080a 50%, #000000 100%);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }}
+    .estates-header-row {{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      gap: 2rem;
+    }}
+    .estates-eyebrow {{
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold-accent);
+      margin-bottom: 0.65rem;
+    }}
+    .estates-headline {{
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+    }}
+    .carousel-nav-controls {{
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-shrink: 0;
+    }}
+    .carousel-nav-btn {{
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(30, 30, 36, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--hairline);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+    }}
+    .carousel-nav-btn:hover {{
+      background: rgba(229, 200, 144, 0.2);
+      border-color: var(--gold-accent);
+      color: #ffffff;
+      transform: scale(1.06);
+    }}
+    .carousel-nav-btn:active {{
+      transform: scale(0.96);
+    }}
+
+    .estate-filter-bar {{
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: none;
+    }}
+    .estate-filter-bar::-webkit-scrollbar {{ display: none; }}
+    .filter-pill {{
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--pill-radius);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      outline: none;
+    }}
+    .filter-pill:hover {{
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.2);
+    }}
+    .filter-pill.active {{
+      background: var(--gold-gradient);
+      color: #0b0c10;
+      font-weight: 700;
+      border-color: transparent;
+      box-shadow: 0 4px 18px rgba(229, 200, 144, 0.35);
+    }}
+
+    .estates-carousel-wrapper {{
+      position: relative;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      overflow: hidden;
+    }}
+    .carousel-scrim-left, .carousel-scrim-right {{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 6vw;
+      z-index: 10;
+      pointer-events: none;
+    }}
+    .carousel-scrim-left {{
+      left: 0;
+      background: linear-gradient(90deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+    }}
+    .carousel-scrim-right {{
+      right: 0;
+      background: linear-gradient(270deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+    }}
+    .estates-track {{
+      display: flex;
+      gap: 1.75rem;
+      padding: 1rem max(2rem, calc((100vw - 1180px) / 2)) 2.5rem max(2rem, calc((100vw - 1180px) / 2));
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      user-select: none;
+      cursor: grab;
+    }}
+    .estates-track.is-dragging {{
+      cursor: grabbing;
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }}
+    .estates-track::-webkit-scrollbar {{ display: none; }}
+
+    .estate-card {{
+      flex: 0 0 420px;
+      scroll-snap-align: start;
+      background: var(--bg-card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--hairline);
+      border-radius: var(--apple-radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+      cursor: pointer;
+    }}
+    .estate-card:hover {{
+      transform: translateY(-8px) scale(1.015);
+      border-color: var(--hairline-hover);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 200, 144, 0.15);
+    }}
+    .estate-media-wrap {{
+      position: relative;
+      width: 100%;
+      height: 270px;
+      overflow: hidden;
+      background: #141418;
+    }}
+    .estate-card-img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    .estate-card:hover .estate-card-img {{
+      transform: scale(1.06);
+    }}
+    .estate-status-badge {{
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      z-index: 2;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--pill-radius);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }}
+    .status-for-sale {{
+      background: rgba(16, 185, 129, 0.22);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+    }}
+    .status-pending {{
+      background: rgba(245, 158, 11, 0.22);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+    }}
+    .status-sold {{
+      background: rgba(229, 200, 144, 0.22);
+      color: #f7e7c4;
+      border: 1px solid rgba(229, 200, 144, 0.5);
+    }}
+    .estate-price-pill {{
+      position: absolute;
+      top: 1.15rem;
+      right: 1.15rem;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--pill-radius);
+    }}
+    .estate-card-body {{
+      padding: 1.65rem 1.75rem 1.85rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }}
+    .estate-title {{
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+      line-height: 1.25;
+    }}
+    .estate-submarket {{
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }}
+    .estate-specs-grid {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 1.15rem;
+    }}
+    .spec-pill {{
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d1d1d6;
+      font-size: 0.76rem;
+      font-weight: 500;
+      padding: 0.3rem 0.65rem;
+      border-radius: var(--pill-radius);
+    }}
+    .estate-brief {{
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 1.4rem;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }}
+    .estate-action-row {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--hairline);
+    }}
+    .estate-explore-link {{
+      font-size: 0.86rem;
+      color: var(--gold-accent);
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: gap 0.2s ease;
+    }}
+    .estate-card:hover .estate-explore-link {{
+      gap: 0.5rem;
+    }}
+    .estate-card-btn {{
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--pill-radius);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }}
+    .estate-card-btn:hover {{
+      background: var(--gold-gradient);
+      color: #0b0c10;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(229, 200, 144, 0.35);
+    }}
+
+    /* Estate Modal Lightbox */
+    .estate-modal-backdrop {{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10050;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    .estate-modal-backdrop.is-active {{
+      display: flex;
+      opacity: 1;
+    }}
+    .estate-modal-sheet {{
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #0e0e12;
+      border: 1.5px solid rgba(229, 200, 144, 0.35);
+      border-radius: 32px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(229, 200, 144, 0.2);
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-accent) rgba(255, 255, 255, 0.05);
+      transform: translateY(28px) scale(0.96);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    .estate-modal-backdrop.is-active .estate-modal-sheet {{
+      transform: translateY(0) scale(1);
+    }}
+    .estate-modal-close {{
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(20, 20, 26, 0.85);
+      border: 1px solid var(--hairline);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      transition: all 0.2s ease;
+    }}
+    .estate-modal-close:hover {{
+      background: var(--gold-accent);
+      color: #000000;
+      transform: rotate(90deg);
+    }}
+    .modal-hero-img-wrap {{
+      width: 100%;
+      height: 360px;
+      position: relative;
+    }}
+    .modal-hero-img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }}
+    .modal-hero-gradient {{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(14,14,18,0.95) 100%);
+    }}
+    .modal-body {{
+      padding: 2rem 2.5rem 2.5rem 2.5rem;
+    }}
+    .modal-keystone-box {{
+      background: rgba(229, 200, 144, 0.07);
+      border: 1px solid rgba(229, 200, 144, 0.3);
+      border-radius: 20px;
+      padding: 1.35rem 1.75rem;
+      margin: 1.5rem 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }}
+    .modal-keystone-col-label {{
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold-accent);
+      margin-bottom: 0.25rem;
+    }}
+    .modal-keystone-col-val {{
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+    }}
+    .modal-cta-bar {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--hairline);
+    }}
+
   </style>
 </head>
 <body>
@@ -928,6 +1402,7 @@ class FastSiteBuilder:
       </a>
 
       <div class="nav-actions">
+        <a class="nav-link" href="#portfolio" style="padding: 0.85rem 0.5rem; margin-bottom: -0.85rem;">Estates</a>
         <!-- Dropdown 1: Intelligence -->
         <div class="nav-item-dropdown">
           <a class="nav-link" href="#valuation">
@@ -1039,6 +1514,43 @@ class FastSiteBuilder:
         <div class="stage-badge">
           Direct Principal Access
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apple Kinetic Estates Showcase Section -->
+  <section class="estates-section" id="portfolio">
+    <div class="container">
+      <div class="estates-header-row">
+        <div>
+          <div class="estates-eyebrow">Curated Portfolio • Southwest Florida Luxury</div>
+          <h2 class="estates-headline">Explore the estates.<br>Active, pending, and trophy sales.</h2>
+        </div>
+        <div class="carousel-nav-controls">
+          <button class="carousel-nav-btn prev-btn" id="estatePrevBtn" aria-label="Previous estate">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="carousel-nav-btn next-btn" id="estateNextBtn" aria-label="Next estate">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="estate-filter-bar">
+        <button class="filter-pill active" data-filter="all">All Estates (5)</button>
+        <button class="filter-pill" data-filter="for_sale">✨ For Sale (2)</button>
+        <button class="filter-pill" data-filter="under_contract">⚡ Under Contract (1)</button>
+        <button class="filter-pill" data-filter="sold">🏆 Record Sold (2)</button>
+      </div>
+    </div>
+
+    <!-- Kinetic Horizontal Carousel Track with Edge Scrims -->
+    <div class="estates-carousel-wrapper">
+      <div class="carousel-scrim-left"></div>
+      <div class="carousel-scrim-right"></div>
+      <div class="estates-track" id="estatesTrack">
+        {estate_cards_html}
       </div>
     </div>
   </section>
@@ -1349,7 +1861,227 @@ class FastSiteBuilder:
     }});
 
     updateValuation();
+
+    // =========================================================
+    // Apple-Style Kinetic Horizontal Carousel & Estate Modal
+    // =========================================================
+    const estatesData = {listings_json_str};
+    const estatesTrack = document.getElementById('estatesTrack');
+    const estatePrevBtn = document.getElementById('estatePrevBtn');
+    const estateNextBtn = document.getElementById('estateNextBtn');
+    const estateFilterBtns = document.querySelectorAll('.estate-filter-bar .filter-pill');
+
+    // Arrow Navigation with smooth momentum
+    if (estateNextBtn && estatesTrack) {{
+      estateNextBtn.addEventListener('click', () => {{
+        estatesTrack.scrollBy({{ left: 450, behavior: 'smooth' }});
+      }});
+    }}
+    if (estatePrevBtn && estatesTrack) {{
+      estatePrevBtn.addEventListener('click', () => {{
+        estatesTrack.scrollBy({{ left: -450, behavior: 'smooth' }});
+      }});
+    }}
+
+    // Drag-to-Scroll Kinetic Motion
+    if (estatesTrack) {{
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      estatesTrack.addEventListener('mousedown', (e) => {{
+        isDown = true;
+        estatesTrack.classList.add('is-dragging');
+        startX = e.pageX - estatesTrack.offsetLeft;
+        scrollLeft = estatesTrack.scrollLeft;
+      }});
+
+      estatesTrack.addEventListener('mouseleave', () => {{
+        if (!isDown) return;
+        isDown = false;
+        estatesTrack.classList.remove('is-dragging');
+      }});
+
+      estatesTrack.addEventListener('mouseup', () => {{
+        if (!isDown) return;
+        isDown = false;
+        estatesTrack.classList.remove('is-dragging');
+      }});
+
+      estatesTrack.addEventListener('mousemove', (e) => {{
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - estatesTrack.offsetLeft;
+        const walk = (x - startX) * 1.35;
+        estatesTrack.scrollLeft = scrollLeft - walk;
+      }});
+    }}
+
+    // Category Filter with Smooth Animation
+    estateFilterBtns.forEach(btn => {{
+      btn.addEventListener('click', () => {{
+        estateFilterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        const cards = document.querySelectorAll('.estate-card');
+        
+        cards.forEach(card => {{
+          const cat = card.getAttribute('data-category');
+          if (filter === 'all' || cat === filter) {{
+            card.style.display = 'flex';
+            setTimeout(() => {{
+              card.style.opacity = '1';
+              card.style.transform = 'scale(1)';
+            }}, 20);
+          }} else {{
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.94)';
+            setTimeout(() => {{
+              card.style.display = 'none';
+            }}, 250);
+          }}
+        }});
+      }});
+    }});
+
+    // Estate Modal Controller
+    window.openEstateModal = function(estateId) {{
+      const estate = estatesData.find(item => item.id === estateId);
+      if (!estate) return;
+
+      const modal = document.getElementById('estateModal');
+      const heroImg = document.getElementById('modalHeroImg');
+      const title = document.getElementById('modalTitle');
+      const neighborhood = document.getElementById('modalNeighborhood');
+      const price = document.getElementById('modalPrice');
+      const statusBadge = document.getElementById('modalStatusBadge');
+      const specs = document.getElementById('modalSpecs');
+      const narrative = document.getElementById('modalNarrative');
+      const ppsf = document.getElementById('modalPpsf');
+      const benchmark = document.getElementById('modalBenchmark');
+      const velocity = document.getElementById('modalVelocity');
+      const showingBtn = document.getElementById('modalRequestShowingBtn');
+
+      if (heroImg) heroImg.src = estate.primary_image;
+      if (title) title.textContent = estate.title;
+      if (neighborhood) neighborhood.textContent = estate.neighborhood + ' • ' + estate.submarket;
+      if (price) price.textContent = estate.price;
+      if (statusBadge) {{
+        statusBadge.textContent = estate.status_label;
+        statusBadge.className = 'estate-status-badge ' + (estate.status_pill_class || 'status-for-sale');
+      }}
+      if (specs) {{
+        specs.innerHTML = `
+          <span class="spec-pill" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">${{estate.beds}} Bedrooms</span>
+          <span class="spec-pill" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">${{estate.baths}} Bathrooms</span>
+          <span class="spec-pill" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">${{estate.sqft.toLocaleString()}} Sq.Ft.</span>
+          <span class="spec-pill" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">${{estate.garage}}</span>
+          <span class="spec-pill" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">${{estate.waterfront}}</span>
+        `;
+      }}
+      if (narrative) narrative.textContent = estate.quill_narrative;
+      if (ppsf) ppsf.textContent = estate.keystone_valuation ? estate.keystone_valuation.price_per_sqft : '—';
+      if (benchmark) benchmark.textContent = estate.keystone_valuation ? estate.keystone_valuation.benchmark_spread : '—';
+      if (velocity) velocity.textContent = estate.keystone_valuation ? estate.keystone_valuation.market_velocity : '—';
+
+      if (showingBtn) {{
+        showingBtn.onclick = () => {{
+          closeEstateModal();
+          const consultSection = document.getElementById('consultation');
+          if (consultSection) {{
+            consultSection.scrollIntoView({{ behavior: 'smooth' }});
+            const addrInput = document.getElementById('intakePropertyAddress');
+            if (addrInput) {{
+              addrInput.value = estate.title + ' (' + estate.neighborhood + ')';
+              addrInput.focus();
+            }}
+          }}
+        }};
+      }}
+
+      if (modal) {{
+        modal.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+      }}
+    }};
+
+    window.closeEstateModal = function() {{
+      const modal = document.getElementById('estateModal');
+      if (modal) {{
+        modal.classList.remove('is-active');
+        document.body.style.overflow = '';
+      }}
+    }};
+
+    const closeBtn = document.getElementById('closeEstateModalBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeEstateModal);
+
+    const modalBackdrop = document.getElementById('estateModal');
+    if (modalBackdrop) {{
+      modalBackdrop.addEventListener('click', (e) => {{
+        if (e.target === modalBackdrop) closeEstateModal();
+      }});
+    }}
+
+    document.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape') closeEstateModal();
+    }});
   </script>
+
+  <!-- Apple Frosted Glass Estate Dossier Modal -->
+  <div class="estate-modal-backdrop" id="estateModal">
+    <div class="estate-modal-sheet" id="estateModalSheet">
+      <button class="estate-modal-close" id="closeEstateModalBtn" aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="modal-hero-img-wrap">
+        <img src="" alt="" class="modal-hero-img" id="modalHeroImg">
+        <div class="modal-hero-gradient"></div>
+        <div style="position: absolute; bottom: 1.5rem; left: 2.5rem; right: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <div class="estate-status-badge" id="modalStatusBadge" style="position: static; margin-bottom: 0.6rem; display: inline-block;"></div>
+            <h2 id="modalTitle" style="font-size: 2rem; font-weight: 700; color: #ffffff; line-height: 1.15;"></h2>
+            <div id="modalNeighborhood" style="color: var(--gold-accent); font-size: 0.95rem; margin-top: 0.3rem;"></div>
+          </div>
+          <div id="modalPrice" style="font-size: 2rem; font-weight: 800; color: #ffffff; text-shadow: 0 4px 18px rgba(0,0,0,0.8);"></div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="estate-specs-grid" id="modalSpecs" style="margin-bottom: 1.5rem; gap: 0.65rem;"></div>
+        
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-accent); margin-bottom: 0.5rem;">Architectural Narrative</h4>
+        <p id="modalNarrative" style="color: #d1d1d6; font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+
+        <!-- Keystone Analytical Intel Box -->
+        <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-accent); margin-bottom: 0.5rem;">Keystone Market Intelligence</h4>
+        <div class="modal-keystone-box">
+          <div>
+            <div class="modal-keystone-col-label">Price Per Sq.Ft</div>
+            <div class="modal-keystone-col-val" id="modalPpsf">—</div>
+          </div>
+          <div>
+            <div class="modal-keystone-col-label">Benchmark Valuation</div>
+            <div class="modal-keystone-col-val" id="modalBenchmark">—</div>
+          </div>
+          <div>
+            <div class="modal-keystone-col-label">Submarket Velocity</div>
+            <div class="modal-keystone-col-val" id="modalVelocity" style="font-size: 0.95rem;">—</div>
+          </div>
+        </div>
+
+        <!-- Showing Action Bar -->
+        <div class="modal-cta-bar">
+          <div>
+            <div style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">Experience this estate in person</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">Direct principal scheduling with {t.name}</div>
+          </div>
+          <button class="pill-btn-primary" id="modalRequestShowingBtn" style="padding: 0.75rem 1.85rem; font-size: 0.92rem;">
+            Request Private Walkthrough
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Floating Glass AI Concierge Widget (Stripe x Apple) -->
   <style>

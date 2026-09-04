@@ -178,8 +178,17 @@ python apex_core/fast_site_builder.py
      - Hard HOLD enforcement: `send_managed_agent` blocked on `#Alienware-hq` with `[STOP — HOLD ACTIVE]`.
      - Specialist sandbox isolation: delegation to `Harbor`, `Keystone`, `Quill`, and `Rosie` strictly limited to `#rosie-onboarding-sandbox` and `#wellington-canary` (`[STOP — SANDBOX VIOLATION]`).
      - `#panel-advisors` remains hard-blocked with `[STOP — TOOL DENY]`.
-   - Updated `update_managed_agent_tool_governance.py` and `tests/test_mention_tool.py`.
-   - Verified via unit test suite: **67/67 PASS** (0 failures, 0 errors in 0.51s).
+     - Fails closed on missing or None channel context (`[STOP — SANDBOX VIOLATION]`).
+   - Updated `update_managed_agent_tool_governance.py` and `tests/test_mention_tool.py` (8/8 PASS).
+9. [x] **CoS Proactive Operations Engine Deployed (P1–P5 `COS_PROACTIVE_SOP.md` §10)**:
+   - Built `apex_core/cos_proactive.py` providing:
+     - **P1**: `StandupComposer` (8:00 AM & 6:00 PM ET §4 template format).
+     - **P2**: `COS_PROACTIVE_PROMPT_BLOCK` (§2 core principle + §9 response quality rubric: "hey" → proactive standup, passive echo forbidden) synced to `anti-cos/SOUL.md`.
+     - **P3**: Onboarding brief watch integration (via W1 `brief_watcher.py`).
+     - **P4**: `GatewayHealthProbe` with preamble alert-first gating (if gateway is DOWN, standup body is skipped and alert is surfaced first).
+     - **P5**: `StatusTelemetryReader` parsing live `ANTI_STATUS.md` and `HERMES_STATUS.md` into structured telemetry bullets.
+   - Comprehensive test suite: `tests/test_cos_proactive.py` (**14/14 PASS**).
+   - Full Alienware workspace test suite: **82/82 PASS** (0 failures, 0 errors in 0.51s).
 
 ---
 
@@ -189,4 +198,4 @@ python apex_core/fast_site_builder.py
 - **Specialist Sandbox Channels**: Authorized in `#rosie-onboarding-sandbox` and `#wellington-canary`.
 - **SOP §12 Compliance**: Zero false claims; `claims.*` strictly `false` across all alerts and manifests until real deployment.
 - **Hermes Fleet**: Detached Gateway daemon PID 37056 + Lease Guardian daemon PID 32880 active.
-- **Workspace Test Suite**: 67/67 tests passing.
+- **Workspace Test Suite**: **82/82 tests passing**.

@@ -1,0 +1,44 @@
+{
+  "slot": "morning",
+  "timestamp_et": "2026-09-04 8:00 AM ET",
+  "gateway_health": {
+    "gateway_up": true,
+    "gateway_pid": "37056",
+    "telegram_ok": true,
+    "desktop_ok": false,
+    "last_incident": "none",
+    "alert_message": null,
+    "probe_source": "http_probe"
+  },
+  "telemetry": {
+    "gateway_pid": "37056",
+    "gateway_status_line": "Operational",
+    "hold_active": true,
+    "phase_a_summary": "A4 IN PROGRESS; gateway PID 37056",
+    "a4_status": "IN PROGRESS",
+    "rosie_wiring": "W1\u2013W5 COMPLETE (all PASS)",
+    "dry_run_status": "PASS",
+    "cos_p_tasks": {
+      "P1": "",
+      "P2": "",
+      "P3": "",
+      "P4": "",
+      "P5": ""
+    },
+    "anti_queue": "_None._",
+    "cursor_queue": "See CURSOR_REVIEW.md for latest audit verdict",
+    "leo_decisions_needed": [
+      "Awaiting A4 72h completion before first live APPROVE PROVISION"
+    ],
+    "pytest_count": "68/68",
+    "last_incident": "none"
+  },
+  "body": "HERMES STANDUP \u2014 2026-09-04 8:00 AM ET\n\nENGINE\n\u2022 Gateway: UP PID 37056 | Telegram: OK | Desktop :9119: FAIL\n\u2022 Last incident: none\n\nROSIE ONBOARDING\n\u2022 Open briefs: 0 staged (see onboarding-briefs/) | Awaiting Leo: 1\n\u2022 Dry-run status: PASS\n\u2022 Wiring: W1\u2013W5 COMPLETE (all PASS)\n\u2022 Blocker: A4 72h watch in progress\n\nTEAM QUEUE\n\u2022 Anti (Phase A): A4 IN PROGRESS; A4 IN PROGRESS\n\u2022 Cursor (Phase B): See CURSOR_REVIEW.md for latest audit verdict\n\nLEO DECISIONS NEEDED\n\u2022 Awaiting A4 72h completion before first live APPROVE PROVISION\n\nNEXT AUTO ACTION (Hermes)\n\u2022 Monitor gateway health; surface any new onboarding briefs to Leo.\n\nPOSTURE (\u00a712)\n\u2022 STAGED ONLY | Agent deployed: NO | Public portal live: NO | MLS connected: NO\n\u2022 HOLD #Alienware-hq: ACTIVE",
+  "claims": {
+    "agent_deployed": false,
+    "portal_created": false,
+    "mls_connected": false,
+    "voice_enabled": false,
+    "calendar_synced": false
+  }
+}
