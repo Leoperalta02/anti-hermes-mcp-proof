@@ -15,14 +15,20 @@ class RobustHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         super().end_headers()
 
-def main():
+def run_server(host: str = "127.0.0.1", port: int = 8000) -> ThreadingHTTPServer:
     os.chdir(WORKSPACE_ROOT)
-    server = ThreadingHTTPServer(("0.0.0.0", 8000), RobustHandler)
+    return ThreadingHTTPServer((host, port), RobustHandler)
+
+
+def main():
+    server = run_server("0.0.0.0", 8000)
     print(f"[PreviewServer] Running at http://localhost:8000 (Root: {WORKSPACE_ROOT})")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
+    finally:
+        server.server_close()
 
 if __name__ == "__main__":
     main()

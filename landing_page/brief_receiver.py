@@ -9,6 +9,7 @@ Does not deploy agents, provision tenants, or claim a live portal.
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -17,7 +18,20 @@ from urllib.parse import urlparse
 
 HOST = "127.0.0.1"
 PORT = 8787
-BRIEF_DIR = Path(r"C:\LEO-LAB-ANTIGRAVITY\business-scope\onboarding-briefs")
+_DEFAULT_BRIEF_DIR = Path(r"C:\LEO-LAB-ANTIGRAVITY\business-scope\onboarding-briefs")
+_WORKSPACE_FALLBACK = Path(__file__).resolve().parent.parent / "evidence" / "onboarding-briefs"
+
+
+def resolve_brief_dir() -> Path:
+    env = os.getenv("APEX_BRIEF_DIR")
+    if env:
+        return Path(env)
+    if _DEFAULT_BRIEF_DIR.parent.exists():
+        return _DEFAULT_BRIEF_DIR
+    return _WORKSPACE_FALLBACK
+
+
+BRIEF_DIR = resolve_brief_dir()
 MAX_BODY = 256_000
 SECRET_RE = re.compile(
     r"(password|passwd|api[_-]?key|secret|token|bearer|authorization|"
@@ -215,9 +229,17 @@ class BriefHandler(BaseHTTPRequestHandler):
         )
 
 
-def main() -> None:
+def run_server(host: str = HOST, port: int = PORT, brief_dir: Path | None = None) -> ThreadingHTTPServer:
+    global BRIEF_DIR
+    if brief_dir:
+        BRIEF_DIR = Path(brief_dir)
     BRIEF_DIR.mkdir(parents=True, exist_ok=True)
-    server = ThreadingHTTPServer((HOST, PORT), BriefHandler)
+    server = ThreadingHTTPServer((host, port), BriefHandler)
+    return server
+
+
+def main() -> None:
+    server = run_server(HOST, PORT)
     print(f"Apex staged brief receiver on http://{HOST}:{PORT}")
     print(f"Briefs directory: {BRIEF_DIR}")
     print("Does not deploy agents. Bind is loopback only.")
