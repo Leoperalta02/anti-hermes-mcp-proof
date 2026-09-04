@@ -39,6 +39,11 @@ SECRET_RE = re.compile(
     re.IGNORECASE,
 )
 
+from apex_core.provision_executor import (
+    evaluate_brief_provision_gate,
+    execute_gated_provision_from_file,
+)
+
 DEFAULT_TELEGRAM_TARGET = "telegram:8349762599"
 TELEGRAM_TARGET = os.getenv("APEX_TELEGRAM_TARGET", DEFAULT_TELEGRAM_TARGET)
 
@@ -185,12 +190,16 @@ class BriefWatcher:
             stage_valid = True
 
         # 4. Stage Hermes Telegram Alert
+        leo_decision = brief.get("leo_decision") if isinstance(brief, dict) else None
+        provision_gate = evaluate_brief_provision_gate(brief if isinstance(brief, dict) else {})
+
         alert_payload = {
             "channel": self.telegram_target,
             "brief_id": stem,
             "brief_file": str(brief_path),
             "timestamp": utc_now_iso(),
             "classification": classification,
+            "provision_gate": provision_gate,
             "claims": {
                 "agent_deployed": False,
                 "portal_created": False,
@@ -230,6 +239,44 @@ class BriefWatcher:
         print(f"[Hermes Triage] Processed brief {stem} -> {classification}")
 
         return alert_payload
+
+    def provision_approved_brief(self, brief_path: Path) -> Dict[str, Any]:
+        """Execute gated tenant provision when brief carries Leo approval."""
+        try:
+            result = execute_gated_provision_from_file(brief_path)
+            print(f"[Hermes Provision] Provisioned {result['tenant_slug']} ({result['provision_gate']['gate_mode']})")
+            return result
+        except PermissionError as exc:
+            return {
+                "status": "BLOCKED",
+                "brief_id": brief_path.stem,
+                "reason": str(exc),
+                "provision_gate": evaluate_brief_provision_gate(
+                    json.loads(brief_path.read_text(encoding="utf-8"))
+                ),
+            }
+
+    def scan_provision_ready(self) -> List[Dict[str, Any]]:
+        """Find briefs with open provision gate that are not yet provisioned."""
+        if not self.briefs_dir.exists():
+            return []
+
+        results = []
+        for p in sorted(self.briefs_dir.glob("*.json")):
+            try:
+                brief = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if brief.get("provisioned_at"):
+                continue
+            gate = evaluate_brief_provision_gate(brief)
+            if not gate["provision_allowed"]:
+                continue
+            stage = brief.get("hermes_stage")
+            if stage and stage not in ("STAGE:READY",):
+                continue
+            results.append(self.provision_approved_brief(p))
+        return results
 
     def scan_once(self) -> List[Dict[str, Any]]:
         """Scans briefs directory for any unprocessed JSON files."""
@@ -282,13 +329,17 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Hermes Brief Watcher & Triage (W1 & W2)")
     parser.add_argument("--once", action="store_true", help="Run a single scan and exit")
+    parser.add_argument("--provision-approved", action="store_true", help="Provision briefs with open Leo gate")
     parser.add_argument("--dir", type=str, default=None, help="Custom briefs directory path")
     args = parser.parse_args()
 
     custom_dir = Path(args.dir) if args.dir else None
     watcher = BriefWatcher(briefs_dir=custom_dir)
 
-    if args.once:
+    if args.provision_approved:
+        provisioned = watcher.scan_provision_ready()
+        print(f"Provision scan complete. Processed {len(provisioned)} brief(s).")
+    elif args.once:
         found = watcher.scan_once()
         print(f"Completed scan. Triaged {len(found)} brief(s).")
     else:

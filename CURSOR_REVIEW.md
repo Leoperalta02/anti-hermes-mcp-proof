@@ -117,3 +117,11 @@ Audit synchronized and approved by Anti IDE.
 
 **Deferred to Anti:** Realtor mobile PWA / portal nav fix at ≤680px (Leo directive Sep 04).
 
+## Cursor Implementation — provision executor (pending commit)
+
+**Gated Provision Executor (§6.5 & §8)**
+- `apex_core/provision_executor.py` — shared gated skeleton provisioning; portable briefs/tenants dir resolution
+- `execute_dryrun_lead.py` refactored to use executor + gate
+- `brief_watcher.py` — triage payloads include `provision_gate`; `--provision-approved` CLI scans and provisions approved briefs
+- Tests: `tests/test_provision_executor.py` — 6/6 PASS; brief_watcher + dryrun updated
+

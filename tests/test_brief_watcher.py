@@ -60,6 +60,8 @@ class TestBriefWatcher(unittest.TestCase):
         self.assertIn("Public portal live: NO", msg)
         self.assertIn("MLS connected: NO", msg)
         self.assertIn("Rosie Rivera", msg)
+        self.assertIn("provision_gate", result)
+        self.assertFalse(result["provision_gate"]["provision_allowed"])
 
         # Verify alert written to evidence directory
         self.assertTrue(self.watcher.alert_file.exists())
@@ -182,6 +184,33 @@ class TestBriefWatcher(unittest.TestCase):
         self.assertIn("Mentor: Bradley Dohack", result["message"])
         self.assertIn("eXp Realty", result["message"])
         self.assertFalse(result["claims"]["agent_deployed"])
+
+
+    def test_scan_provision_ready_with_dryrun_gate(self):
+        """Verify approved briefs trigger gated skeleton provisioning."""
+        brief = {
+            "kind": "apex_realtor_onboarding_brief",
+            "hermes_stage": "STAGE:READY",
+            "leo_decision": "APPROVE PROVISION DRYRUN",
+            "assigned_tenant_slug": "scan-provision-test",
+            "answers": {
+                "full_name": "Scan Provision Test",
+                "market": "Estero, FL",
+                "needs": ["intake"],
+            },
+        }
+        brief_file = self.briefs_dir / "approved-brief.json"
+        brief_file.write_text(json.dumps(brief), encoding="utf-8")
+
+        import os
+        os.environ["APEX_TENANTS_DIR"] = str(self.temp_dir / "tenants")
+        try:
+            results = self.watcher.scan_provision_ready()
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0]["status"], "PROVISIONED")
+            self.assertEqual(results[0]["tenant_slug"], "scan-provision-test")
+        finally:
+            os.environ.pop("APEX_TENANTS_DIR", None)
 
 
 if __name__ == "__main__":

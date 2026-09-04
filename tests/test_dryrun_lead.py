@@ -21,6 +21,7 @@ class TestDryrunLead(unittest.TestCase):
         self.assertEqual(data["answers"]["full_name"], "DRYRUN Rosie Test")
         self.assertEqual(data["hermes_stage"], "STAGE:READY")
         self.assertEqual(data["leo_decision"], "APPROVE PROVISION DRYRUN")
+        self.assertEqual(res["provision_gate"]["gate_mode"], "DRYRUN")
 
         # Verify all 3 specialist draft outputs exist on disk
         for agent, path_str in res["drafts_generated"].items():
