@@ -55,10 +55,12 @@ class TestListingMediaAgent(unittest.TestCase):
     def setUp(self):
         self.temp_dir = Path(tempfile.mkdtemp(prefix="apex_listing_test_"))
         self.listings_path = self.temp_dir / "office_listings.json"
+        self.queue_path = self.temp_dir / "listing_intake_queue.json"
         self.tenant_dir = self.temp_dir / "tenants" / "rosie"
         self.agent = ListingMediaAgent(
             listings_path=self.listings_path,
             tenant_dir=self.tenant_dir,
+            queue_path=self.queue_path,
         )
 
     def tearDown(self):
@@ -131,7 +133,7 @@ class TestListingMediaAgent(unittest.TestCase):
 
     def test_zero_false_claims(self):
         """Verify claims.* are strictly False across ingest, enrich, and pipeline."""
-        pipeline = self.agent.process_submission(SAMPLE_PAYLOAD)
+        pipeline = self.agent.process_intake_submission(SAMPLE_PAYLOAD)
         for key, val in pipeline["claims"].items():
             self.assertFalse(val, f"Claim '{key}' must be false")
 
@@ -147,9 +149,22 @@ class TestListingMediaAgent(unittest.TestCase):
         for key in DEFAULT_CLAIMS:
             self.assertIn(key, pipeline["claims"])
 
+    def test_intake_queue_before_showcase(self):
+        """Submissions land in queue; showcase only after explicit approval."""
+        result = self.agent.process_intake_submission(SAMPLE_PAYLOAD)
+        self.assertEqual(result["status"], "QUEUE_STAGED")
+        self.assertTrue(self.queue_path.exists())
+        self.assertFalse(self.listings_path.exists())
+
+        pending = self.agent.load_intake_queue(tenant_slug="rosie")
+        self.assertEqual(len(pending), 1)
+        self.assertEqual(pending[0]["queue_status"], "PENDING_APPROVAL")
+
     def test_showcase_json_sync(self):
-        """Assert property formats cleanly into office_listings.json schema."""
-        result = self.agent.process_submission(SAMPLE_PAYLOAD)
+        """Assert property formats cleanly into office_listings.json after approval."""
+        self.agent.process_intake_submission(SAMPLE_PAYLOAD)
+        result = self.agent.approve_for_showcase("gp-estero-101")
+        self.assertEqual(result["status"], "APPROVED_FOR_SHOWCASE")
 
         self.assertTrue(self.listings_path.exists())
         with open(self.listings_path, "r", encoding="utf-8") as f:
@@ -185,10 +200,11 @@ class TestListingMediaAgent(unittest.TestCase):
             self.assertIn("id", item)
             self.assertIn("keystone_valuation", item)
 
-        # Update existing entry on re-stage
+        # Update existing entry on re-stage via queue + approve
         updated_payload = dict(SAMPLE_PAYLOAD)
         updated_payload["price"] = 2800000
-        self.agent.process_submission(updated_payload)
+        self.agent.process_intake_submission(updated_payload)
+        self.agent.approve_for_showcase("gp-estero-101")
         updated = json.loads(self.listings_path.read_text(encoding="utf-8"))
         self.assertEqual(len(updated), 1)
         self.assertEqual(updated[0]["price_raw"], 2800000)

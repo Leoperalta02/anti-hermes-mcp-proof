@@ -7,7 +7,7 @@ Trained on Apple Design Principles (apple.com, apple.com/business).
 import os
 import sys
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 # Ensure workspace root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -46,6 +46,29 @@ class FastSiteBuilder:
             except Exception as e:
                 print(f"[FastSiteBuilder] Warning reading {listings_path}: {e}")
         return []
+
+    @staticmethod
+    def load_intake_queue(tenant_slug: Optional[str] = None) -> list:
+        """Load pending listing intake queue entries for portal embedding."""
+        queue_path = os.path.join(os.path.dirname(__file__), "listing_intake_queue.json")
+        if not os.path.exists(queue_path):
+            return []
+        try:
+            with open(queue_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if not isinstance(data, list):
+                return []
+            pending = [e for e in data if e.get("queue_status") == "PENDING_APPROVAL"]
+            if tenant_slug:
+                slug = tenant_slug.strip().lower()
+                pending = [
+                    e for e in pending
+                    if str(e.get("listing", {}).get("tenant_slug", "rosie")).lower() == slug
+                ]
+            return pending
+        except Exception as e:
+            print(f"[FastSiteBuilder] Warning reading {queue_path}: {e}")
+            return []
 
     def build_site(self, tenant: Tenant) -> str:
         site_folder = os.path.join(self.output_dir, tenant.subdomain_slug)
@@ -2455,6 +2478,8 @@ class FastSiteBuilder:
         playbook_menu_markup = "\n".join(buttons_html)
         first_script_key = next(iter(playbook.keys()), "fsbo")
         playbook_json_str = json.dumps(playbook)
+        intake_queue = self.load_intake_queue(t.subdomain_slug)
+        intake_queue_json = json.dumps(intake_queue)
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3086,11 +3111,44 @@ class FastSiteBuilder:
       color: var(--text-primary);
     }}
 
+    /* ── LISTING INTAKE QUEUE ── */
+    .intake-grid {{ display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.25rem; margin-top: 1rem; }}
+    .intake-form-card .crm-field {{ margin-bottom: 0.65rem; }}
+    .listing-queue-card {{
+      background: var(--bg-card-elevated); border: 1px solid var(--hairline);
+      border-radius: 16px; padding: 1.1rem 1.25rem; margin-bottom: 0.75rem;
+    }}
+    .listing-queue-card:hover {{ border-color: var(--hairline-gold); }}
+    .lq-header {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; }}
+    .lq-title {{ font-size: 0.95rem; font-weight: 600; }}
+    .lq-meta {{ font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; }}
+    .lq-keystone {{
+      font-size: 0.78rem; color: var(--gold-accent); margin: 0.65rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }}
+    .lq-narrative {{
+      font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55;
+      border-left: 2px solid var(--hairline-gold); padding-left: 0.75rem; margin: 0.5rem 0;
+    }}
+    .lq-actions {{ display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }}
+    .btn-approve {{
+      font-size: 0.78rem; font-weight: 600; padding: 0.45rem 1rem;
+      border-radius: var(--pill); border: none; cursor: pointer;
+      background: linear-gradient(135deg,#f7e7c4,#e5c890); color: #000;
+    }}
+    .btn-approve:disabled {{ opacity: 0.5; cursor: not-allowed; }}
+    .intake-posture {{
+      font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.75rem;
+      padding: 0.5rem 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--hairline);
+    }}
+
     @media (max-width: 1100px) {{
       .kpi-bar {{ grid-template-columns: repeat(3, 1fr); }}
       .workspace-grid, .net-grid, .cma-grid {{ grid-template-columns: 1fr; }}
       .playbook-grid {{ grid-template-columns: 1fr; }}
       .copilot-card {{ position: static; height: 480px; }}
+      .intake-grid {{ grid-template-columns: 1fr; }}
     }}
     @media (max-width: 680px) {{
       .kpi-bar {{ grid-template-columns: repeat(2, 1fr); }}
@@ -3115,6 +3173,7 @@ class FastSiteBuilder:
         <button class="nav-tab" onclick="switchPanel('netsheets', this)">Net Sheets</button>
         <button class="nav-tab" onclick="switchPanel('cma', this)">CMA</button>
         <button class="nav-tab" onclick="switchPanel('prospects', this)">FSBO / Expired</button>
+        <button class="nav-tab" onclick="switchPanel('listings', this)">Listings</button>
         <button class="nav-tab" onclick="switchPanel('playbook', this)">Playbook</button>
         <button class="nav-tab" onclick="switchPanel('transactions', this)">Transactions</button>
       </div>
@@ -3595,6 +3654,84 @@ class FastSiteBuilder:
           <button class="btn-action primary" onclick="logAction(this,'Called Oguike')">📞 Call</button>
           <button class="btn-action" onclick="logAction(this,'Added to CRM')">+ Add to CRM</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         PANEL: MEDIA & LISTING INTAKE QUEUE
+    ═══════════════════════════════════════════════ -->
+    <div id="panel-listings" class="os-panel">
+      <div style="padding: 2rem 0 1rem 0;">
+        <h1 style="font-size:1.8rem; font-weight:600; letter-spacing:-0.025em;">Media & Listing Intake Queue</h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.3rem;">
+          Gulf Pointe / {t.name} • Submit property media — Keystone & Quill enrich drafts awaiting your approval
+        </p>
+      </div>
+
+      <div class="intake-grid">
+        <div class="card intake-form-card">
+          <div class="card-title">New Property Submission</div>
+          <form id="listing-intake-form" onsubmit="submitListingIntake(event)">
+            <div class="crm-field">
+              <label class="crm-label">Title</label>
+              <input class="crm-input" name="title" required placeholder="Gulf Pointe Lanai Estate">
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Address</label>
+              <input class="crm-input" name="address" required placeholder="101 Bella Terra Blvd, Estero, FL">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+              <div class="crm-field">
+                <label class="crm-label">Subdivision</label>
+                <input class="crm-input" name="subdivision" placeholder="West Bay Club">
+              </div>
+              <div class="crm-field">
+                <label class="crm-label">Price ($)</label>
+                <input class="crm-input" name="price" type="number" required>
+              </div>
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Status</label>
+              <select class="crm-input" name="status" required>
+                <option value="FOR_SALE">FOR SALE</option>
+                <option value="UNDER_CONTRACT">UNDER CONTRACT</option>
+                <option value="RECORD_SOLD">RECORD SOLD</option>
+              </select>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.65rem;">
+              <div class="crm-field"><label class="crm-label">Beds</label><input class="crm-input" name="beds" type="number" value="4"></div>
+              <div class="crm-field"><label class="crm-label">Baths</label><input class="crm-input" name="baths" value="3.5"></div>
+              <div class="crm-field"><label class="crm-label">Sqft</label><input class="crm-input" name="sqft" type="number" required></div>
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">View / Waterfront</label>
+              <input class="crm-input" name="view" placeholder="Fairway / Gulf access">
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Photo URLs (one per line)</label>
+              <textarea class="crm-textarea" name="photos" rows="3" required placeholder="https://..."></textarea>
+            </div>
+            <div class="crm-field">
+              <label class="crm-label">Video URL (optional)</label>
+              <input class="crm-input" name="video_url" placeholder="https://...">
+            </div>
+            <button type="submit" class="btn-approve" style="width:100%; margin-top:0.5rem;">Submit to Intake Queue</button>
+          </form>
+          <div id="intake-form-feedback" style="display:none; color:var(--success); font-size:0.82rem; margin-top:0.75rem; font-weight:600;"></div>
+          <div class="intake-posture">
+            🛡️ SOP §12: STAGED ONLY — MLS connected: NO • Published live: NO • Awaiting realtor approval
+          </div>
+        </div>
+
+        <section>
+          <div class="section-header">
+            <span class="section-title">Awaiting Approval</span>
+            <span class="count-pill" id="listing-queue-count">0 Pending</span>
+          </div>
+          <div id="listing-intake-queue">
+            <!-- Queue cards injected by JS -->
+          </div>
+        </section>
       </div>
     </div>
 
@@ -4413,9 +4550,128 @@ class FastSiteBuilder:
       }});
     }}
 
+    // ── LISTING INTAKE QUEUE ──
+    const LISTING_INTAKE_API = 'http://127.0.0.1:8765';
+    const TENANT_SLUG = {json.dumps(t.subdomain_slug)};
+    let listingIntakeQueue = {intake_queue_json};
+
+    function formatListingPrice(n) {{
+      if (!n) return '—';
+      return '$' + Number(n).toLocaleString();
+    }}
+
+    function renderListingIntakeQueue() {{
+      const container = document.getElementById('listing-intake-queue');
+      const countEl = document.getElementById('listing-queue-count');
+      const pending = listingIntakeQueue.filter(e => e.queue_status === 'PENDING_APPROVAL');
+      if (countEl) countEl.textContent = pending.length + ' Pending';
+
+      if (!container) return;
+      if (!pending.length) {{
+        container.innerHTML = '<div class="card" style="color:var(--text-secondary); font-size:0.85rem;">No staged submissions yet. Use the form to submit property media.</div>';
+        return;
+      }}
+
+      container.innerHTML = pending.map(entry => {{
+        const listing = entry.listing || {{}};
+        const keystone = entry.keystone || (entry.enrichment && entry.enrichment.keystone) || {{}};
+        const narrative = (entry.enrichment && entry.enrichment.quill_narrative) || '';
+        const ppsf = keystone.price_per_sqft_display || 'N/A';
+        const spread = (keystone.comp_spread && keystone.comp_spread.display) || 'Pending';
+        const photos = listing.photos || [];
+        const thumb = photos[0] ? '<img src="' + photos[0] + '" alt="" style="width:72px;height:54px;object-fit:cover;border-radius:8px;margin-right:0.75rem;">' : '';
+        return '<div class="listing-queue-card" id="lq-' + entry.listing_id + '">' +
+          '<div class="lq-header">' +
+            '<div style="display:flex;align-items:flex-start;">' + thumb +
+              '<div><div class="lq-title">' + (listing.title || entry.listing_id) + '</div>' +
+              '<div class="lq-meta">' + (listing.address || '') + ' • ' + (listing.subdivision || '') + '</div>' +
+              '<div class="lq-meta">' + formatListingPrice(listing.price) + ' • ' + (listing.status || '') + '</div>' +
+            '</div></div>' +
+          '</div>' +
+          '<div class="lq-keystone">📐 Keystone: ' + ppsf + ' • Comp corridor ±5%: ' + spread + '</div>' +
+          '<div class="lq-narrative">✍️ Quill: ' + (narrative.substring(0, 220) + (narrative.length > 220 ? '…' : '')) + '</div>' +
+          '<div class="lq-actions">' +
+            '<button class="btn-approve" onclick="approveListingForShowcase(\\'' + entry.listing_id + '\\')">✓ Approve for Showcase</button>' +
+            '<span style="font-size:0.72rem;color:var(--text-secondary);align-self:center;">STAGED — not live MLS</span>' +
+          '</div></div>';
+      }}).join('');
+    }}
+
+    async function refreshListingIntakeQueue() {{
+      try {{
+        const res = await fetch(LISTING_INTAKE_API + '/api/listing/queue?tenant=' + encodeURIComponent(TENANT_SLUG));
+        if (!res.ok) throw new Error('Queue fetch failed');
+        const data = await res.json();
+        listingIntakeQueue = data.queue || [];
+      }} catch (e) {{
+        // Fall back to embedded queue when intake server offline
+      }}
+      renderListingIntakeQueue();
+    }}
+
+    async function submitListingIntake(ev) {{
+      ev.preventDefault();
+      const form = ev.target;
+      const fd = new FormData(form);
+      const photos = (fd.get('photos') || '').split('\\n').map(s => s.trim()).filter(Boolean);
+      const payload = {{
+        title: fd.get('title'), address: fd.get('address'), subdivision: fd.get('subdivision'),
+        price: parseFloat(fd.get('price')), status: fd.get('status'),
+        specs: {{
+          beds: parseInt(fd.get('beds') || '4', 10), baths: fd.get('baths'),
+          sqft: parseInt(fd.get('sqft'), 10), pool: true, view: fd.get('view')
+        }},
+        photos, video_url: fd.get('video_url') || null, tenant_slug: TENANT_SLUG
+      }};
+      const feedback = document.getElementById('intake-form-feedback');
+      try {{
+        const res = await fetch(LISTING_INTAKE_API + '/api/listing/submit', {{
+          method: 'POST', headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify(payload)
+        }});
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Submit failed');
+        feedback.style.display = 'block';
+        feedback.style.color = 'var(--success)';
+        feedback.textContent = '✓ Queued ' + data.listing_id + ' — Keystone & Quill drafts staged.';
+        form.reset();
+        await refreshListingIntakeQueue();
+      }} catch (err) {{
+        feedback.style.display = 'block';
+        feedback.style.color = 'var(--danger)';
+        feedback.textContent = '⚠ ' + err.message + ' — start intake server: python apex_core/listing_intake_server.py';
+      }}
+    }}
+
+    async function approveListingForShowcase(listingId) {{
+      const card = document.getElementById('lq-' + listingId);
+      const btn = card ? card.querySelector('.btn-approve') : null;
+      if (btn) {{ btn.disabled = true; btn.textContent = 'Approving…'; }}
+      try {{
+        const res = await fetch(LISTING_INTAKE_API + '/api/listing/approve', {{
+          method: 'POST', headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ listing_id: listingId }})
+        }});
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Approve failed');
+        if (card) {{
+          card.style.borderColor = 'var(--success)';
+          card.querySelector('.lq-actions').innerHTML =
+            '<div style="color:var(--success);font-weight:600;font-size:0.82rem;">✓ Approved for Apple showcase — rebuild front door to reflect.</div>';
+        }}
+        listingIntakeQueue = listingIntakeQueue.filter(e => e.listing_id !== listingId);
+        renderListingIntakeQueue();
+        addMsg('Listing <strong>' + listingId + '</strong> approved for kinetic showcase (STAGED — not live MLS).', 'agent');
+      }} catch (err) {{
+        if (btn) {{ btn.disabled = false; btn.textContent = '✓ Approve for Showcase'; }}
+        alert('Approve failed: ' + err.message);
+      }}
+    }}
+
     // ── INIT ──
     loadScript('{first_script_key}', null);
     loadInboundLeads();
+    renderListingIntakeQueue();
   </script>
 </body>
 </html>"""

@@ -22,6 +22,7 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
 DEFAULT_LISTINGS_PATH = Path(__file__).resolve().parent / "office_listings.json"
+DEFAULT_QUEUE_PATH = Path(__file__).resolve().parent / "listing_intake_queue.json"
 DEFAULT_TENANTS_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\real-estate-copilot\tenants")
 DEFAULT_TENANT_SLUG = "rosie"
 
@@ -95,12 +96,45 @@ class ListingMediaAgent:
         self,
         listings_path: Optional[Path] = None,
         tenant_dir: Optional[Path] = None,
+        queue_path: Optional[Path] = None,
     ):
         self.listings_path = Path(listings_path) if listings_path else DEFAULT_LISTINGS_PATH
+        self.queue_path = Path(queue_path) if queue_path else DEFAULT_QUEUE_PATH
         if tenant_dir:
             self.tenant_dir = Path(tenant_dir)
         else:
             self.tenant_dir = DEFAULT_TENANTS_ROOT / DEFAULT_TENANT_SLUG
+
+    def _load_queue(self) -> List[Dict[str, Any]]:
+        if not self.queue_path.exists():
+            return []
+        try:
+            data = json.loads(self.queue_path.read_text(encoding="utf-8"))
+            if isinstance(data, list):
+                return data
+        except Exception:
+            pass
+        return []
+
+    def _write_queue(self, entries: List[Dict[str, Any]]) -> None:
+        self.queue_path.parent.mkdir(parents=True, exist_ok=True)
+        self.queue_path.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+
+    def load_intake_queue(self, tenant_slug: Optional[str] = None, pending_only: bool = True) -> List[Dict[str, Any]]:
+        """Return queued intake entries, optionally filtered by tenant and pending status."""
+        entries = self._load_queue()
+        if tenant_slug:
+            slug = tenant_slug.strip().lower()
+            entries = [e for e in entries if str(e.get("listing", {}).get("tenant_slug", DEFAULT_TENANT_SLUG)).lower() == slug]
+        if pending_only:
+            entries = [e for e in entries if e.get("queue_status") == "PENDING_APPROVAL"]
+        return entries
+
+    def get_queue_entry(self, listing_id: str) -> Optional[Dict[str, Any]]:
+        for entry in self._load_queue():
+            if entry.get("listing_id") == listing_id:
+                return entry
+        return None
 
     def _reject_secrets(self, payload: Dict[str, Any]) -> None:
         payload_str = json.dumps(payload)
@@ -350,23 +384,40 @@ class ListingMediaAgent:
         self.listings_path.write_text(json.dumps(existing, indent=2), encoding="utf-8")
         return self.listings_path
 
-    def process_submission(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        """Full pipeline: ingest → enrich → stage for showcase."""
+    def process_intake_submission(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Ingest + enrich and stage to intake queue (awaiting realtor approval for showcase)."""
         ingest_result = self.ingest_property_submission(payload)
         listing = PropertyListingMedia(**ingest_result["listing"])
         enrichment = self.enrich_with_specialists(listing)
 
-        combined = {
+        queue_entry = {
+            "listing_id": listing.listing_id,
+            "queue_status": "PENDING_APPROVAL",
             "listing": ingest_result["listing"],
             "enrichment": enrichment,
             "keystone": enrichment["keystone"],
+            "claims": dict(DEFAULT_CLAIMS),
+            "external_send_blocked": True,
+            "send_gate": "LEO_AND_REALTOR_APPROVAL_REQUIRED",
+            "submitted_at": listing.submitted_at,
+            "approved_at": None,
         }
-        showcase_path = self.stage_for_showcase(combined)
+
+        entries = self._load_queue()
+        replaced = False
+        for idx, item in enumerate(entries):
+            if item.get("listing_id") == listing.listing_id:
+                entries[idx] = queue_entry
+                replaced = True
+                break
+        if not replaced:
+            entries.append(queue_entry)
+        self._write_queue(entries)
 
         return {
-            "status": "DRAFT_STAGED_CLEAN",
+            "status": "QUEUE_STAGED",
             "listing_id": listing.listing_id,
-            "showcase_path": str(showcase_path),
+            "queue_path": str(self.queue_path),
             "quill_path": enrichment["quill_path"],
             "keystone_path": enrichment["keystone_path"],
             "claims": dict(DEFAULT_CLAIMS),
@@ -374,3 +425,55 @@ class ListingMediaAgent:
             "send_gate": "LEO_AND_REALTOR_APPROVAL_REQUIRED",
             "timestamp": utc_now_iso(),
         }
+
+    def approve_for_showcase(self, listing_id: str) -> Dict[str, Any]:
+        """Promote a queued listing into office_listings.json after realtor approval."""
+        entry = self.get_queue_entry(listing_id)
+        if not entry:
+            raise ValueError(f"Listing '{listing_id}' not found in intake queue.")
+
+        if entry.get("queue_status") == "APPROVED_FOR_SHOWCASE":
+            return {
+                "status": "ALREADY_APPROVED",
+                "listing_id": listing_id,
+                "showcase_path": str(self.listings_path),
+                "claims": dict(DEFAULT_CLAIMS),
+                "timestamp": utc_now_iso(),
+            }
+
+        combined = {
+            "listing": entry["listing"],
+            "enrichment": entry.get("enrichment") or {},
+            "keystone": entry.get("keystone") or {},
+        }
+        showcase_path = self.stage_for_showcase(combined)
+
+        entry["queue_status"] = "APPROVED_FOR_SHOWCASE"
+        entry["approved_at"] = utc_now_iso()
+        entry["claims"] = dict(DEFAULT_CLAIMS)
+
+        entries = self._load_queue()
+        for idx, item in enumerate(entries):
+            if item.get("listing_id") == listing_id:
+                entries[idx] = entry
+                break
+        self._write_queue(entries)
+
+        approved_entry = self._build_showcase_entry(combined)
+        approved_entry["workflow_status"] = "APPROVED_FOR_SHOWCASE"
+        approved_entry["claims"]["mls_connected"] = False
+        approved_entry["claims"]["published_live"] = False
+
+        return {
+            "status": "APPROVED_FOR_SHOWCASE",
+            "listing_id": listing_id,
+            "showcase_path": str(showcase_path),
+            "showcase_entry": approved_entry,
+            "claims": dict(DEFAULT_CLAIMS),
+            "external_send_blocked": True,
+            "timestamp": utc_now_iso(),
+        }
+
+    def process_submission(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Full pipeline: ingest → enrich → queue (use approve_for_showcase to publish)."""
+        return self.process_intake_submission(payload)
