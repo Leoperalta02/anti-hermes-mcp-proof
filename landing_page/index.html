@@ -250,21 +250,30 @@
         </fieldset>
 
         <fieldset class="stage" data-stage="profile" hidden>
-          <legend>Profile</legend>
+          <legend>Profile & Team</legend>
           <label>Full name
-            <input type="text" name="full_name" autocomplete="name" maxlength="120">
+            <input type="text" name="full_name" autocomplete="name" maxlength="120" placeholder="e.g. Rosie Rivera">
           </label>
           <label>Brokerage
-            <input type="text" name="brokerage" maxlength="160">
+            <input type="text" name="brokerage" maxlength="160" placeholder="e.g. eXp Realty">
+          </label>
+          <label>Team / Mentor Group <span class="optional">(optional)</span>
+            <input type="text" name="team_name" maxlength="160" placeholder="e.g. Gulf Pointe Properties">
+          </label>
+          <label>Team Leader / Mentor <span class="optional">(optional)</span>
+            <input type="text" name="team_leader" maxlength="120" placeholder="e.g. Bradley Dohack">
+          </label>
+          <label>Office Address / Location <span class="optional">(optional)</span>
+            <input type="text" name="office_address" maxlength="200" placeholder="e.g. 9480 Corkscrew Palms Cir, Suite 4, Estero, FL 33928">
           </label>
           <label>Primary market
-            <input type="text" name="market" placeholder="City, region, or farm" maxlength="160">
+            <input type="text" name="market" placeholder="City, region, or farm (e.g. Estero & Naples, FL)" maxlength="160">
           </label>
           <label>Email for follow-up about this brief
-            <input type="email" name="email" autocomplete="email" maxlength="160">
+            <input type="email" name="email" autocomplete="email" maxlength="160" placeholder="e.g. rosie@gulfpointe.com">
           </label>
           <label>Phone <span class="optional">(optional)</span>
-            <input type="tel" name="phone" autocomplete="tel" maxlength="40">
+            <input type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="e.g. 239-555-0199">
           </label>
           <label class="check">
             <input type="checkbox" name="profile_unknown" value="unknown">

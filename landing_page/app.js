@@ -110,6 +110,9 @@ function askedSummary(values) {
   const named = [];
   if (values.full_name) named.push(values.full_name);
   if (values.brokerage) named.push(values.brokerage);
+  if (values.team_name) named.push(`Team: ${values.team_name}`);
+  if (values.team_leader) named.push(`Mentor: ${values.team_leader}`);
+  if (values.office_address) named.push(values.office_address);
   if (values.market) named.push(values.market);
   const who = named.length ? named.join(" · ") : "A Realtor (name not given)";
   const focus = needs.length
@@ -186,8 +189,19 @@ function renderReview() {
   const panel = $("review-panel");
   if (!panel) return;
   const v = state.values;
+  const profileParts = [
+    v.full_name,
+    v.brokerage,
+    v.team_name ? `Team: ${v.team_name}` : "",
+    v.team_leader ? `Mentor: ${v.team_leader}` : "",
+    v.office_address,
+    v.market,
+    v.email,
+    v.phone
+  ].filter(Boolean);
+
   const rows = [
-    ["Profile", [v.full_name, v.brokerage, v.market, v.email, v.phone].filter(Boolean).join(" · ") || "skipped / unknown"],
+    ["Profile & Team", profileParts.join(" · ") || "skipped / unknown"],
     ["Needs", displayValue(v.needs) + (v.needs_other ? ` — ${v.needs_other}` : "")],
     ["Tools", [v.crm_name, v.calendar_name, v.mls_name, v.website].filter(Boolean).join(" · ") || "skipped / unknown"],
     ["Assets", [v.listing_range, v.photography, v.brand_notes].filter(Boolean).join(" · ") || "skipped / unknown"],

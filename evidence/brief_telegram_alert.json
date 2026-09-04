@@ -1,8 +1,8 @@
 {
   "channel": "telegram:8349762599",
-  "brief_id": "20260904T121215Z-rosie",
-  "brief_file": "C:\\LEO-LAB-ANTIGRAVITY\\business-scope\\onboarding-briefs\\20260904T121215Z-rosie.json",
-  "timestamp": "2026-09-04T17:49:11.769460+00:00",
+  "brief_id": "20260904T190640Z-rosie-rivera",
+  "brief_file": "C:\\LEO-LAB-ANTIGRAVITY\\business-scope\\onboarding-briefs\\20260904T190640Z-rosie-rivera.json",
+  "timestamp": "2026-09-04T19:07:10.453217+00:00",
   "classification": "STAGE:DISCOVERY",
   "claims": {
     "agent_deployed": false,
@@ -11,5 +11,5 @@
     "voice_enabled": false,
     "calendar_synced": false
   },
-  "message": "\ud83d\udce5 [HERMES TRIAGE: NEW ONBOARDING BRIEF]\n\n\ud83d\udccb Brief ID: 20260904T121215Z-rosie\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83c\udfaf Needs: needs_unknown\n\ud83c\udff7\ufe0f Triage Tag: STAGE:DISCOVERY\n\n\ud83d\udee1\ufe0f Posture (\u00a712 SOP): STAGED ONLY\n\u2022 Agent deployed: NO\n\u2022 Public portal live: NO\n\u2022 MLS connected: NO\n\n\ud83d\udc49 Recommended Action: Review brief and await Leo gate ('APPROVE PROVISION DRYRUN')."
+  "message": "\ud83d\udce5 [HERMES TRIAGE: NEW ONBOARDING BRIEF]\n\n\ud83d\udccb Brief ID: 20260904T190640Z-rosie-rivera\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: eXp Realty\n\ud83d\udc65 Organization: Team: Gulf Pointe Properties \u00b7 Mentor: Bradley Dohack\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83c\udfaf Needs: needs_unknown\n\ud83c\udff7\ufe0f Triage Tag: STAGE:DISCOVERY\n\n\ud83d\udee1\ufe0f Posture (\u00a712 SOP): STAGED ONLY\n\u2022 Agent deployed: NO\n\u2022 Public portal live: NO\n\u2022 MLS connected: NO\n\n\ud83d\udc49 Recommended Action: Incomplete discovery brief. Follow up on required intake fields."
 }

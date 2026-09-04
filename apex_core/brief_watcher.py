@@ -145,12 +145,24 @@ class BriefWatcher:
                 classification = "STAGE:DISCOVERY"
                 action_recommendation = "Incomplete discovery brief. Follow up on required intake fields."
 
+            team_info = ""
+            team_name = answers.get("team_name")
+            team_leader = answers.get("team_leader")
+            if team_name or team_leader:
+                t_parts = []
+                if team_name:
+                    t_parts.append(f"Team: {team_name}")
+                if team_leader:
+                    t_parts.append(f"Mentor: {team_leader}")
+                team_info = f"👥 Organization: {' · '.join(t_parts)}\n"
+
             # 3. Alert Formatting (§12 & §6.4 — ZERO FALSE CLAIMS)
             alert_msg = (
                 f"📥 [HERMES TRIAGE: NEW ONBOARDING BRIEF]\n\n"
                 f"📋 Brief ID: {stem}\n"
                 f"👤 Realtor: {name}\n"
                 f"🏢 Brokerage: {brokerage}\n"
+                f"{team_info}"
                 f"📍 Market: {market}\n"
                 f"🎯 Needs: {needs_str}\n"
                 f"🏷️ Triage Tag: {classification}\n\n"

@@ -135,6 +135,9 @@ class TenantSkeletonManager:
         market: str,
         email: Optional[str] = None,
         phone: Optional[str] = None,
+        team_name: Optional[str] = None,
+        team_leader: Optional[str] = None,
+        office_address: Optional[str] = None,
     ) -> Path:
         """Provisions a sovereign tenant skeleton directory under real-estate-copilot/tenants/{slug}/."""
         self.ensure_skeleton_template()
@@ -151,6 +154,9 @@ class TenantSkeletonManager:
             "tenant_slug": slug,
             "realtor_name": realtor_name,
             "brokerage": brokerage,
+            "team_name": team_name,
+            "team_leader": team_leader,
+            "office_address": office_address,
             "market": market,
             "email": email or f"{slug}@sovereign.realtor",
             "phone": phone or "239-555-0100",
@@ -169,9 +175,11 @@ class TenantSkeletonManager:
         (tenant_dir / "TENANT_MANIFEST.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
         # Customized tenant SOUL
+        org_line = f" ({team_name}, {brokerage})" if team_name else f" ({brokerage})"
+        mentor_note = f" Operating under mentor leadership of {team_leader}." if team_leader else ""
         tenant_soul = (
             f"# {realtor_name} — Real Estate AI CoPilot\n\n"
-            f"You are the Private Real Estate AI CoPilot for {realtor_name} ({brokerage}) covering {market}.\n\n"
+            f"You are the Private Real Estate AI CoPilot for {realtor_name}{org_line} covering {market}.{mentor_note}\n\n"
             f"## Specialists:\n"
             f"- **Harbor**: Lead intake, qualification questions, and follow-up routing.\n"
             f"- **Keystone**: Comparative Market Analysis (CMA), valuation adjustments, and contract timelines.\n"

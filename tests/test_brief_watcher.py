@@ -157,6 +157,34 @@ class TestBriefWatcher(unittest.TestCase):
             del os.environ["APEX_TELEGRAM_TARGET"]
 
 
+    def test_triage_brief_with_mentor_team(self):
+        """Verify brief with team and mentor group details formats cleanly in alert."""
+        sample_brief = {
+            "kind": "apex_realtor_onboarding_brief",
+            "status": "staged",
+            "answers": {
+                "full_name": "Rosie Rivera",
+                "brokerage": "eXp Realty",
+                "team_name": "Gulf Pointe Properties",
+                "team_leader": "Bradley Dohack",
+                "office_address": "9480 Corkscrew Palms Cir, Suite 4, Estero, FL 33928",
+                "market": "Estero & Naples, FL",
+                "email": "rosie@gulfpointe.com",
+                "needs": ["intake", "cma_model"]
+            }
+        }
+        brief_file = self.briefs_dir / "20260904-rosie-gulfpointe.json"
+        brief_file.write_text(json.dumps(sample_brief), encoding="utf-8")
+
+        result = self.watcher.triage_brief(brief_file)
+        self.assertEqual(result["classification"], "STAGE:READY")
+        self.assertIn("Team: Gulf Pointe Properties", result["message"])
+        self.assertIn("Mentor: Bradley Dohack", result["message"])
+        self.assertIn("eXp Realty", result["message"])
+        self.assertFalse(result["claims"]["agent_deployed"])
+
+
 if __name__ == "__main__":
     unittest.main()
+
 
