@@ -1,0 +1,151 @@
+[
+  {
+    "id": "estate-pelican-sound",
+    "title": "The Pelican Sound Sanctuary",
+    "neighborhood": "Pelican Sound, Estero, FL",
+    "submarket": "Estero River & Gulf Access",
+    "price": "$3,895,000",
+    "price_raw": 3895000,
+    "status": "for_sale",
+    "status_label": "✨ FOR SALE",
+    "status_pill_class": "status-for-sale",
+    "beds": 4,
+    "baths": "4.5",
+    "sqft": 4620,
+    "garage": "3-Car Bay",
+    "lot": "0.62 Acres",
+    "waterfront": "Deepwater Canal + 50ft Boat Lift",
+    "primary_image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "tagline": "Modern organic coastal living with direct Gulf access and resort-caliber outdoor lanai.",
+    "quill_narrative": "A masterwork of transitional coastal architecture nestled along Estero's deepwater waterways. Featuring soaring 14-foot tongue-and-groove ceilings, motorized sliding glass walls, a temperature-controlled 400-bottle glass wine room, and an infinity-edge saltwater pool overlooking a private 50-foot dock.",
+    "keystone_valuation": {
+      "price_per_sqft": "$843/sqft",
+      "benchmark_spread": "$3,750,000 - $4,100,000",
+      "market_velocity": "High Demand (Estero Gulf Access Under 60 Days)"
+    }
+  },
+  {
+    "id": "estate-west-bay",
+    "title": "West Bay Club Reserve",
+    "neighborhood": "West Bay Club, Estero, FL",
+    "submarket": "Estero Bay Preserve",
+    "price": "$2,750,000",
+    "price_raw": 2750000,
+    "status": "for_sale",
+    "status_label": "✨ FOR SALE",
+    "status_pill_class": "status-for-sale",
+    "beds": 3,
+    "baths": "3.5",
+    "sqft": 3450,
+    "garage": "2.5-Car Bay",
+    "lot": "0.48 Acres",
+    "waterfront": "Preserve & Pete Dye Championship Fairway",
+    "primary_image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "tagline": "Sublime privacy overlooking the Estero Bay preserve with private beach club privileges.",
+    "quill_narrative": "Elevated single-story luxury framed by tranquil wetland preserves and golf vistas. Built with custom European cabinetry, Wolf/Sub-Zero refrigeration, full impact glass envelope, and an extended travertine loggia with summer kitchen.",
+    "keystone_valuation": {
+      "price_per_sqft": "$797/sqft",
+      "benchmark_spread": "$2,650,000 - $2,890,000",
+      "market_velocity": "Active Interest (Private Beach Club Asset)"
+    }
+  },
+  {
+    "id": "estate-vanderbilt-beach",
+    "title": "Vanderbilt Beachfront Haven",
+    "neighborhood": "Vanderbilt Beach, Naples, FL",
+    "submarket": "Gulf of Mexico Beachfront",
+    "price": "$6,490,000",
+    "price_raw": 6490000,
+    "status": "under_contract",
+    "status_label": "⚡ UNDER CONTRACT",
+    "status_pill_class": "status-pending",
+    "beds": 5,
+    "baths": "6.0",
+    "sqft": 5890,
+    "garage": "4-Car Bay",
+    "lot": "0.75 Acres",
+    "waterfront": "110ft Direct White Sand Beachfront",
+    "primary_image": "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "tagline": "Trophy Gulf-front estate with sunset pavilion and private dune boardwalk.",
+    "quill_narrative": "Unmatched panoramic views across the Gulf of Mexico. This coastal contemporary masterpiece showcases seamless indoor-outdoor living, private elevator, multi-tiered waterfront decks, and an opulent primary wing with spa bath and sunset terrace.",
+    "keystone_valuation": {
+      "price_per_sqft": "$1,102/sqft",
+      "benchmark_spread": "$6,200,000 - $6,750,000",
+      "market_velocity": "Contract Executed in 18 Days (Naples Beachfront)"
+    }
+  },
+  {
+    "id": "estate-shadow-wood",
+    "title": "Shadow Wood Coastal Estate",
+    "neighborhood": "Shadow Wood at The Brooks, Bonita Springs, FL",
+    "submarket": "North Estero / Bonita Springs",
+    "price": "$4,150,000",
+    "price_raw": 4150000,
+    "status": "sold",
+    "status_label": "🏆 SOLD IN 5 DAYS",
+    "status_pill_class": "status-sold",
+    "beds": 4,
+    "baths": "5.0",
+    "sqft": 4910,
+    "garage": "3-Car Bay",
+    "lot": "0.55 Acres",
+    "waterfront": "Lakefront with Cascading Rock Waterfall",
+    "primary_image": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "tagline": "Record-setting sale engineered with strategic private buyer positioning.",
+    "quill_narrative": "Represented by Rosie Rivera. Deployed off-market teaser campaign to Keystone database, generating 3 competing cash offers and setting the 2026 all-time high price-per-square-foot in Shadow Wood.",
+    "keystone_valuation": {
+      "price_per_sqft": "$845/sqft (Subdivision Record)",
+      "benchmark_spread": "Closed at 102.5% of List Price",
+      "market_velocity": "Sold in 5 Days Over Asking"
+    }
+  },
+  {
+    "id": "estate-pelican-landing-watermark",
+    "title": "Pelican Landing Watermark",
+    "neighborhood": "Pelican Landing, Estero, FL",
+    "submarket": "Spring Creek & Coconut Road Corridor",
+    "price": "$3,200,000",
+    "price_raw": 3200000,
+    "status": "sold",
+    "status_label": "🏆 JUST SOLD",
+    "status_pill_class": "status-sold",
+    "beds": 4,
+    "baths": "4.0",
+    "sqft": 4100,
+    "garage": "3-Car Bay",
+    "lot": "0.51 Acres",
+    "waterfront": "Spring Creek Mangrove Sanctuary",
+    "primary_image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "tagline": "Sold over asking price with private Gulf island beach access included.",
+    "quill_narrative": "Exquisite custom residence offering access to Pelican Landing's private 34-acre beach island on Big Hickory Island. Custom quartz waterfall island, zero-corner pocketing sliders, and an oversized screened lanai with heated pool and gas fireplace.",
+    "keystone_valuation": {
+      "price_per_sqft": "$780/sqft",
+      "benchmark_spread": "Closed at $3,200,000 Full Cash",
+      "market_velocity": "Sold in 12 Days"
+    }
+  }
+]

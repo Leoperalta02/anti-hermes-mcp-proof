@@ -102,5 +102,36 @@ class TestLeadFlowIntegration(unittest.TestCase):
         self.assertIn("const scripts = {", portal_html)
 
 
+    def test_external_office_listings_and_apple_showcase(self):
+        """Verify office_listings.json exists and dynamically injects into the Apple-style showcase."""
+        listings_path = os.path.join(os.path.dirname(__file__), "..", "apex_core", "office_listings.json")
+        self.assertTrue(os.path.exists(listings_path), "office_listings.json must exist in apex_core")
+
+        listings = self.builder.load_listings()
+        self.assertIsInstance(listings, list)
+        self.assertGreaterEqual(len(listings), 4, "Must have at least 4 curated properties")
+
+        for item in listings:
+            self.assertIn("id", item)
+            self.assertIn("title", item)
+            self.assertIn("price", item)
+            self.assertIn("status", item)
+            self.assertIn("neighborhood", item)
+            self.assertIn("keystone_valuation", item)
+
+        # Verify index.html contains kinetic carousel and modal elements
+        index_path = os.path.join(PUBLIC_SITES_DIR, self.rosie.subdomain_slug, "index.html")
+        with open(index_path, "r", encoding="utf-8") as f:
+            index_html = f.read()
+
+        self.assertIn("estates-section", index_html)
+        self.assertIn("estates-track", index_html)
+        self.assertIn("estate-card", index_html)
+        self.assertIn("The Pelican Sound Sanctuary", index_html)
+        self.assertIn("Vanderbilt Beachfront Haven", index_html)
+        self.assertIn("estateModal", index_html)
+        self.assertIn("openEstateModal", index_html)
+
+
 if __name__ == "__main__":
     unittest.main()
