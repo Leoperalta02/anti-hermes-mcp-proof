@@ -423,12 +423,24 @@ class FastSiteBuilder:
       transform: translateY(-8px);
       overflow: hidden;
       pointer-events: none;
-      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 999;
     }}
+    /* Hover buffer bridge */
+    .apple-flyout::before {{
+      content: '';
+      position: absolute;
+      top: -25px;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: transparent;
+    }}
     .nav-item-dropdown:hover .apple-flyout,
-    .nav-item-dropdown:focus-within .apple-flyout {{
-      max-height: 440px;
+    .nav-item-dropdown:focus-within .apple-flyout,
+    .apple-flyout:hover,
+    .apple-flyout.is-open {{
+      max-height: 460px;
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
@@ -1188,6 +1200,83 @@ class FastSiteBuilder:
         btn.innerText = '✓ Brief Dispatched';
       }});
     }}
+
+    // Apple Navigation Click & Hover Grace Buffer
+    const dropdowns = document.querySelectorAll('.nav-item-dropdown');
+    let closeTimer = null;
+
+    dropdowns.forEach(dd => {{
+      const link = dd.querySelector('.nav-link');
+      const flyout = dd.querySelector('.apple-flyout');
+
+      function openFlyout() {{
+        if (closeTimer) clearTimeout(closeTimer);
+        dropdowns.forEach(other => {{
+          const f = other.querySelector('.apple-flyout');
+          if (f && f !== flyout) f.classList.remove('is-open');
+        }});
+        if (flyout) flyout.classList.add('is-open');
+        const scrim = document.querySelector('.apple-page-scrim');
+        if (scrim) scrim.style.opacity = '1';
+      }}
+
+      function closeFlyoutWithDelay() {{
+        if (closeTimer) clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {{
+          if (flyout && (flyout.matches(':hover') || dd.matches(':hover'))) return;
+          if (flyout) flyout.classList.remove('is-open');
+          const scrim = document.querySelector('.apple-page-scrim');
+          if (scrim) scrim.style.opacity = '0';
+        }}, 350);
+      }}
+
+      dd.addEventListener('mouseenter', openFlyout);
+      dd.addEventListener('mouseleave', closeFlyoutWithDelay);
+
+      if (flyout) {{
+        flyout.addEventListener('mouseenter', openFlyout);
+        flyout.addEventListener('mousemove', openFlyout);
+        flyout.addEventListener('mouseleave', closeFlyoutWithDelay);
+      }}
+
+      if (link) {{
+        link.addEventListener('click', (e) => {{
+          e.preventDefault();
+          const isOpen = flyout.classList.contains('is-open');
+          if (isOpen) {{
+            flyout.classList.remove('is-open');
+            const scrim = document.querySelector('.apple-page-scrim');
+            if (scrim) scrim.style.opacity = '0';
+          }} else {{
+            openFlyout();
+          }}
+        }});
+      }}
+    }});
+
+    // Smooth scroll and auto-close flyout on sub-link click
+    document.querySelectorAll('.apple-flyout a').forEach(a => {{
+      a.addEventListener('click', (e) => {{
+        const href = a.getAttribute('href');
+        if (href && href.startsWith('#')) {{
+          e.preventDefault();
+          document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
+          const scrim = document.querySelector('.apple-page-scrim');
+          if (scrim) scrim.style.opacity = '0';
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({{ behavior: 'smooth' }});
+        }}
+      }});
+    }});
+
+    // Close when clicking anywhere outside header
+    document.addEventListener('click', (e) => {{
+      if (!e.target.closest('.apple-nav')) {{
+        document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
+        const scrim = document.querySelector('.apple-page-scrim');
+        if (scrim) scrim.style.opacity = '0';
+      }}
+    }});
 
     updateValuation();
   </script>
