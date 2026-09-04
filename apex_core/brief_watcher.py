@@ -25,9 +25,9 @@ if sys.stderr and hasattr(sys.stderr, "reconfigure"):
     except Exception:
         pass
 
-# Root path
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BRIEFS_DIR = Path(r"C:\LEO-LAB-ANTIGRAVITY\business-scope\onboarding-briefs")
+_WORKSPACE_BRIEFS_FALLBACK = WORKSPACE_ROOT / "evidence" / "onboarding-briefs"
 EVIDENCE_DIR = WORKSPACE_ROOT / "evidence"
 PROCESSED_FILE = EVIDENCE_DIR / "processed_briefs.json"
 ALERT_FILE = EVIDENCE_DIR / "brief_telegram_alert.json"
@@ -43,6 +43,15 @@ DEFAULT_TELEGRAM_TARGET = "telegram:8349762599"
 TELEGRAM_TARGET = os.getenv("APEX_TELEGRAM_TARGET", DEFAULT_TELEGRAM_TARGET)
 
 
+def resolve_briefs_dir() -> Path:
+    env = os.getenv("APEX_BRIEFS_DIR")
+    if env:
+        return Path(env)
+    if DEFAULT_BRIEFS_DIR.parent.exists():
+        return DEFAULT_BRIEFS_DIR
+    return _WORKSPACE_BRIEFS_FALLBACK
+
+
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -54,13 +63,14 @@ class BriefWatcher:
         evidence_dir: Optional[Path] = None,
         telegram_target: Optional[str] = None,
     ):
-        self.briefs_dir = Path(briefs_dir) if briefs_dir else DEFAULT_BRIEFS_DIR
+        self.briefs_dir = Path(briefs_dir) if briefs_dir else resolve_briefs_dir()
         self.evidence_dir = Path(evidence_dir) if evidence_dir else EVIDENCE_DIR
         self.telegram_target = telegram_target or os.getenv("APEX_TELEGRAM_TARGET", TELEGRAM_TARGET)
         self.processed_file = self.evidence_dir / "processed_briefs.json"
         self.alert_file = self.evidence_dir / "brief_telegram_alert.json"
         self.triage_log = self.evidence_dir / "brief_triage_log.jsonl"
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
+        self.briefs_dir.mkdir(parents=True, exist_ok=True)
 
     def load_processed_ids(self) -> set:
         if self.processed_file.exists():
@@ -193,6 +203,12 @@ class BriefWatcher:
 
         with open(self.alert_file, "w", encoding="utf-8") as f:
             json.dump(alert_payload, f, indent=2)
+
+        # 4b. Gated Telegram dispatch (staged by default; live only if APEX_TELEGRAM_LIVE=1)
+        from apex_core.telegram_dispatch import dispatch_telegram_alert
+
+        dispatch_result = dispatch_telegram_alert(alert_payload, evidence_dir=self.evidence_dir)
+        alert_payload["dispatch"] = dispatch_result
 
         # 5. Append to triage log
         with open(self.triage_log, "a", encoding="utf-8") as f:
