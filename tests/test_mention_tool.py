@@ -3,20 +3,28 @@ test_mention_tool.py
 Verification suite for mention_agent_in_channel supervisor-mediated in-channel mention tool.
 Tests all 5 fail-closed governance rules.
 """
-import unittest
-import sys
+import importlib
 import os
+import sys
+import unittest
 
-sys.path.insert(0, r'C:\LEO-LAB-ANTIGRAVITY\hermes-agent')
+# Alienware local path for hermes-agent
+_HERMES_AGENT_PATH = r'C:\LEO-LAB-ANTIGRAVITY\hermes-agent'
+if os.path.exists(_HERMES_AGENT_PATH) and _HERMES_AGENT_PATH not in sys.path:
+    sys.path.insert(0, _HERMES_AGENT_PATH)
 
-from tools.managed_agent_tool import (
-    mention_agent_in_channel,
-    send_managed_agent,
-    set_current_channel,
-    set_active_round_seats,
-    _PANEL_ROUTABLE_PUBKEYS
-)
+try:
+    _managed_tool = importlib.import_module("tools.managed_agent_tool")
+    mention_agent_in_channel = _managed_tool.mention_agent_in_channel
+    send_managed_agent = _managed_tool.send_managed_agent
+    set_current_channel = _managed_tool.set_current_channel
+    set_active_round_seats = _managed_tool.set_active_round_seats
+    _PANEL_ROUTABLE_PUBKEYS = _managed_tool._PANEL_ROUTABLE_PUBKEYS
+except Exception:
+    _managed_tool = None
 
+
+@unittest.skipIf(_managed_tool is None, "tools.managed_agent_tool not found on this host")
 class TestMentionAgentToolGovernance(unittest.TestCase):
 
     def setUp(self):

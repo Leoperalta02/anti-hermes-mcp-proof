@@ -8,14 +8,13 @@
 ## Phase A — Engine (Anti)
 
 | Task | Status | Evidence |
-|------|--------|----------|
+| --- | --- | --- |
 | A1 Gateway supervision | **PASS** | WMI-detached daemon; Scheduled Task `Hermes_Gateway`; PID **37056** |
 | A2 Electron git path fix | **PASS** | `allowUnsafeCustomBinary: true` in `git-review-ops.ts`; Desktop active |
 | A3 SQLite Lease Guardian | **PASS** | `apex_core/lease_guardian.py` daemon PID **4284**; 28/28 tests |
 | A4 72h uptime watch | **IN PROGRESS** | 12h+ clean; no unclean exits on gateway |
 | A5 Telegram polling | **PASS** | Sticky polling active; 8am standup delivered to Telegram |
 | A6 Aura Storage & Inbox Sentinel | **PASS** | WMI-detached daemon PID **33372**; 15-min heartbeat; Samsung Drive `D:\Email_Archives` |
-
 
 **Commit:** `053aee7` on `github/main` (lease guardian + HERMES_STATUS)
 
@@ -28,7 +27,7 @@ Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_O
 ### Rosie (`ROSIE_ONBOARDING_SOP.md` §10) — ALL W1–W5 VERIFIED & PASS ✅
 
 | # | Task | Verify | Status |
-|---|------|--------|--------|
+| --- | --- | --- | --- |
 | W1 | Folder watch/cron: `onboarding-briefs/*.json` → Hermes task | Test file triggers alert (`test_brief_watcher.py`) | **PASS** |
 | W2 | Telegram alert template (no false claims) | Structured alert in `evidence/brief_telegram_alert.json` | **PASS** (Staged) |
 | W3 | Hermes triage prompt block in CoS profile | Synced into `anti-cos/SOUL.md`; `cos_triage_evaluator.py` | **PASS** |
@@ -38,7 +37,7 @@ Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_O
 ### CoS (`COS_PROACTIVE_SOP.md` §10)
 
 | # | Task | Verify |
-|---|------|--------|
+| --- | --- | --- |
 | P1 | Cron 8am + 6pm standup | Leo receives template |
 | P2 | System prompt: §2 principle + §9 rubric | "hey" → standup, not echo |
 | P3 | Folder watch: `onboarding-briefs/` | New file → 5 min alert |

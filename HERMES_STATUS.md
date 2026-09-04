@@ -9,7 +9,7 @@
 ## Architecture & Fleet Baseline
 
 | Agent / Component | Runtime & Model Route | Role & Status |
-|---|---|---|
+| --- | --- | --- |
 | **Hermes Gateway** | Python 3.11 venv (`hermes-state`) | Daemon PID 37056, Telegram sticky IPv4 polling (`149.154.166.110`), Web Dashboard (`http://127.0.0.1:9119`) |
 | **Lease Guardian** | `apex_core/lease_guardian.py` (PID 32880) | 60s Watchdog: auto-purges expired leases, restarts Gateway via WMI if dropped |
 | **Cursor Bridge** | Node Daemon (`cursor-agent-api-proxy`, port 4646) | Profile `cursor`: `gpt-5.3-codex-low-fast` via local proxy (~1s response time) |
@@ -62,4 +62,3 @@
 
 7. **Test Suite Verification:**
    - `python -m unittest discover -s tests` → **67/67 PASS** (0 failures, 0 errors in 0.51s).
-

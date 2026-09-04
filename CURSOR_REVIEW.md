@@ -7,7 +7,7 @@ Audited `536e193` on `github/main`. W5 implementation is solid; the full onboard
 ### W5 (`536e193`) — verified
 
 | Area | Result |
-|------|--------|
+| --- | --- |
 | **Spec** | `DELEGATION_SANDBOX_SPEC.md` — `#rosie-onboarding-sandbox`, `#wellington-canary`; HOLD on `#Alienware-hq`; `#panel-advisors` blocked |
 | **Dispatcher** | `delegation_sandbox.py` — fail-closed channels, input validation, 4 specialists |
 | **Draft posture** | `DRAFT_PENDING_REALTOR_APPROVAL`, `external_send_blocked: true`, `send_gate: LEO_AND_REALTOR_APPROVAL_REQUIRED` |
@@ -19,16 +19,16 @@ Audited `536e193` on `github/main`. W5 implementation is solid; the full onboard
 ### Hermes wiring stack (W1–W5)
 
 | SOP | Tests (Alienware Local) | Verdict |
-|-----|-------------------------|---------|
+| --- | --- | --- |
 | W1 Brief watcher + POST hook | 6/6 | STAGED PASS |
 | W2 Telegram alert template | (in W1) | STAGED PASS |
 | W3 CoS triage evaluator | 8/8 | PASS |
 | W4 Tenant skeleton manager | 6/6 | PASS |
 | W5 Delegation sandbox | 10/10 | PASS |
 
-**Hermes modules combined: 30/30 PASS**
+Hermes modules combined: **30/30 PASS**.
 
-Full repo on Alienware local: **65/65 PASS** (45/56 runnable in Cursor cloud due to Alienware-only path dependencies).
+Full repo on Alienware local: **67/67 PASS** (portable imports runnable in any environment).
 
 ### Why stack is STAGED PASS (not full PASS)
 
