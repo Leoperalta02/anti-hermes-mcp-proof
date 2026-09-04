@@ -155,5 +155,3 @@ python apex_core/fast_site_builder.py
    - Hooked directly into `landing_page/brief_receiver.py` upon HTTP POST submission.
    - Verified via `tests/test_brief_watcher.py` (4/4 tests pass).
 5. [ ] **Hermes CoS Triage Integration (W3)**: Wire triage evaluator into active Chief of Staff profile.
-
-
