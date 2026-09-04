@@ -12,9 +12,10 @@ from typing import Dict, Any
 # Ensure workspace root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from apex_core.tenant_manager import tenant_manager, Tenant
+WORKSPACE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+PUBLIC_SITES_DIR = os.path.join(WORKSPACE_ROOT, "public_sites")
 
-PUBLIC_SITES_DIR = os.path.join(os.path.dirname(__file__), "..", "public_sites")
+from apex_core.tenant_manager import tenant_manager, Tenant
 
 class FastSiteBuilder:
     def __init__(self, output_dir: str = PUBLIC_SITES_DIR):
@@ -59,6 +60,15 @@ class FastSiteBuilder:
         if tenant.flyer_path and os.path.exists(tenant.flyer_path):
             import shutil
             shutil.copyfile(tenant.flyer_path, os.path.join(site_folder, "assets", "flyer.png"))
+
+        # Copy common luxury hero images from landing_page/assets
+        common_assets_dir = os.path.join(WORKSPACE_ROOT, "landing_page", "assets")
+        for asset_name in ("mansion_hero.jpg", "penthouse.jpg"):
+            src_asset = os.path.join(common_assets_dir, asset_name)
+            dst_asset = os.path.join(site_folder, "assets", asset_name)
+            if os.path.exists(src_asset) and not os.path.exists(dst_asset):
+                import shutil
+                shutil.copyfile(src_asset, dst_asset)
 
         # Generate HTML based on vertical
         if tenant.vertical == "FL_NO_FAULT_ACCIDENT":
