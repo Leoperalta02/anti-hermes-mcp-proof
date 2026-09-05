@@ -535,9 +535,6 @@ class FastSiteBuilder:
       z-index: 1001;
       pointer-events: auto;
     }}
-    .nav-item-dropdown:hover .apple-flyout,
-    .nav-item-dropdown:focus-within .apple-flyout,
-    .apple-flyout:hover,
     .apple-flyout.is-open {{
       max-height: 520px;
       opacity: 1;
@@ -1800,15 +1797,26 @@ class FastSiteBuilder:
       }});
     }}
 
-    // Apple Navigation Click & Hover Grace Buffer
+    // Apple Navigation Hover & Switching Controller
     const dropdowns = document.querySelectorAll('.nav-item-dropdown');
+    const scrim = document.querySelector('.apple-page-scrim');
+    const estatesLink = document.querySelector('a.nav-link[href="#portfolio"]');
     let closeTimer = null;
+
+    function closeAllFlyouts() {{
+      if (closeTimer) {{
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }}
+      document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
+      if (scrim) scrim.style.opacity = '0';
+    }}
 
     dropdowns.forEach(dd => {{
       const link = dd.querySelector('.nav-link');
       const flyout = dd.querySelector('.apple-flyout');
 
-      function openFlyout() {{
+      function openThisFlyout() {{
         if (closeTimer) {{
           clearTimeout(closeTimer);
           closeTimer = null;
@@ -1818,25 +1826,22 @@ class FastSiteBuilder:
           if (f && f !== flyout) f.classList.remove('is-open');
         }});
         if (flyout) flyout.classList.add('is-open');
-        const scrim = document.querySelector('.apple-page-scrim');
         if (scrim) scrim.style.opacity = '1';
       }}
 
-      function closeFlyoutWithDelay() {{
+      function scheduleClose() {{
         if (closeTimer) clearTimeout(closeTimer);
         closeTimer = setTimeout(() => {{
           const anyDropdownHovered = Array.from(dropdowns).some(d => d.matches(':hover'));
           const anyFlyoutHovered = Array.from(document.querySelectorAll('.apple-flyout')).some(f => f.matches(':hover'));
-          if (anyDropdownHovered || anyFlyoutHovered) return;
-
-          document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
-          const scrim = document.querySelector('.apple-page-scrim');
-          if (scrim) scrim.style.opacity = '0';
-        }}, 700);
+          if (!anyDropdownHovered && !anyFlyoutHovered) {{
+            closeAllFlyouts();
+          }}
+        }}, 120);
       }}
 
-      dd.addEventListener('mouseenter', openFlyout);
-      dd.addEventListener('mouseleave', closeFlyoutWithDelay);
+      dd.addEventListener('mouseenter', openThisFlyout);
+      dd.addEventListener('mouseleave', scheduleClose);
 
       if (flyout) {{
         flyout.addEventListener('mouseenter', () => {{
@@ -1845,13 +1850,7 @@ class FastSiteBuilder:
             closeTimer = null;
           }}
         }});
-        flyout.addEventListener('mousemove', () => {{
-          if (closeTimer) {{
-            clearTimeout(closeTimer);
-            closeTimer = null;
-          }}
-        }});
-        flyout.addEventListener('mouseleave', closeFlyoutWithDelay);
+        flyout.addEventListener('mouseleave', scheduleClose);
       }}
 
       if (link) {{
@@ -1859,15 +1858,21 @@ class FastSiteBuilder:
           e.preventDefault();
           const isOpen = flyout && flyout.classList.contains('is-open');
           if (isOpen) {{
-            if (flyout) flyout.classList.remove('is-open');
-            const scrim = document.querySelector('.apple-page-scrim');
-            if (scrim) scrim.style.opacity = '0';
+            closeAllFlyouts();
           }} else {{
-            openFlyout();
+            openThisFlyout();
           }}
         }});
       }}
     }});
+
+    // Hovering or clicking Estates immediately closes any open flyouts
+    if (estatesLink) {{
+      estatesLink.addEventListener('mouseenter', closeAllFlyouts);
+      estatesLink.addEventListener('click', () => {{
+        closeAllFlyouts();
+      }});
+    }}
 
     // Smooth scroll and auto-close flyout on sub-link click
     document.querySelectorAll('.apple-flyout a').forEach(a => {{
@@ -1875,9 +1880,7 @@ class FastSiteBuilder:
         const href = a.getAttribute('href');
         if (href && href.startsWith('#')) {{
           e.preventDefault();
-          document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
-          const scrim = document.querySelector('.apple-page-scrim');
-          if (scrim) scrim.style.opacity = '0';
+          closeAllFlyouts();
           const target = document.querySelector(href);
           if (target) target.scrollIntoView({{ behavior: 'smooth' }});
         }}
@@ -1887,9 +1890,7 @@ class FastSiteBuilder:
     // Close when clicking anywhere outside header
     document.addEventListener('click', (e) => {{
       if (!e.target.closest('.apple-nav')) {{
-        document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
-        const scrim = document.querySelector('.apple-page-scrim');
-        if (scrim) scrim.style.opacity = '0';
+        closeAllFlyouts();
       }}
     }});
 
