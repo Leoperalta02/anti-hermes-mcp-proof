@@ -474,33 +474,42 @@ class FastSiteBuilder:
       display: flex;
       align-items: center;
       gap: 2rem;
+      position: relative;
+      z-index: 1005;
     }}
     
     /* Apple Dropdown Trigger */
     .nav-item-dropdown {{
       position: static;
+      display: flex;
+      align-items: center;
     }}
     .nav-link {{
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 0.88rem;
-      font-weight: 400;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
       padding: 0.85rem 0.5rem;
       margin-bottom: -0.85rem;
       cursor: pointer;
-      transition: color 0.2s ease;
+      transition: color 0.15s ease;
       position: relative;
+      z-index: 1006;
     }}
-    .nav-link:hover, .nav-item-dropdown:hover .nav-link {{
-      color: var(--text-primary);
+    .nav-link:hover,
+    .nav-link:focus,
+    .nav-item-dropdown.is-open > .nav-link,
+    .nav-item-dropdown:hover > .nav-link {{
+      color: #ffffff !important;
     }}
     .nav-link svg {{
-      transition: transform 0.25s ease;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
     }}
-    .nav-item-dropdown:hover .nav-link svg {{
+    .nav-item-dropdown.is-open > .nav-link svg {{
       transform: rotate(180deg);
     }}
 
@@ -518,21 +527,21 @@ class FastSiteBuilder:
       max-height: 0;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       pointer-events: none;
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+      transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
       z-index: 999;
     }}
-    /* Hover buffer bridge - uninterrupted invisible hit-catcher between nav and flyout */
+    /* Hit-catcher buffer: strictly at the seam between nav bar bottom and flyout top */
     .apple-flyout::before {{
       content: '';
       position: absolute;
-      top: -35px;
+      top: -8px;
       left: 0;
       right: 0;
-      height: 40px;
+      height: 10px;
       background: transparent;
-      z-index: 1001;
+      z-index: 998;
       pointer-events: auto;
     }}
     .apple-flyout.is-open {{
@@ -1127,6 +1136,7 @@ class FastSiteBuilder:
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      -webkit-user-select: none;
       user-select: none;
       cursor: grab;
     }}
@@ -1432,7 +1442,7 @@ class FastSiteBuilder:
       </a>
 
       <div class="nav-actions">
-        <a class="nav-link" href="#portfolio" style="padding: 0.85rem 0.5rem; margin-bottom: -0.85rem;">Estates</a>
+        <a class="nav-link" href="#portfolio">Estates</a>
         <!-- Dropdown 1: Intelligence -->
         <div class="nav-item-dropdown">
           <a class="nav-link" href="#valuation">
@@ -1641,14 +1651,14 @@ class FastSiteBuilder:
               <span>Interior Living Area</span>
               <span class="slider-val"><span id="sqft-val">3,500</span> sq.ft</span>
             </div>
-            <input type="range" class="apple-slider" id="sqft-slider" min="1500" max="8500" step="50" value="3500" oninput="updateValuation()">
+            <input type="range" class="apple-slider" id="sqft-slider" min="1500" max="8500" step="50" value="3500" oninput="updateValuation()" aria-label="Interior Living Area in square feet" title="Interior Living Area slider">
           </div>
 
           <div>
             <div class="control-label">
               <span>Submarket Location</span>
             </div>
-            <select class="apple-select" id="market-select" onchange="updateValuation()">
+            <select class="apple-select" id="market-select" onchange="updateValuation()" aria-label="Select Submarket Location" title="Submarket Location">
               <option value="estero">Estero / West Bay Club ($480 - $550/sq.ft)</option>
               <option value="bonita">Bonita Springs / Bay Colony ($550 - $680/sq.ft)</option>
               <option value="naples" selected>Naples / Port Royal ($650 - $1,100/sq.ft)</option>
@@ -1808,39 +1818,49 @@ class FastSiteBuilder:
         clearTimeout(closeTimer);
         closeTimer = null;
       }}
-      document.querySelectorAll('.apple-flyout').forEach(f => f.classList.remove('is-open'));
+      dropdowns.forEach(dd => {{
+        dd.classList.remove('is-open');
+        const f = dd.querySelector('.apple-flyout');
+        if (f) f.classList.remove('is-open');
+      }});
       if (scrim) scrim.style.opacity = '0';
+    }}
+
+    function openFlyout(dd) {{
+      if (closeTimer) {{
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }}
+      // Immediately switch: close other dropdowns and open target
+      dropdowns.forEach(other => {{
+        if (other !== dd) {{
+          other.classList.remove('is-open');
+          const f = other.querySelector('.apple-flyout');
+          if (f) f.classList.remove('is-open');
+        }}
+      }});
+      dd.classList.add('is-open');
+      const flyout = dd.querySelector('.apple-flyout');
+      if (flyout) flyout.classList.add('is-open');
+      if (scrim) scrim.style.opacity = '1';
+    }}
+
+    function scheduleClose() {{
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {{
+        const anyDropdownHovered = Array.from(dropdowns).some(d => d.matches(':hover'));
+        const anyFlyoutHovered = Array.from(document.querySelectorAll('.apple-flyout')).some(f => f.matches(':hover'));
+        if (!anyDropdownHovered && !anyFlyoutHovered) {{
+          closeAllFlyouts();
+        }}
+      }}, 120);
     }}
 
     dropdowns.forEach(dd => {{
       const link = dd.querySelector('.nav-link');
       const flyout = dd.querySelector('.apple-flyout');
 
-      function openThisFlyout() {{
-        if (closeTimer) {{
-          clearTimeout(closeTimer);
-          closeTimer = null;
-        }}
-        dropdowns.forEach(other => {{
-          const f = other.querySelector('.apple-flyout');
-          if (f && f !== flyout) f.classList.remove('is-open');
-        }});
-        if (flyout) flyout.classList.add('is-open');
-        if (scrim) scrim.style.opacity = '1';
-      }}
-
-      function scheduleClose() {{
-        if (closeTimer) clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => {{
-          const anyDropdownHovered = Array.from(dropdowns).some(d => d.matches(':hover'));
-          const anyFlyoutHovered = Array.from(document.querySelectorAll('.apple-flyout')).some(f => f.matches(':hover'));
-          if (!anyDropdownHovered && !anyFlyoutHovered) {{
-            closeAllFlyouts();
-          }}
-        }}, 120);
-      }}
-
-      dd.addEventListener('mouseenter', openThisFlyout);
+      dd.addEventListener('mouseenter', () => openFlyout(dd));
       dd.addEventListener('mouseleave', scheduleClose);
 
       if (flyout) {{
@@ -1856,23 +1876,38 @@ class FastSiteBuilder:
       if (link) {{
         link.addEventListener('click', (e) => {{
           e.preventDefault();
-          const isOpen = flyout && flyout.classList.contains('is-open');
+          const isOpen = dd.classList.contains('is-open');
           if (isOpen) {{
             closeAllFlyouts();
           }} else {{
-            openThisFlyout();
+            openFlyout(dd);
           }}
         }});
       }}
     }});
 
-    // Hovering or clicking Estates immediately closes any open flyouts
+    // Hovering or clicking Estates immediately closes all flyouts & allows immediate click
     if (estatesLink) {{
-      estatesLink.addEventListener('mouseenter', closeAllFlyouts);
-      estatesLink.addEventListener('click', () => {{
+      estatesLink.addEventListener('mouseenter', () => {{
         closeAllFlyouts();
       }});
+      estatesLink.addEventListener('click', (e) => {{
+        closeAllFlyouts();
+        const target = document.getElementById('portfolio');
+        if (target) {{
+          e.preventDefault();
+          target.scrollIntoView({{ behavior: 'smooth' }});
+          if (window.history && window.history.pushState) {{
+            window.history.pushState(null, null, '#portfolio');
+          }}
+        }}
+      }});
     }}
+
+    // Hovering non-dropdown nav elements (Brand or CTA) also immediately dismisses flyouts
+    document.querySelectorAll('.brand-mark, .pill-btn-small').forEach(el => {{
+      el.addEventListener('mouseenter', closeAllFlyouts);
+    }});
 
     // Smooth scroll and auto-close flyout on sub-link click
     document.querySelectorAll('.apple-flyout a').forEach(a => {{
