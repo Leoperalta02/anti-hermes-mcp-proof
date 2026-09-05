@@ -329,6 +329,17 @@ class ListingIntakeHandler(BaseHTTPRequestHandler):
                 _json_response(self, 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)})
             return
 
+        if parsed.path == "/api/onboarding/provision":
+            from apex_core.onboarding_pipeline import RealtorOnboardingPipeline
+            pipeline = RealtorOnboardingPipeline()
+            body.setdefault("leo_decision", "APPROVE PROVISION DRYRUN")
+            try:
+                result = pipeline.run_onboarding(body)
+                _json_response(self, 200, {"status": "SUCCESS", "result": result})
+            except Exception as exc:
+                _json_response(self, 400, {"status": "ERROR", "error": str(exc)})
+            return
+
         _json_response(self, 404, {"error": "Not found"})
 
 
@@ -401,6 +412,17 @@ def handle_request(
             return 200, agent.rebuild_front_door(tenant_slug)
         except ValueError as exc:
             return 400, {"error": str(exc), "claims": dict(DEFAULT_CLAIMS)}
+
+    if method == "POST" and parsed.path == "/api/onboarding/provision":
+        from apex_core.onboarding_pipeline import RealtorOnboardingPipeline
+        pipeline = RealtorOnboardingPipeline()
+        payload = body or {}
+        payload.setdefault("leo_decision", "APPROVE PROVISION DRYRUN")
+        try:
+            result = pipeline.run_onboarding(payload)
+            return 200, {"status": "SUCCESS", "result": result}
+        except Exception as exc:
+            return 400, {"status": "ERROR", "error": str(exc)}
 
     return 404, {"error": "Not found"}
 
