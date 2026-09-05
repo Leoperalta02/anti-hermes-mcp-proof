@@ -51,8 +51,8 @@
       top: 0;
       z-index: 1000;
       background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(28px);
       border-bottom: 1px solid var(--hairline);
       transition: background 0.3s ease;
     }
@@ -132,8 +132,8 @@
       left: 0;
       right: 0;
       background: rgba(10, 10, 14, 0.97);
-      backdrop-filter: blur(35px);
       -webkit-backdrop-filter: blur(35px);
+      backdrop-filter: blur(35px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
       max-height: 0;
@@ -222,8 +222,8 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.35s ease;
@@ -372,8 +372,8 @@
     }
     .stage-badge {
       background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--hairline);
       padding: 0.6rem 1.2rem;
       border-radius: var(--pill-radius);
@@ -659,8 +659,8 @@
       height: 48px;
       border-radius: 50%;
       background: rgba(30, 30, 36, 0.75);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--hairline);
       color: var(--text-primary);
       display: flex;
@@ -763,8 +763,8 @@
       flex: 0 0 420px;
       scroll-snap-align: start;
       background: var(--bg-card);
-      backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
       border: 1px solid var(--hairline);
       border-radius: var(--apple-radius);
       overflow: hidden;
@@ -806,8 +806,8 @@
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
     }
     .status-for-sale {
@@ -831,8 +831,8 @@
       right: 1.15rem;
       z-index: 2;
       background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #ffffff;
       font-size: 0.9rem;
@@ -937,8 +937,8 @@
       height: 100vh;
       z-index: 10050;
       background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(28px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -1409,17 +1409,17 @@
 
         <div class="cma-controls">
           <div>
-            <div class="control-label">
+            <label for="sqft-slider" class="control-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
               <span>Interior Living Area</span>
               <span class="slider-val"><span id="sqft-val">3,500</span> sq.ft</span>
-            </div>
+            </label>
             <input type="range" class="apple-slider" id="sqft-slider" min="1500" max="8500" step="50" value="3500" oninput="updateValuation()" aria-label="Interior Living Area in square feet" title="Interior Living Area slider">
           </div>
 
           <div>
-            <div class="control-label">
+            <label for="market-select" class="control-label" style="display: block; margin-bottom: 0.75rem;">
               <span>Submarket Location</span>
-            </div>
+            </label>
             <select class="apple-select" id="market-select" onchange="updateValuation()" aria-label="Select Submarket Location" title="Submarket Location">
               <option value="estero">Estero / West Bay Club ($480 - $550/sq.ft)</option>
               <option value="bonita">Bonita Springs / Bay Colony ($550 - $680/sq.ft)</option>
@@ -1446,16 +1446,16 @@
     <div class="intake-card">
       <form onsubmit="submitInquiry(event)">
         <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="apple-input" id="inquiry-name" placeholder="Leo Peralta" required>
+          <label for="inquiry-name" class="form-label">Full Name</label>
+          <input type="text" class="apple-input" id="inquiry-name" placeholder="Leo Peralta" required title="Full Name" aria-label="Full Name">
         </div>
         <div class="form-group">
-          <label class="form-label">Direct Phone or Email</label>
-          <input type="text" class="apple-input" id="inquiry-contact" placeholder="client@private.domain" required>
+          <label for="inquiry-contact" class="form-label">Direct Phone or Email</label>
+          <input type="text" class="apple-input" id="inquiry-contact" placeholder="client@private.domain" required title="Direct Phone or Email" aria-label="Direct Phone or Email">
         </div>
         <div class="form-group">
-          <label class="form-label">Property Interest or Address</label>
-          <input type="text" class="apple-input" id="inquiry-address" placeholder="e.g. Pelican Landing or 1646 Heritage" required>
+          <label for="inquiry-address" class="form-label">Property Interest or Address</label>
+          <input type="text" class="apple-input" id="inquiry-address" placeholder="e.g. Pelican Landing or 1646 Heritage" required title="Property Interest or Address" aria-label="Property Interest or Address">
         </div>
         <button type="submit" class="pill-btn-primary" id="inquiry-submit-btn" style="width: 100%; justify-content: center; cursor: pointer; border: none;">
           Transmit Confidential Brief
@@ -1975,8 +1975,8 @@
       align-items: center;
       gap: 0.85rem;
       background: rgba(18, 18, 24, 0.94);
-      backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(28px);
       border: 1.5px solid rgba(229, 200, 144, 0.65);
       padding: 0.65rem 1.35rem 0.65rem 0.75rem;
       border-radius: var(--pill-radius);
@@ -2064,8 +2064,8 @@
       height: 540px;
       max-height: calc(100vh - 7rem);
       background: rgba(12, 12, 16, 0.96);
-      backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
+      backdrop-filter: blur(32px);
       border: 1px solid rgba(229, 200, 144, 0.3);
       border-radius: 20px;
       box-shadow: 0 32px 80px rgba(0, 0, 0, 0.95), 0 0 30px rgba(229, 200, 144, 0.15);
@@ -2258,8 +2258,8 @@
     </div>
 
     <form class="concierge-footer" onsubmit="sendConciergeMsg(event)">
-      <input type="text" class="concierge-input" id="concierge-input" placeholder="Ask about comps, valuations, or private tours..." autocomplete="off">
-      <button type="submit" class="concierge-send-btn">↑</button>
+      <input type="text" class="concierge-input" id="concierge-input" placeholder="Ask about comps, valuations, or private tours..." autocomplete="off" title="Ask Rosie's AI Concierge" aria-label="Ask Rosie's AI Concierge">
+      <button type="submit" class="concierge-send-btn" title="Send message" aria-label="Send message">↑</button>
     </form>
   </div>
 

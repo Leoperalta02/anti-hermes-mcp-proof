@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "axe/forms": "error",
+    "css-prefix-order": "error",
+    "compat-api/css": "off",
+    "no-inline-styles": "off",
+    "apple-touch-icons": "off"
+  }
+}
