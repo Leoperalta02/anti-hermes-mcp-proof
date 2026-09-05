@@ -1,8 +1,12 @@
 # Hermes Agent Operational Status
 
-**Last Updated:** September 3, 2026 - 8:20 PM EDT  
+**Last Updated:** September 5, 2026 - 9:35 AM EDT  
 **Status:** Operational (Detached Gateway Daemon PID 37056 + Lease Guardian Watchdog PID 32880)  
 **Hold State:** STRICT HOLD on `#Alienware-hq` (Maintained)  
+**Recent Directives (Executed Under Leo's Guidance):**
+- Purged front-door listing intake modal from public sites; enclosed strictly inside private portal (`portal.html#listings`).
+- Built standalone mobile PWA app architecture for Rosie's portal (`manifest.json`, gold touch icons, install banner, tested at 390×844 mobile viewport).
+- Cursor scoped as Alienware CLI dev fallback; live actions fail-closed; zero vault access. All tests 100% PASS.
 
 ---
 

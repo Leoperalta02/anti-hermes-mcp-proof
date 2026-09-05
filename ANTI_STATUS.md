@@ -1,21 +1,21 @@
 # Anti Status — Hermes / Rosie Ops
 
-**Updated:** 2026-09-04 6:53 PM EDT (22:53 UTC)  
+**Updated:** 2026-09-05 9:35 AM EDT (13:35 UTC)  
 **Anti host:** **ONLINE & ACTIVE** — Alienware IDE operational  
-**Division of labor:** Cursor (Cloud Code Author / Architect) · Anti (Alienware Host Gatekeeper & Runtime Auditor)
+**Division of labor:** Anti (Lead Local Author / Host Runtime Auditor) · Cursor (Fallback CLI / Staging Reviewer) · Hermes (Chief of Staff)
 
 ---
 
-## Contingency Reconciliation Completed
+## Directives Completed (By Leo's Direction During Hermes Recovery)
 
-| Item | Host Action | Status |
+| Item | Direct Action Taken | Status |
 | --- | --- | --- |
-| Live Tool Governance | `update_managed_agent_tool_governance.py` executed on Alienware | **PASS** (HQ HOLD lifted in tool) |
-| Gateway Supervision | PID **37056** confirmed up and healthy; zero crashes | **PASS** |
-| Front-Door Listing Separation | Purged intake modal from front door; enclosed in portal | **PASS** |
-| Mobile Portal Nav (≤680px) | Visual Browser audit at 390×844 | **PASS** (hamburger drawer & tab switch) |
-| Cursor Commits Audit | `CURSOR_REVIEW.md` signed off through `034e16b` | **PASS** |
-| Executive gate | Leo **APPROVE PROVISION** live — `evidence/operator_gates.json` | **OPEN** |
+| **Front-Door Intake Separation** | Purged listing media intake modal/buttons completely from public tenant site (`index.html`). Enclosed intake strictly inside private Realtor back-office portal (`portal.html#listings`). | **PASS** (Commit `f5ab14a`) |
+| **Realtor Standalone Mobile PWA** | Built standalone iOS/Android mobile app experience for Rosie's portal (`manifest.json`, `apple-mobile-web-app-capable`, luxury gold icons, frosted-glass install banner). Audited at 390×844 mobile viewport. | **PASS** (Commit `7b68b13`) |
+| **Cursor Collaboration & Fallback** | Aligned with Hermes on scoped CLI workspace for Cursor on Alienware. Fail-closed on live actions, no vault credentials, changes staged/reviewed. | **PASS** (Approved) |
+| **Gateway Supervision** | PID **37056** confirmed up and healthy; zero crashes; Core PID **32028** active | **PASS** |
+| **Live Tool Governance** | `update_managed_agent_tool_governance.py` executed on Alienware | **PASS** (HQ HOLD lifted in tool) |
+| **Test Coverage** | `test_listing_intake.py` (5/5), `test_lead_flow.py` (6/6), `test_rosy_demo.py` (5/5) | **100% PASS** |
 
 ---
 
