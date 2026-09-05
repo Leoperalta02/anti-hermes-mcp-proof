@@ -785,6 +785,94 @@
       border: 1px solid var(--hairline);
     }
 
+    /* Media Dropzone & Live Thumbnails */
+    .media-dropzone {
+      border: 2px dashed rgba(229,200,144,0.35);
+      border-radius: 14px;
+      padding: 1.4rem 1rem;
+      text-align: center;
+      background: rgba(229,200,144,0.03);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 0.75rem;
+    }
+    .media-dropzone:hover, .media-dropzone.dragover {
+      border-color: var(--gold-accent);
+      background: rgba(229,200,144,0.08);
+      transform: scale(1.005);
+    }
+    .dropzone-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .dropzone-text { font-size: 0.85rem; color: var(--text-primary); }
+    .dropzone-sub { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; }
+    .photo-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+    .photo-thumb-card {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      border: 1px solid var(--hairline);
+      background: #121218;
+    }
+    .photo-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-thumb-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #ffffff;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .photo-thumb-remove:hover {
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+    .photo-thumb-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.75);
+      color: var(--gold-accent);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .video-upload-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .video-preview-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--hairline-gold);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
     @media (max-width: 1100px) {
       .kpi-bar { grid-template-columns: repeat(3, 1fr); }
       .workspace-grid, .net-grid, .cma-grid { grid-template-columns: 1fr; }
@@ -1419,12 +1507,33 @@
               <input class="crm-input" name="view" id="intake-view" placeholder="Fairway / Gulf access">
             </div>
             <div class="crm-field">
-              <label class="crm-label">Photo URLs (one per line)</label>
-              <textarea class="crm-textarea" name="photos" id="intake-photos" rows="3" required placeholder="https://..."></textarea>
+              <label class="crm-label">Property Photos & Media (Upload Files or Paste URLs)</label>
+              
+              <!-- Drag & Drop / Camera Roll Box -->
+              <div class="media-dropzone" id="photo-dropzone" onclick="document.getElementById('file-photo-input').click()">
+                <div class="dropzone-icon">📸</div>
+                <div class="dropzone-text"><strong>Click to browse device / camera roll</strong> or drag & drop photos here</div>
+                <div class="dropzone-sub">Supports JPG, PNG, WEBP, HEIC • Auto-staged into high-resolution gallery</div>
+                <input type="file" id="file-photo-input" accept="image/*" multiple style="display: none;" onchange="handlePhotoFilesSelected(this.files)">
+              </div>
+              
+              <!-- Instant Thumbnail Preview Grid -->
+              <div class="photo-preview-grid" id="photo-preview-grid"></div>
+
+              <textarea class="crm-textarea" name="photos" id="intake-photos" rows="2" placeholder="Or enter image URLs (one per line)..." style="margin-top: 0.65rem; font-size: 0.78rem; font-family: monospace;"></textarea>
             </div>
+
+            <!-- Video Walkthrough & Virtual Tour Section -->
             <div class="crm-field">
-              <label class="crm-label">Video URL (optional)</label>
-              <input class="crm-input" name="video_url" id="intake-video" placeholder="https://...">
+              <label class="crm-label">Cinematic Video Walkthrough & Virtual Tour</label>
+              <div class="video-upload-row">
+                <input class="crm-input" name="video_url" id="intake-video" placeholder="Paste YouTube, Vimeo, or Matterport 3D Tour link...">
+                <button type="button" class="btn-sm" onclick="document.getElementById('file-video-input').click()" style="white-space: nowrap; padding: 0.6rem 0.95rem; font-size: 0.78rem; cursor: pointer;">
+                  📹 Upload Video File
+                </button>
+                <input type="file" id="file-video-input" accept="video/*" style="display: none;" onchange="handleVideoFileSelected(this.files)">
+              </div>
+              <div id="video-preview-wrap" style="display: none; margin-top: 0.5rem;"></div>
             </div>
             <button type="submit" class="btn-approve" style="width:100%; margin-top:0.5rem;">Submit to Intake Queue</button>
           </form>
@@ -2387,6 +2496,170 @@
       }
     }
 
+    let stagedPhotoList = [];
+
+    function renderPhotoPreviews(photos) {
+      if (Array.isArray(photos)) {
+        stagedPhotoList = [...photos];
+      } else {
+        const textarea = document.getElementById('intake-photos');
+        const textVal = textarea ? textarea.value : '';
+        stagedPhotoList = textVal.split('\n').map(s => s.trim()).filter(Boolean);
+      }
+      syncPhotoTextarea();
+      const grid = document.getElementById('photo-preview-grid');
+      if (!grid) return;
+      if (stagedPhotoList.length === 0) {
+        grid.innerHTML = '';
+        return;
+      }
+      grid.innerHTML = stagedPhotoList.map((url, idx) => `
+        <div class="photo-thumb-card">
+          <img src="${url}" class="photo-thumb-img" alt="Photo ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80'">
+          <div class="photo-thumb-remove" onclick="removePhotoThumb(${idx})" title="Remove photo">✕</div>
+          ${idx === 0 ? '<div class="photo-thumb-badge">★ COVER</div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function syncPhotoTextarea() {
+      const textarea = document.getElementById('intake-photos');
+      if (textarea) {
+        textarea.value = stagedPhotoList.join('\n');
+      }
+    }
+
+    function removePhotoThumb(idx) {
+      stagedPhotoList.splice(idx, 1);
+      renderPhotoPreviews(stagedPhotoList);
+    }
+
+    async function handlePhotoFilesSelected(fileList) {
+      if (!fileList || fileList.length === 0) return;
+      const files = Array.from(fileList);
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const b64Data = e.target.result;
+          let fileUrl = b64Data;
+          try {
+            const res = await fetch(LISTING_INTAKE_API + '/api/listing/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                filename: file.name,
+                data: b64Data,
+                tenant_slug: TENANT_SLUG
+              })
+            });
+            if (res.ok) {
+              const respJson = await res.json();
+              if (respJson.file_url) fileUrl = respJson.file_url;
+            }
+          } catch (err) {
+            console.warn('Direct upload backend not responding, using local preview:', err);
+          }
+          stagedPhotoList.push(fileUrl);
+          renderPhotoPreviews(stagedPhotoList);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function handleVideoFileSelected(fileList) {
+      if (!fileList || fileList.length === 0) return;
+      const file = fileList[0];
+      const videoInput = document.getElementById('intake-video');
+      const previewWrap = document.getElementById('video-preview-wrap');
+
+      if (previewWrap) {
+        previewWrap.style.display = 'block';
+        previewWrap.innerHTML = '<div style="font-size:0.78rem; color:var(--gold-accent);">⏳ Staging video file (' + file.name + ')…</div>';
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const b64Data = e.target.result;
+        let videoUrl = b64Data;
+        try {
+          const res = await fetch(LISTING_INTAKE_API + '/api/listing/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: file.name,
+              data: b64Data,
+              tenant_slug: TENANT_SLUG
+            })
+          });
+          if (res.ok) {
+            const respJson = await res.json();
+            if (respJson.file_url) videoUrl = respJson.file_url;
+          }
+        } catch (err) {
+          console.warn('Video upload backend unreachable, using base64 data URL:', err);
+        }
+        if (videoInput) videoInput.value = videoUrl;
+        if (previewWrap) {
+          previewWrap.innerHTML = `
+            <div class="video-preview-card">
+              <div style="display:flex; align-items:center; gap:0.5rem; overflow:hidden;">
+                <span style="font-size:1.1rem;">📹</span>
+                <div style="font-size:0.8rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${file.name}</div>
+                <div style="font-size:0.7rem; color:var(--success); font-weight:700;">✓ Ready</div>
+              </div>
+              <button type="button" class="btn-sm" onclick="clearVideoPreview()" style="background:rgba(239,68,68,0.2); border-color:var(--danger); color:var(--danger); padding:2px 8px; font-size:0.75rem;">✕ Remove</button>
+            </div>
+          `;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearVideoPreview() {
+      const videoInput = document.getElementById('intake-video');
+      const previewWrap = document.getElementById('video-preview-wrap');
+      const fileInput = document.getElementById('file-video-input');
+      if (videoInput) videoInput.value = '';
+      if (fileInput) fileInput.value = '';
+      if (previewWrap) {
+        previewWrap.style.display = 'none';
+        previewWrap.innerHTML = '';
+      }
+    }
+
+    function initDropzone() {
+      const dropzone = document.getElementById('photo-dropzone');
+      if (!dropzone) return;
+      ['dragenter', 'dragover'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('dragover');
+        }, false);
+      });
+      ['dragleave', 'drop'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('dragover');
+        }, false);
+      });
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+          handlePhotoFilesSelected(files);
+        }
+      }, false);
+
+      const textarea = document.getElementById('intake-photos');
+      if (textarea) {
+        textarea.addEventListener('input', () => {
+          renderPhotoPreviews();
+        });
+      }
+    }
+
     async function runListingAutoFetch() {
       const input = document.getElementById('autofetch-query');
       const btn = document.getElementById('autofetch-btn');
@@ -2472,7 +2745,10 @@
         if (fBaths) fBaths.value = data.baths || '3.5';
         if (fSqft) fSqft.value = data.sqft || 2400;
         if (fView) fView.value = data.view || '';
-        if (fPhotos && data.photos) fPhotos.value = data.photos.join('\n');
+        if (fPhotos && data.photos) {
+          fPhotos.value = data.photos.join('\n');
+          renderPhotoPreviews(data.photos);
+        }
         if (fType && data.listing_type) fType.value = data.listing_type;
         if (fCourtesy && data.courtesy_attribution) fCourtesy.value = data.courtesy_attribution;
 
@@ -2518,6 +2794,9 @@
         feedback.style.color = 'var(--success)';
         feedback.textContent = '✓ Queued ' + data.listing_id + ' — Keystone & Quill drafts staged.';
         form.reset();
+        stagedPhotoList = [];
+        renderPhotoPreviews([]);
+        clearVideoPreview();
         await refreshListingIntakeQueue();
       } catch (err) {
         feedback.style.display = 'block';
@@ -2557,6 +2836,7 @@
     loadInboundLeads();
     renderListingIntakeQueue();
     checkPwaInstallState();
+    initDropzone();
     if (window.location.hash === '#listings') {
       const listingsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => (t.getAttribute('onclick') || '').includes("'listings'"));
       switchPanel('listings', listingsTab || null);

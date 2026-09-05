@@ -12,9 +12,11 @@ Endpoints:
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import sys
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
@@ -28,6 +30,24 @@ from apex_core.listing_media_agent import DEFAULT_CLAIMS, ListingMediaAgent
 from apex_core.property_data_adapter import PropertyDataAdapter
 
 DEFAULT_PORT = 8765
+
+
+def save_uploaded_media(filename: str, data_base64: str, tenant_slug: str = "rosie") -> str:
+    """Saves a base64 encoded uploaded image or video into public_sites/{tenant}/assets/uploads/."""
+    clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+    unique_name = f"{uuid.uuid4().hex[:8]}_{clean_name}"
+    uploads_dir = WORKSPACE_ROOT / "public_sites" / tenant_slug / "assets" / "uploads"
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+
+    # Strip data URI prefix if present
+    if "," in data_base64:
+        data_base64 = data_base64.split(",", 1)[1]
+
+    file_bytes = base64.b64decode(data_base64)
+    target_file = uploads_dir / unique_name
+    target_file.write_bytes(file_bytes)
+
+    return f"assets/uploads/{unique_name}"
 
 
 def resolve_property_autofetch(query: str) -> Dict[str, Any]:
@@ -286,6 +306,20 @@ class ListingIntakeHandler(BaseHTTPRequestHandler):
                 _json_response(self, 400, {"error": str(exc)})
             return
 
+        if parsed.path == "/api/listing/upload":
+            filename = str(body.get("filename", "upload.jpg")).strip()
+            data_b64 = str(body.get("data", "")).strip()
+            tenant = str(body.get("tenant_slug", "rosie")).strip()
+            if not data_b64:
+                _json_response(self, 400, {"error": "File data required"})
+                return
+            try:
+                rel_url = save_uploaded_media(filename, data_b64, tenant)
+                _json_response(self, 200, {"status": "UPLOAD_SUCCESS", "file_url": rel_url, "filename": filename})
+            except Exception as exc:
+                _json_response(self, 400, {"error": str(exc)})
+            return
+
         if parsed.path == "/api/listing/rebuild":
             tenant_slug = str(body.get("tenant_slug") or "rosie").strip()
             try:
@@ -346,6 +380,18 @@ def handle_request(
             return 400, {"error": "query address or URL required"}
         try:
             return 200, resolve_property_autofetch(query)
+        except Exception as exc:
+            return 400, {"error": str(exc)}
+
+    if method == "POST" and parsed.path == "/api/listing/upload":
+        filename = str((body or {}).get("filename", "upload.jpg")).strip()
+        data_b64 = str((body or {}).get("data", "")).strip()
+        tenant = str((body or {}).get("tenant_slug", "rosie")).strip()
+        if not data_b64:
+            return 400, {"error": "File data required"}
+        try:
+            rel_url = save_uploaded_media(filename, data_b64, tenant)
+            return 200, {"status": "UPLOAD_SUCCESS", "file_url": rel_url, "filename": filename}
         except Exception as exc:
             return 400, {"error": str(exc)}
 

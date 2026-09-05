@@ -132,6 +132,24 @@ class TestListingIntake(unittest.TestCase):
         self.assertEqual(data_url["listing_type"], "CO_BROKE")
         self.assertIn("Co-Broke", data_url["courtesy_attribution"])
 
+    def test_upload_media_endpoint(self):
+        sample_b64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="
+        status, data = handle_request("POST", "/api/listing/upload", {
+            "filename": "living_room_preview.jpg",
+            "data": sample_b64,
+            "tenant_slug": "rosie"
+        })
+        self.assertEqual(status, 200)
+        self.assertEqual(data["status"], "UPLOAD_SUCCESS")
+        self.assertTrue(data["file_url"].startswith("assets/uploads/"))
+        self.assertIn("living_room_preview.jpg", data["file_url"])
+
+        # Check file exists on disk
+        saved_file = WORKSPACE_ROOT / "public_sites" / "rosie" / data["file_url"]
+        self.assertTrue(saved_file.exists())
+        # Clean up
+        saved_file.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()
