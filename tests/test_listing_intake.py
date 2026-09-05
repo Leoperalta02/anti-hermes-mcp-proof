@@ -109,5 +109,30 @@ class TestListingIntake(unittest.TestCase):
         self.assertNotIn("submitListingMedia", html)
 
 
+    def test_autofetch_by_address_and_url(self):
+        # 1. Test by Address
+        status, data = handle_request("POST", "/api/listing/autofetch", {"query": "21450 Bella Terra Blvd"}, agent=self.agent)
+        self.assertEqual(status, 200)
+        self.assertEqual(data["status"], "AUTOFETCH_SUCCESS")
+        self.assertIn("Bella Terra", data["resolved_address"])
+        self.assertEqual(data["beds"], 4)
+        self.assertEqual(data["living_sqft"] if "living_sqft" in data else data["sqft"], 2480)
+        self.assertTrue(len(data["photos"]) >= 4)
+        self.assertEqual(data["listing_type"], "EXCLUSIVE")
+
+        # 2. Test by Zillow URL
+        status, data_url = handle_request(
+            "POST",
+            "/api/listing/autofetch",
+            {"query": "https://www.zillow.com/homedetails/1646-Heritage-Dr-Estero-FL-33928/123456_zpid/"},
+            agent=self.agent
+        )
+        self.assertEqual(status, 200)
+        self.assertIn("Heritage", data_url["resolved_address"])
+        self.assertEqual(data_url["listing_type"], "CO_BROKE")
+        self.assertIn("Co-Broke", data_url["courtesy_attribution"])
+
+
 if __name__ == "__main__":
     unittest.main()
+
