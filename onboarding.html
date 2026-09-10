@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Onboarding | Apex Luxury AI</title>
+  <meta name="description" content="Deploy your AI Chief of Staff in three frictionless steps. Name your CoS, claim your sovereign subdomain, and authorize your private realtor office.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing_page/onboarding.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' fill='none' stroke='%23e5c890'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' font-family='Georgia,serif' fill='%23e5c890'%3EA%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="caustic-mesh" aria-hidden="true"></div>
+
+  <div class="page-shell">
+    <header class="onboard-nav">
+      <a class="nav-brand" href="landing_page/index.dark-prototype.html">
+        <span class="brand-mark">A</span>
+        <span class="brand-copy">
+          <strong>Apex Luxury AI</strong>
+          <span>Sovereign Onboarding</span>
+        </span>
+      </a>
+      <span class="nav-meta">Elite Realtor Provisioning</span>
+    </header>
+
+    <main class="onboard-main">
+      <article class="glass-wizard" aria-labelledby="wizard-title">
+        <header class="wizard-header">
+          <p class="eyebrow">60-Second Sovereign Setup</p>
+          <h1 class="wizard-title" id="wizard-title">
+            Deploy Your <span class="gold-text">AI Chief of Staff</span>
+          </h1>
+          <p class="wizard-lede">
+            Three steps to name your operator, claim your private portal, and authorize your sovereign office.
+          </p>
+        </header>
+
+        <nav class="progress-rail" aria-label="Onboarding progress">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-step active" data-step="1">
+            <span class="step-dot">1</span>
+            <span class="step-label">Practice &amp; CoS</span>
+          </div>
+          <div class="progress-step" data-step="2">
+            <span class="step-dot">2</span>
+            <span class="step-label">Claim Subdomain</span>
+          </div>
+          <div class="progress-step" data-step="3">
+            <span class="step-dot">3</span>
+            <span class="step-label">Authorize Plan</span>
+          </div>
+        </nav>
+
+        <!-- STEP 1 -->
+        <section class="step-panel active" data-step="1" aria-labelledby="step-1-heading">
+          <h2 class="step-heading" id="step-1-heading">Practice Details &amp; Name Your CoS</h2>
+          <p class="step-subtext">
+            Your personal AI operator that answers your phone 24/7, syncs your calendar, and drafts morning briefs.
+          </p>
+
+          <p class="form-error hidden" id="form-error" role="alert">
+            Please complete all required fields before continuing.
+          </p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="realtor-name">Realtor Full Name</label>
+              <input class="form-input" type="text" id="realtor-name" name="realtor_name" placeholder="e.g. Rosy Rivera" autocomplete="name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="brokerage">Brokerage</label>
+              <input class="form-input" type="text" id="brokerage" name="brokerage" placeholder="e.g. Premier Sotheby's International" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="market">Primary Market / City</label>
+              <input class="form-input" type="text" id="market" name="market" placeholder="e.g. Naples &amp; Bonita Springs" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="phone">Direct Phone</label>
+              <input class="form-input" type="tel" id="phone" name="phone" placeholder="e.g. +1 (239) 555-0142" autocomplete="tel" required>
+            </div>
+            <div class="form-group full">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@yourbrokerage.com" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="cos-section">
+            <label class="form-label" for="cos-name">Name Your AI Chief of Staff</label>
+            <div class="chip-row" role="group" aria-label="Quick-select CoS names">
+              <button type="button" class="name-chip" data-name="Victoria">Victoria</button>
+              <button type="button" class="name-chip" data-name="Sterling">Sterling</button>
+              <button type="button" class="name-chip" data-name="Marcus">Marcus</button>
+              <button type="button" class="name-chip" data-name="Eleanor">Eleanor</button>
+            </div>
+            <input class="form-input" type="text" id="cos-name" name="cos_name" placeholder="Or enter a custom name…" value="Victoria" required>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary btn-grow" id="step-1-next">
+              Continue to Subdomain Claim →
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="step-panel" data-step="2" aria-labelledby="step-2-heading">
+          <h2 class="step-heading" id="step-2-heading">Claim Sovereign Subdomain</h2>
+          <p class="step-subtext">
+            Your private client portal and back-door command office live here.
+          </p>
+
+          <div class="subdomain-claimer">
+            <label class="form-label" for="subdomain-slug">Choose your sovereign address</label>
+            <div class="subdomain-input-row">
+              <input
+                class="subdomain-input"
+                type="text"
+                id="subdomain-slug"
+                name="subdomain_slug"
+                placeholder="rosy"
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck="false"
+                aria-describedby="preview-url preview-status"
+              >
+              <span class="subdomain-suffix">.apexluxuryai.com</span>
+            </div>
+
+            <div class="subdomain-preview">
+              <div class="preview-label">Live preview</div>
+              <div class="preview-url" id="preview-url">rosy.apexluxuryai.com</div>
+              <div class="preview-status" id="preview-status">Available — this sovereign address is ready to claim.</div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" id="step-2-back">← Back</button>
+            <button type="button" class="btn btn-primary btn-grow" id="step-2-next">
+              Continue to Plan Authorization →
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section class="step-panel" data-step="3" aria-labelledby="step-3-heading">
+          <h2 class="step-heading" id="step-3-heading">Plan Authorization</h2>
+          <p class="step-subtext">
+            Select your sovereign tier. Checkout opens via Stripe — Apple Pay ready.
+          </p>
+
+          <div class="plan-grid" role="radiogroup" aria-label="Subscription plan">
+            <article class="plan-card selected" data-plan="solo_sovereign" tabindex="0" role="radio" aria-checked="true">
+              <span class="plan-badge">Most Popular</span>
+              <h3 class="plan-name">Solo Sovereign Office</h3>
+              <div class="plan-price">$497<span>/mo</span></div>
+              <ul class="plan-features">
+                <li>1 Named CoS</li>
+                <li>24/7 Vapi Voice Answering</li>
+                <li>Calendar Booking</li>
+                <li>Morning Briefs</li>
+                <li>Full-Res Media Studio</li>
+              </ul>
+            </article>
+
+            <article class="plan-card" data-plan="elite_sovereign" tabindex="0" role="radio" aria-checked="false">
+              <span class="plan-badge">Elite Practice</span>
+              <h3 class="plan-name">Elite Sovereign Practice</h3>
+              <div class="plan-price">$1,297<span>/mo</span></div>
+              <ul class="plan-features">
+                <li>Everything in Solo</li>
+                <li>Automated CMA Comps Engine</li>
+                <li>Multi-Listing Intake</li>
+                <li>Custom Domain Mapping</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" id="step-3-back">← Back</button>
+            <button type="button" class="btn btn-primary btn-full" id="authorize-btn">
+              Authorize Sovereign Office &amp; Provision
+            </button>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="onboard-footer">
+      <p>Secure Stripe checkout · No MLS credentials required at signup · <a href="landing_page/index.dark-prototype.html">Return to Apex HQ</a></p>
+    </footer>
+  </div>
+
+  <script src="landing_page/onboarding.js"></script>
+</body>
+</html>
