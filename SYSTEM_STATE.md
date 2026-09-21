@@ -144,6 +144,12 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (2) Grounded Hermes Anti root memory (`MEMORY.md`) and Cursor memory (`profiles/cursor/memories/MEMORY.md`): Hermes Anti is informed of her identity as Anti's Hermes presence, Cursor's presence on HP Node This PC, and Leo as Founder.
   (3) Configured `anti-hermes-mcp-proof` MCP server in both root `config.yaml` and `profiles/cursor/config.yaml`.
   (4) Verified live ACP bidirectional communication: Hermes Anti responded over native ACP with zero latency, confirming: "Anti — Primary Engineering Super Agent, Lead Architect, and workforce orchestrator. Paired partner: Leo Peralta... Telegram gateways: Hosted on the HP Compute Node at 192.168.1.248, not on Alienware HQ."
+- [2026-09-21 03:20:00 EDT] [Anti & Cursor & Leo Peralta] ROSIE PLATFORM & ONBOARDING FULL AUDIT VERIFIED:
+  (1) Harbor Brief Receiver: Live on HP Compute Node (192.168.1.248:8787); verified GET /health -> HTTP 200 and POST /brief -> HTTP 201 {"ok": true, "status": "staged"}.
+  (2) Keystone & Quill Geography Alignment: Reconciled Rosie's core primary branding across hero, meta tags, and header to Southwest Florida (North Fort Myers, Cape Coral, Fort Myers, Estero, Bonita Springs, Naples) with the Miami Central Corridor card properly designated as her private client affiliate listing.
+  (3) Atelier Front/Back UI Wiring: Dynamic estate filter counters verified matching all 6 cards; inline modal and navigation handlers intact without dead callbacks.
+  (4) Pipeline & Test Sandbox Isolation: Verified test_onboarding_pipeline.py and test_rosy_demo.py pass 100% in isolated temporary sandboxes with zero write impact on live public_sites/rosie production files.
+  (5) Acceptance Suite: pytest tests/test_rosie_ui.py executed clean across hosts (4 passed, 1 headless skip on HP Node; 5 passed on HQ). All static UI and functional gates are GREEN.
 
 
 
