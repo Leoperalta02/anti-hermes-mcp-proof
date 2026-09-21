@@ -30,13 +30,43 @@ def test_estate_filter_counts_are_derived_from_cards_and_handlers_are_wired():
     assert 'btn.addEventListener(\'click\'' in page
 
 
+def test_production_index_does_not_expose_prototype_portal_surface():
+    page = _page()
+    assert not re.search(r'href=["\'](?:\./)?portal\.html(?:["\'#?])', page, re.IGNORECASE)
+    assert "Executive Client Portal" not in page
+
+
+def test_ui_handlers_referenced_by_markup_have_live_definitions():
+    page = _page()
+    inline_handlers = re.findall(r'\bon(?:click|input|change|submit)="([^"]+)"', page)
+    referenced = {
+        name
+        for handler in inline_handlers
+        for name in re.findall(r'(?<![.\w$])([A-Za-z_$][\w$]*)\s*\(', handler)
+        if name not in {"stopPropagation", "getElementById", "querySelectorAll", "forEach", "rgba", "var"}
+    }
+    function_defs = set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(', page))
+    window_defs = set(re.findall(r'window\.([A-Za-z_$][\w$]*)\s*=\s*function', page))
+    assert referenced <= function_defs | window_defs
+
+
+def test_filter_pills_do_not_ship_stale_hardcoded_counts():
+    page = _page()
+    pills = re.findall(r'<button class="filter-pill[^>]*>(.*?)</button>', page)
+    assert len(pills) == 4
+    assert all(re.search(r'\(\d+\)', pill) is None for pill in pills)
+
+
 @pytest.mark.skipif(__import__("importlib").util.find_spec("playwright") is None, reason="playwright unavailable")
 def test_estate_filter_counts_match_visible_cards_in_browser():
-    from playwright.sync_api import sync_playwright
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+    try:
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as p:
+            try:
+                browser = p.chromium.launch(headless=True)
+            except Exception as e:
+                pytest.skip(f"Chromium binary not available on this host: {e}")
+            page = browser.new_page()
         page.goto(ROSIE.as_uri(), wait_until="domcontentloaded")
 
         def visible_cards():
