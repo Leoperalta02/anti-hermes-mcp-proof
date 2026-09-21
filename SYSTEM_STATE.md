@@ -154,6 +154,11 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Cursor installed Playwright Chromium (v1234) on HP Compute Node (MININT-VLESCGA).
   (2) Executed `python -m pytest tests/test_rosie_ui.py -q` on HP Node: 5 PASSED in 28.57s. All dynamic filter count and visual DOM gates verified 100% green without skips.
   (3) Telegram gateways (@AntiCosLeo_bot and @CursorCodeHQ_bot) confirmed active and polling cleanly on HP Node for Leo's Miami trip. Full system state synchronized and frozen.
+- [2026-09-21 19:10:00 EDT] [Anti & Cursor & Leo Peralta] BOT MEMORY & TOOL CONNECTIVITY GROUNDED:
+  (1) Grounded Cursor SOUL.md and MEMORY.md on HP Node: explicitly locked Cursor's identity as Primary Engineering Super Agent wired live to Cursor Native CLI (`cursor.cmd agent`), ACP (Agent Client Protocol), and `anti-hermes-mcp-proof` MCP tools.
+  (2) Grounded Anti MEMORY.md and SOUL.md: updated with full awareness of Cursor's live CLI, ACP, and MCP tools, plus Anti's unrestricted authority over specialist profiles (Harbor, Keystone, Quill, Atelier, Mosaic).
+  (3) Purged stale "clerk" and "unconnected" descriptions across all profiles so both Telegram bots reflect active, fully-wired reality to Leo.
+
 
 
 
