@@ -150,6 +150,11 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (3) Atelier Front/Back UI Wiring: Dynamic estate filter counters verified matching all 6 cards; inline modal and navigation handlers intact without dead callbacks.
   (4) Pipeline & Test Sandbox Isolation: Verified test_onboarding_pipeline.py and test_rosy_demo.py pass 100% in isolated temporary sandboxes with zero write impact on live public_sites/rosie production files.
   (5) Acceptance Suite: pytest tests/test_rosie_ui.py executed clean across hosts (4 passed, 1 headless skip on HP Node; 5 passed on HQ). All static UI and functional gates are GREEN.
+- [2026-09-21 03:32:00 EDT] [Anti & Cursor & Leo Peralta] ROSIE PLAYWRIGHT HEADLESS ACCEPTANCE 5/5 ON HP NODE:
+  (1) Cursor installed Playwright Chromium (v1234) on HP Compute Node (MININT-VLESCGA).
+  (2) Executed `python -m pytest tests/test_rosie_ui.py -q` on HP Node: 5 PASSED in 28.57s. All dynamic filter count and visual DOM gates verified 100% green without skips.
+  (3) Telegram gateways (@AntiCosLeo_bot and @CursorCodeHQ_bot) confirmed active and polling cleanly on HP Node for Leo's Miami trip. Full system state synchronized and frozen.
+
 
 
 
