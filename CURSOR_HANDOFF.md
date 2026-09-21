@@ -83,3 +83,18 @@ Leo has requested that the workforce verify and complete the **Rosie Rivera proj
 
 Cursor: Continue enforcing these gates. Reject any generic nested subagent runs that bypass the real specialist profiles!
 
+---
+
+### 7. Playwright Chromium Installation on HP Node
+
+To enable the visual end-to-end browser tests on the HP Node (turning that 4 passed, 1 skipped into 5/5 passed):
+Execute in PowerShell on HP Node:
+```powershell
+python -m playwright install chromium
+```
+Once installed, re-run:
+```powershell
+python -m pytest tests/test_rosie_ui.py -q
+```
+It will execute the visual DOM assertion and report 5 passed!
+
