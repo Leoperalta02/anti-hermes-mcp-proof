@@ -65,3 +65,12 @@ Leo has requested that the workforce verify and complete the **Rosie Rivera proj
   4. Confirm the listing intake endpoint integration (`LISTING_INTAKE_API:8765`) matches the active HP Node port.
   5. Log the verification results in a concise receipt in `SYSTEM_STATE.md` and report completion.
 
+---
+
+### 4. Direct Baton Hand-Off from Anti CoS (Hermes Lead) to Cursor
+
+**Anti CoS Official Kickoff Directive:**
+> *"Kickoff: Inventory Rosie’s authoritative repo/state, preserve specialist boundaries, and run parallel Harbor/Keystone/Quill/Atelier/Scout/Rowan/Mosaic checks across the public front door, authenticated Realtor OS, forms, listings carousel, and integration seams. Cursor will independently audit the implementation, browser-test desktop/mobile flows, and enforce zero-placeholder, accessibility, persistence, and console-error gates. I’ll reconcile every result into a verified receipt; production readiness remains unclaimed until live connectivity and all gates are independently proven."*
+
+Cursor on HP Node: The baton is live. Execute your independent audit across Rosie's front/back sites and enforce the specialist gates!
+
