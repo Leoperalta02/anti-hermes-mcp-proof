@@ -67,25 +67,19 @@ Leo has requested that the workforce verify and complete the **Rosie Rivera proj
 
 ---
 
-### 5. Direct Engineering Order from Anti to Cursor (Autonomous Ops)
+---
 
-**Leo should not have to manually run gateway commands or type in Telegram. You are the Primary Engineering Super Agent on This PC (HP Node). Execute this directly in your terminal now:**
+### 6. Architectural Clarification & Specialist Routing Protocol
 
-1. **Launch the HP Hermes Gateway Daemon:**
-   Run in PowerShell on HP Node:
-   ```powershell
-   $env:HERMES_HOME = "C:\LEO-LAB-ANTIGRAVITY\hermes-state"
-   Start-Process -NoNewWindow -FilePath "C:\LEO-LAB-ANTIGRAVITY\hermes-state\hermes-agent\venv\Scripts\hermes.exe" -ArgumentList "gateway", "run", "--replace", "--accept-hooks"
-   ```
+**To Anti CoS and Cursor:**
+1. **The Real Profiles Exist on HQ:**
+   All specialist profiles (`harbor`, `keystone`, `quill`, `atelier`, `mosaic`, `aura`, `scout`, `rowan`) exist physically on Alienware HQ at `C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\`.
+   The HP Node only has `profiles/cursor` because HP Node is Cursor's heavy build tank, not the home of the specialist profiles.
 
-2. **Reset the 102k Bloated Session via Database:**
-   Do not make Leo type `/new`. Run this Python command on HP Node to programmatically close the bloated session:
-   ```powershell
-   python -c "import sqlite3, time; con = sqlite3.connect('C:/LEO-LAB-ANTIGRAVITY/hermes-state/state.db'); con.execute('UPDATE sessions SET ended_at = ?, end_reason = ? WHERE source = ? AND ended_at IS NULL', (time.time(), 'SESSION_RESET_BY_CURSOR', 'telegram')); con.commit(); con.close(); print('TELEGRAM SESSION RESET')"
-   ```
+2. **Inviolable Rules for Anti CoS:**
+   - **No Anonymous Costume Subagents:** Do NOT spawn generic parallel subagent clones and costume-name them Harbor/Keystone/Quill under `default`. You must route work to the **real existing profiles** (`--profile harbor`, `--profile keystone`, etc.) or invoke their sessions directly.
+   - **CoS Does NOT Do Manual Labor:** Anti CoS is strictly forbidden from manually modifying `onboarding_pipeline.py` or writing unittests herself. CoS delegates, Harbor/Keystone produce, Cursor audits.
+   - **Kanban & Handoff Alignment:** Assign tickets to real profile names (`harbor`, `keystone`, `quill`, `atelier`, `mosaic`) so they execute within their calibrated system prompts, skills, and model routes.
 
-3. **Verify Gateway Process:**
-   Verify `hermes` is running with `Get-Process python | Where-Object { $_.CommandLine -like '*gateway*' }` and log the PID to `SYSTEM_STATE.md`.
-
-Cursor: Execute steps 1-3 autonomously right now, then confirm back here via git commit so Leo does not have to touch it!
+Cursor: Continue enforcing these gates. Reject any generic nested subagent runs that bypass the real specialist profiles!
 
