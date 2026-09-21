@@ -59,35 +59,44 @@ def test_filter_pills_do_not_ship_stale_hardcoded_counts():
 
 @pytest.mark.skipif(__import__("importlib").util.find_spec("playwright") is None, reason="playwright unavailable")
 def test_estate_filter_counts_match_visible_cards_in_browser():
+    from playwright.sync_api import sync_playwright
+
     try:
-        from playwright.sync_api import sync_playwright
         with sync_playwright() as p:
             try:
                 browser = p.chromium.launch(headless=True)
             except Exception as e:
                 pytest.skip(f"Chromium binary not available on this host: {e}")
-            page = browser.new_page()
-        page.goto(ROSIE.as_uri(), wait_until="domcontentloaded")
+                return
 
-        def visible_cards():
-            return page.locator(".estate-card:visible").count()
+            try:
+                page = browser.new_page()
+                page.goto(ROSIE.as_uri(), wait_until="domcontentloaded")
 
-        def chip_count(filter_name):
-            text = page.locator(f'.filter-pill[data-filter="{filter_name}"]').inner_text()
-            return int(re.search(r"\((\d+)\)", text).group(1))
+                def visible_cards():
+                    return page.locator(".estate-card:visible").count()
 
-        assert visible_cards() == chip_count("all") == 6
-        assert chip_count("for_sale") == 3
-        assert chip_count("under_contract") == 1
-        assert chip_count("sold") == 2
+                def chip_count(filter_name):
+                    text = page.locator(f'.filter-pill[data-filter="{filter_name}"]').inner_text()
+                    return int(re.search(r"\((\d+)\)", text).group(1))
 
-        for filter_name in ("for_sale", "under_contract", "sold", "all"):
-            page.locator(f'.filter-pill[data-filter="{filter_name}"]').click()
-            page.wait_for_timeout(300)
-            assert chip_count("all") == visible_cards()
+                assert visible_cards() == chip_count("all") == 6
+                assert chip_count("for_sale") == 3
+                assert chip_count("under_contract") == 1
+                assert chip_count("sold") == 2
 
-        page.locator('.estate-card[data-id="estate-pelican-sound"]').click()
-        assert page.locator("#estateModal").evaluate("el => el.classList.contains('is-active')")
-        page.locator("#closeEstateModalBtn").click()
-        assert not page.locator("#estateModal").evaluate("el => el.classList.contains('is-active')")
-        browser.close()
+                for filter_name in ("for_sale", "under_contract", "sold", "all"):
+                    page.locator(f'.filter-pill[data-filter="{filter_name}"]').click()
+                    page.wait_for_timeout(300)
+                    assert chip_count("all") == visible_cards()
+
+                page.locator('.estate-card[data-id="estate-pelican-sound"]').click()
+                assert page.locator("#estateModal").evaluate("el => el.classList.contains('is-active')")
+                page.locator("#closeEstateModalBtn").click()
+                assert not page.locator("#estateModal").evaluate("el => el.classList.contains('is-active')")
+            finally:
+                browser.close()
+    except Exception as exc:
+        if "Chromium binary not available" in str(exc):
+            pytest.skip(str(exc))
+        raise
