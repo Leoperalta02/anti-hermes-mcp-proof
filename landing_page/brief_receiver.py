@@ -14,7 +14,12 @@ import re
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
+
+try:
+    from .rosy_demo import create_workspace, load_workspace, transition_workspace
+except ImportError:  # direct script launch
+    from rosy_demo import create_workspace, load_workspace, transition_workspace
 
 HOST = "127.0.0.1"
 PORT = 8787
@@ -44,6 +49,26 @@ ALLOWED_ORIGINS = {
     "http://127.0.0.1:5500",
     "http://localhost:5500",
 }
+
+
+def readiness_payload() -> dict:
+    """Return truthful local readiness facts; never probes or claims externals."""
+    return {
+        "ok": True,
+        "status": "local-staging-ready",
+        "bind": f"{HOST}:{PORT}",
+        "surfaces": {
+            "workspace": {"status": "ready", "mode": "private draft/review"},
+            "brief_receiver": {"status": "ready", "mode": "loopback only"},
+            "external_integrations": {"status": "disabled", "mode": "manual links only"},
+        },
+        "claims": {
+            "direct_publishing": False,
+            "oauth": False,
+            "database": False,
+            "production_deployment": False,
+        },
+    }
 
 
 def utc_now() -> datetime:
@@ -143,23 +168,39 @@ class BriefHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self) -> None:  # noqa: N802
-        path = urlparse(self.path).path
-        if path in ("/", "/health"):
-            self._send(
-                200,
-                {
-                    "ok": True,
-                    "status": "staged-receiver",
-                    "bind": f"{HOST}:{PORT}",
-                    "brief_dir": str(BRIEF_DIR),
-                    "deploys_agents": False,
-                },
-            )
+        parsed = urlparse(self.path)
+        path = parsed.path
+        if path in ("/", "/health", "/readiness"):
+            payload = readiness_payload()
+            payload.update({"brief_dir": str(BRIEF_DIR), "deploys_agents": False, "external_sends": False})
+            self._send(200, payload)
+            return
+
+        if path == "/workspace":
+            tenant_id = (parse_qs(parsed.query).get("tenant_id") or [""])[0]
+            workspace = load_workspace(BRIEF_DIR, tenant_id)
+            if workspace:
+                self._send(200, {"ok": True, "workspace": workspace})
+            else:
+                self._send(404, {"ok": False, "error": "workspace not found"})
             return
         self._send(404, {"ok": False, "error": "not found"})
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
+        length = int(self.headers.get("Content-Length") or "0")
+        if path == "/workspace/actions":
+            if length <= 0 or length > MAX_BODY:
+                self._send(413, {"ok": False, "error": "action too large or empty"})
+                return
+            try:
+                action = json.loads(self.rfile.read(length).decode("utf-8"))
+                workspace = transition_workspace(BRIEF_DIR, action["tenant_id"], action["item_id"], action["action"], action.get("snooze_date"))
+            except (ValueError, KeyError, FileNotFoundError, json.JSONDecodeError) as err:
+                self._send(400, {"ok": False, "error": str(err)})
+                return
+            self._send(200, {"ok": True, "workspace": workspace, "external_send": False})
+            return
         if path not in ("/briefs", "/brief", "/"):
             self._send(404, {"ok": False, "error": "not found"})
             return
@@ -206,6 +247,8 @@ class BriefHandler(BaseHTTPRequestHandler):
         stamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
         stem = f"{stamp}-{slugify(str(who))}"
         BRIEF_DIR.mkdir(parents=True, exist_ok=True)
+        workspace = create_workspace(brief, BRIEF_DIR)
+        brief["workspace"] = {"tenant_id": workspace["tenant_id"], "surface": "workspace.html", "external_sends": False}
         json_path = BRIEF_DIR / f"{stem}.json"
         md_path = BRIEF_DIR / f"{stem}.md"
         json_path.write_text(json.dumps(brief, indent=2), encoding="utf-8")
@@ -218,6 +261,7 @@ class BriefHandler(BaseHTTPRequestHandler):
         except Exception as err:
             self.log_message("Hermes triage hook warning: %s", err)
 
+        workspace_url = '/workspace.html?tenant_id=' + workspace['tenant_id']
         self._send(
             201,
             {
@@ -225,6 +269,7 @@ class BriefHandler(BaseHTTPRequestHandler):
                 "status": "staged",
                 "message": "Staged brief received. No agent deployed.",
                 "paths": {"json": str(json_path), "markdown": str(md_path)},
+                "workspace": {"tenant_id": workspace["tenant_id"], "url": workspace_url, "external_sends": False},
             },
         )
 
