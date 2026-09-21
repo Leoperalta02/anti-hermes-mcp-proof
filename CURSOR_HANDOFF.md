@@ -38,11 +38,15 @@ To optimize credit expenditure, eliminate token burn, and maximize engineering v
 
 ---
 
-### 3. Current Active Tasks Ready for Cursor
+### 3. Current Active Task: Rideshare Copilot Build & Polish
 
-- **Workspace Sync:** Cursor is already running locally on `This PC` at `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof`.
-- **Rideshare Copilot / Dashboard:** `rideshare_copilot/dashboard.html` is open and active for polish and integration.
-- **Rule 10 & Test Verification:** Keep `pytest` restricted to `tests/` and verify clean runs before pushing.
-
-Cursor, acknowledge this operational dispatch and report readiness to handle heavy engineering builds on HP Node!
+The `rideshare_copilot/` module has been pushed to GitHub (`commit c08d4ea`).
+- **Files:** `rideshare_copilot/dashboard.html`, `rideshare_copilot/engine.py`, `rideshare_copilot/install.html`, `rideshare_copilot/IOS_SETUP_GUIDE.md`.
+- **Assignment for Cursor:**
+  1. Pull `main` (`git pull github main`).
+  2. Audit `rideshare_copilot/dashboard.html` and `engine.py`.
+  3. Ensure standalone local serving works cleanly (e.g. `python -m http.server 8080` or dedicated runner), zero broken scripts or placeholders, and Apple-grade responsive dark styling.
+  4. Write a unit/integration test in `tests/test_rideshare_copilot.py` verifying `engine.py` calculation logic.
+  5. Run `pytest tests/test_rideshare_copilot.py` to ensure it passes.
+  6. Commit, push to `main`, and report completion with a concise receipt.
 
