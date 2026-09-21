@@ -38,15 +38,18 @@ To optimize credit expenditure, eliminate token burn, and maximize engineering v
 
 ---
 
-### 3. Current Active Task: Rideshare Copilot Build & Polish
+### 3. Current Active Task: Final Rosie & Onboarding Pipeline Verification
 
-The `rideshare_copilot/` module has been pushed to GitHub (`commit c08d4ea`).
-- **Files:** `rideshare_copilot/dashboard.html`, `rideshare_copilot/engine.py`, `rideshare_copilot/install.html`, `rideshare_copilot/IOS_SETUP_GUIDE.md`.
-- **Assignment for Cursor:**
-  1. Pull `main` (`git pull github main`).
-  2. Audit `rideshare_copilot/dashboard.html` and `engine.py`.
-  3. Ensure standalone local serving works cleanly (e.g. `python -m http.server 8080` or dedicated runner), zero broken scripts or placeholders, and Apple-grade responsive dark styling.
-  4. Write a unit/integration test in `tests/test_rideshare_copilot.py` verifying `engine.py` calculation logic.
-  5. Run `pytest tests/test_rideshare_copilot.py` to ensure it passes.
-  6. Commit, push to `main`, and report completion with a concise receipt.
+Leo has requested that the workforce verify and complete the **Rosie Rivera project** and the **Onboarding Pipeline**.
+- **Rosie Platform Assets:**
+  - Front Door: `public_sites/rosie/index.html` (Apple-grade luxury public landing page)
+  - Back Door: `public_sites/rosie/portal.html` (Sovereign Realtor OS & PWA portal)
+  - Onboarding SOP: `ROSIE_ONBOARDING_SOP.md`
+  - Automated Pipeline: `apex_core/onboarding_pipeline.py` & `tests/test_onboarding_pipeline.py`
+- **Assignment for Cursor on HP Node:**
+  1. Pull `main`.
+  2. Run `python -m unittest tests/test_onboarding_pipeline.py` and verify all 8 onboarding stages execute cleanly in <0.5s.
+  3. Verify `public_sites/rosie/index.html` and `public_sites/rosie/portal.html` for any dead click handlers, missing assets, or placeholder text.
+  4. Confirm the listing intake endpoint integration (`LISTING_INTAKE_API:8765`) matches the active HP Node port.
+  5. Log the verification results in a concise receipt in `SYSTEM_STATE.md` and report completion.
 
