@@ -100,14 +100,16 @@ It will execute the visual DOM assertion and report 5 passed!
 
 ---
 
-### 8. Zero Blockers: Launching Cursor's Independent Telegram Gateway
+### 8. Immediate Priority: Launch Cursor's Independent Telegram Gateway
 
-To ensure Leo can reach both Anti and Cursor on Telegram without conflict:
-Anti runs under the `default` profile (`@AntiCosLeo_bot`).
-Cursor has its own dedicated profile and bot token (`@CursorCodeHQ_bot`). Because they use different bot tokens, they do NOT conflict on `getUpdates` as long as Cursor starts with `--profile cursor`.
+**Cursor:** Leo is heading to Miami and wants to communicate with you via Telegram (`@CursorCodeHQ_bot`).
+The gateway is currently stopped on the HP Node.
 
-**Command to run on HP Node in background:**
+**Run this immediately in PowerShell on the HP Node (as a background process or new terminal):**
 ```powershell
 hermes gateway --profile cursor
 ```
-This will start `@CursorCodeHQ_bot` polling in its own clean session so both agents respond to Leo while he travels to Miami.
+- Anti is on `@AntiCosLeo_bot` (profile `default`).
+- You are on `@CursorCodeHQ_bot` (profile `cursor`).
+- They use completely different bot tokens, so running both has ZERO conflicts. Once you start this, both agents will respond cleanly to Leo on Telegram.
+
