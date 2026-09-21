@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Rideshare Copilot on iPhone 16 Pro Max</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg: #0B0E14;
+      --card-bg: #141923;
+      --border: rgba(255, 255, 255, 0.08);
+      --neon-green: #00E676;
+      --text-main: #FFFFFF;
+      --text-muted: #8E9BAE;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .install-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 36px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .badge {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .qr-container {
+      background: #FFFFFF;
+      padding: 16px;
+      border-radius: 16px;
+      margin: 8px 0;
+      box-shadow: 0 8px 24px rgba(0, 230, 118, 0.2);
+    }
+
+    .install-btn {
+      background: var(--neon-green);
+      color: #000;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 16px 28px;
+      border-radius: 14px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0, 230, 118, 0.3);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .install-btn:hover {
+      opacity: 0.9;
+    }
+
+    .install-btn:active {
+      transform: scale(0.98);
+    }
+
+    .instructions-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      width: 100%;
+      text-align: left;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: #CBD5E1;
+    }
+
+    .step-num {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="install-card">
+    <div class="badge">IPHONE 16 PRO MAX QUICK INSTALL</div>
+    <h1>Rideshare Profit Copilot</h1>
+    <p>Scan this QR code with your iPhone Camera to open this page on your phone, then tap the install button.</p>
+
+    <div class="qr-container" id="qrcode"></div>
+
+    <a href="shortcuts://import-workflow?url=http://192.168.1.133:8799/Rideshare_Profit_Copilot.shortcut" class="install-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Add Shortcut to iPhone
+    </a>
+
+    <div class="instructions-box">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div>Point iPhone Camera at the QR code above & tap the yellow link.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div>Tap <strong>"Add Shortcut to iPhone"</strong>. The iOS Shortcuts app will open and add it.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div>Go to <strong>Settings > Accessibility > Voice Control > Commands</strong> and set phrase <strong>"Check"</strong> to run this shortcut.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currentUrl = "http://192.168.1.133:8799/install.html";
+    new QRCode(document.getElementById("qrcode"), {
+      text: currentUrl,
+      width: 180,
+      height: 180,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.M
+    });
+  </script>
+</body>
+</html>

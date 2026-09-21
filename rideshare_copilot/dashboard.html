@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Profit Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090B0E;
+      --card-bg: #131720;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --neon-green: #00E676;
+      --neon-yellow: #FFD600;
+      --neon-red: #FF1744;
+      --text-main: #FFFFFF;
+      --text-muted: #8E9BAE;
+      --uber-black: #000000;
+      --lyft-pink: #FF00BF;
+      --spark-blue: #0071DC;
+      --doordash-red: #FF3008;
+      --eats-green: #06C167;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 80px) 16px;
+      overflow-x: hidden;
+    }
+
+    /* Top Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0 16px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      color: var(--neon-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    /* Main HUD Card (Tab 1) */
+    .hud-hero {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .hud-hero.state-green {
+      border-color: rgba(0, 230, 118, 0.5);
+      box-shadow: 0 0 30px rgba(0, 230, 118, 0.2);
+    }
+
+    .hud-hero.state-red {
+      border-color: rgba(255, 23, 68, 0.5);
+      box-shadow: 0 0 30px rgba(255, 23, 68, 0.2);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .app-tag {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .tag-uber { background: #000; border: 1px solid #333; color: #fff; }
+    .tag-doordash { background: var(--doordash-red); color: #fff; }
+    .tag-ubereats { background: var(--eats-green); color: #000; }
+    .tag-spark { background: var(--spark-blue); color: #fff; }
+    .tag-lyft { background: var(--lyft-pink); color: #fff; }
+
+    .hero-fare {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .verdict-box {
+      width: 100%;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 12px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .verdict-green {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--neon-green);
+      border: 1.5px solid var(--neon-green);
+    }
+
+    .verdict-yellow {
+      background: rgba(255, 214, 0, 0.15);
+      color: var(--neon-yellow);
+      border: 1.5px solid var(--neon-yellow);
+    }
+
+    .verdict-red {
+      background: rgba(255, 23, 68, 0.15);
+      color: var(--neon-red);
+      border: 1.5px solid var(--neon-red);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .metric-cell {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .metric-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Voice / Announcement Bar */
+    .voice-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .voice-text {
+      font-size: 14px;
+      color: #E2E8F0;
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    .btn-speak {
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-speak:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    /* Presets / Offers (Tab 2) */
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .preset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .preset-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .preset-card.active {
+      border-color: var(--neon-green);
+      background: rgba(0, 230, 118, 0.05);
+    }
+
+    /* Sliders / Calibration (Tab 3) */
+    .slider-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .slider-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .slider-disp {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--neon-green);
+      font-size: 15px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      accent-color: var(--neon-green);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    /* Bottom iOS Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(65px + env(safe-area-inset-bottom, 0px));
+      background: rgba(15, 18, 25, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 10px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 33%;
+    }
+
+    .nav-item.active {
+      color: var(--neon-green);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-title">Profit Copilot</div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      ACTIVE RADAR
+    </div>
+  </header>
+
+  <!-- TAB 1: RADAR HUD (Main Screen) -->
+  <div id="tab-hud" class="tab-content active">
+    <div class="hud-hero" id="heroCard">
+      <div class="hero-top">
+        <span id="appBadge" class="app-tag tag-uber">UBER</span>
+        <span id="fareVal" class="hero-fare">$9.85</span>
+      </div>
+
+      <div class="verdict-box verdict-green" id="verdictBox">TAKE IT</div>
+
+      <div class="metric-grid">
+        <div class="metric-cell">
+          <div class="metric-val" id="mileRateVal" style="color: var(--neon-green);">$2.90</div>
+          <div class="metric-lbl">Per Mile</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-val" id="hourRateVal" style="color: var(--neon-green);">$53.73</div>
+          <div class="metric-lbl">Hourly Rate</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-val" id="totalDistVal">3.4 mi</div>
+          <div class="metric-lbl">Total Miles</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-val" id="durationVal">11 min</div>
+          <div class="metric-lbl">Est. Time</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spoken Text Box -->
+    <div class="voice-bar">
+      <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Spoken Announcement</div>
+      <div class="voice-text" id="voiceText">"Uber Green. 2 dollars and 90 cents a mile. 3.4 miles total. Take it."</div>
+      <button class="btn-speak" onclick="playAudioAnnouncement()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Play Car Audio Alert
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB 2: OFFERS / PRESETS -->
+  <div id="tab-presets" class="tab-content">
+    <div class="section-title">Tap an offer to test HUD</div>
+    <div class="preset-list">
+      <div class="preset-card active" onclick="selectPreset('uber_good')">
+        <div>
+          <span class="app-tag tag-uber" style="font-size: 10px;">UBER RIDES</span>
+          <div style="font-size: 13px; color: #fff; font-weight: 700; margin-top: 4px;">Exclusive Trip Radar</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 15px; color: var(--neon-green); font-weight: 800;">$9.85</div>
+          <div style="font-size: 11px; color: var(--text-muted);">3.4 mi • 11m</div>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="selectPreset('doordash_good')">
+        <div>
+          <span class="app-tag tag-doordash" style="font-size: 10px;">DOORDASH</span>
+          <div style="font-size: 13px; color: #fff; font-weight: 700; margin-top: 4px;">Chipotle Mexican Grill</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 15px; color: var(--neon-green); font-weight: 800;">$7.50</div>
+          <div style="font-size: 11px; color: var(--text-muted);">2.1 mi • 12m</div>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="selectPreset('ubereats_bad')">
+        <div>
+          <span class="app-tag tag-ubereats" style="font-size: 10px;">UBER EATS</span>
+          <div style="font-size: 13px; color: #fff; font-weight: 700; margin-top: 4px;">McDonald's (No tip)</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 15px; color: var(--neon-red); font-weight: 800;">$3.00</div>
+          <div style="font-size: 11px; color: var(--text-muted);">6.2 mi • 28m</div>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="selectPreset('spark_good')">
+        <div>
+          <span class="app-tag tag-spark" style="font-size: 10px;">WALMART SPARK</span>
+          <div style="font-size: 13px; color: #fff; font-weight: 700; margin-top: 4px;">Grocery Batch (2 Stops)</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 15px; color: var(--neon-green); font-weight: 800;">$34.50</div>
+          <div style="font-size: 11px; color: var(--text-muted);">8.2 mi • 45m</div>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="selectPreset('lyft_bad')">
+        <div>
+          <span class="app-tag tag-lyft" style="font-size: 10px;">LYFT DRIVER</span>
+          <div style="font-size: 13px; color: #fff; font-weight: 700; margin-top: 4px;">Downtown Standard Ride</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 15px; color: var(--neon-red); font-weight: 800;">$5.20</div>
+          <div style="font-size: 11px; color: var(--text-muted);">7.8 mi • 24m</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: CALIBRATION RULES -->
+  <div id="tab-rules" class="tab-content">
+    <div class="section-title">Profit Thresholds</div>
+
+    <div class="slider-box">
+      <div class="slider-head">
+        <span>Minimum Rate / Mile</span>
+        <span class="slider-disp" id="minMileDisp">$1.75 / mi</span>
+      </div>
+      <input type="range" id="minMileSlider" min="1.00" max="3.00" step="0.05" value="1.75">
+      <div style="font-size: 12px; color: var(--text-muted);">Rides below this rate are automatically flagged RED (PASS).</div>
+    </div>
+
+    <div class="slider-box">
+      <div class="slider-head">
+        <span>Minimum Rate / Hour</span>
+        <span class="slider-disp" id="minHourDisp">$28.00 / hr</span>
+      </div>
+      <input type="range" id="minHourSlider" min="20.00" max="50.00" step="1.00" value="28.00">
+      <div style="font-size: 12px; color: var(--text-muted);">Protects you from slow city-traffic rides that burn too much time.</div>
+    </div>
+  </div>
+
+  <!-- Bottom iOS Navigation Bar -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('tab-hud')">
+      <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      Radar HUD
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-presets')">
+      <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+      Test Offers
+    </div>
+    <div class="nav-item" onclick="switchTab('tab-rules')">
+      <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      Profit Rules
+    </div>
+  </div>
+
+  <script>
+    const presets = {
+      uber_good: { app: "Uber", pay: 9.85, miles: 3.4, duration: 11 },
+      doordash_good: { app: "DoorDash", pay: 7.50, miles: 2.1, duration: 12 },
+      ubereats_bad: { app: "Uber Eats", pay: 3.00, miles: 6.2, duration: 28 },
+      spark_good: { app: "Spark", pay: 34.50, miles: 8.2, duration: 45 },
+      lyft_bad: { app: "Lyft", pay: 5.20, miles: 7.8, duration: 24 }
+    };
+
+    let config = { minMile: 1.75, minHour: 28.00 };
+    let currentOffer = presets.uber_good;
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    function selectPreset(key) {
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      currentOffer = presets[key];
+      renderHUD();
+      // Auto switch back to HUD tab to see result immediately
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-hud').classList.add('active');
+      document.querySelector('.bottom-nav .nav-item:first-child').classList.add('active');
+    }
+
+    function renderHUD() {
+      const pay = currentOffer.pay;
+      const miles = currentOffer.miles;
+      const duration = currentOffer.duration;
+      const app = currentOffer.app;
+
+      const perMile = pay / miles;
+      const perHour = pay / (duration / 60);
+
+      const isGreen = (perMile >= config.minMile) && (perHour >= config.minHour);
+      const isYellow = (perMile >= config.minMile * 0.9);
+
+      let verdict = "PASS";
+      let verdictClass = "verdict-red";
+      let heroState = "state-red";
+      let color = "var(--neon-red)";
+
+      if (isGreen) {
+        verdict = "TAKE IT";
+        verdictClass = "verdict-green";
+        heroState = "state-green";
+        color = "var(--neon-green)";
+      } else if (isYellow) {
+        verdict = "BORDERLINE";
+        verdictClass = "verdict-yellow";
+        heroState = "";
+        color = "var(--neon-yellow)";
+      }
+
+      document.getElementById('fareVal').innerText = `$${pay.toFixed(2)}`;
+      document.getElementById('mileRateVal').innerText = `$${perMile.toFixed(2)}`;
+      document.getElementById('mileRateVal').style.color = color;
+      document.getElementById('hourRateVal').innerText = `$${perHour.toFixed(2)}`;
+      document.getElementById('hourRateVal').style.color = color;
+      document.getElementById('totalDistVal').innerText = `${miles.toFixed(1)} mi`;
+      document.getElementById('durationVal').innerText = `${duration} min`;
+
+      const badge = document.getElementById('appBadge');
+      badge.innerText = app.toUpperCase();
+      let badgeCls = "tag-uber";
+      if (app === "DoorDash") badgeCls = "tag-doordash";
+      else if (app === "Uber Eats") badgeCls = "tag-ubereats";
+      else if (app === "Spark") badgeCls = "tag-spark";
+      else if (app === "Lyft") badgeCls = "tag-lyft";
+      badge.className = `app-tag ${badgeCls}`;
+
+      const vBox = document.getElementById('verdictBox');
+      vBox.innerText = verdict;
+      vBox.className = `verdict-box ${verdictClass}`;
+
+      document.getElementById('heroCard').className = `hud-hero ${heroState}`;
+
+      // Audio text
+      let speech = `${app} ${isGreen ? 'Green' : (isYellow ? 'Borderline' : 'Red')}. ${perMile.toFixed(2)} dollars a mile. ${miles.toFixed(1)} miles total. ${isGreen ? 'Take it.' : 'Pass.'}`;
+      document.getElementById('voiceText').innerText = `"${speech}"`;
+    }
+
+    function playAudioAnnouncement() {
+      const text = document.getElementById('voiceText').innerText.replace(/"/g, '');
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.05;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    // Sliders
+    const minMileSlider = document.getElementById('minMileSlider');
+    const minHourSlider = document.getElementById('minHourSlider');
+    const minMileDisp = document.getElementById('minMileDisp');
+    const minHourDisp = document.getElementById('minHourDisp');
+
+    minMileSlider.addEventListener('input', (e) => {
+      config.minMile = parseFloat(e.target.value);
+      minMileDisp.innerText = `$${config.minMile.toFixed(2)} / mi`;
+      renderHUD();
+    });
+
+    minHourSlider.addEventListener('input', (e) => {
+      config.minHour = parseFloat(e.target.value);
+      minHourDisp.innerText = `$${config.minHour.toFixed(2)} / hr`;
+      renderHUD();
+    });
+
+    // Initial render
+    renderHUD();
+  </script>
+</body>
+</html>
