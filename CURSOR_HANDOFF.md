@@ -22,18 +22,30 @@ To optimize credit expenditure, eliminate token burn, and maximize engineering v
 
 ---
 
-### 2. Immediate Standing Workflow
+### 2. Immediate Standing Workflow & Subagent Coaching Protocol
+
+> **CRITICAL FOUNDER DIRECTIVE (Leo Peralta):**
+> *"Hermes agents do the work. Cursor verifies, and if something is wrong, Cursor instructs and makes them fix it so they learn and create durable skills."*
 
 1. **Anti Architecture Dispatches:**
    - Anti drafts architecture specs, high-level roadmaps, and accepts Leo's directives in HQ Antigravity IDE.
    - Anti writes task dispatches into `CURSOR_HANDOFF.md` or git commits on `main`.
 
-2. **Cursor Autonomous Execution:**
-   - Cursor pulls `main` on HP Node This PC.
-   - Cursor executes the heavy code changes, runs tests, fixes bugs, and verifies build integrity locally.
-   - Cursor commits code with concise receipts and pushes to GitHub.
+2. **Hermes Subagents Do the Daily Labor:**
+   - **Harbor** (CRM/follow-up routing)
+   - **Keystone** (CMA/pricing analytics)
+   - **Quill** (copywriting & dossiers)
+   - **Atelier** (UI layouts & styling)
+   - **Scout & Rowan** (intel gathering & business packets)
+   - **Mosaic** (visual graphics & flyers on GPU)
 
-3. **Anti Review & Sign-Off:**
+3. **Cursor's Role: Supervisor, Auditor & Code Coach:**
+   - Cursor does NOT manually redo the subagents' work.
+   - Cursor audits their output against acceptance gates and tests.
+   - If a subagent's output fails or has flaws, Cursor rejects the deliverable, writes specific remediation instructions, and makes the subagent re-run and fix it until it passes.
+   - This builds durable operational skills in the Hermes agent team and eliminates human/super-agent babysitting.
+
+4. **Anti Review & Executive Sign-Off:**
    - Anti pulls Cursor's verified code on HQ, validates live ports or UI with Leo, and logs final sign-offs in `SYSTEM_STATE.md`.
 
 ---
