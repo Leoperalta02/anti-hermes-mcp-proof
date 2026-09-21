@@ -98,3 +98,16 @@ python -m pytest tests/test_rosie_ui.py -q
 ```
 It will execute the visual DOM assertion and report 5 passed!
 
+---
+
+### 8. Zero Blockers: Launching Cursor's Independent Telegram Gateway
+
+To ensure Leo can reach both Anti and Cursor on Telegram without conflict:
+Anti runs under the `default` profile (`@AntiCosLeo_bot`).
+Cursor has its own dedicated profile and bot token (`@CursorCodeHQ_bot`). Because they use different bot tokens, they do NOT conflict on `getUpdates` as long as Cursor starts with `--profile cursor`.
+
+**Command to run on HP Node in background:**
+```powershell
+hermes gateway --profile cursor
+```
+This will start `@CursorCodeHQ_bot` polling in its own clean session so both agents respond to Leo while he travels to Miami.
