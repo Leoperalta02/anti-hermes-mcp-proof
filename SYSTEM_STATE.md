@@ -158,9 +158,13 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Grounded Cursor SOUL.md and MEMORY.md on HP Node: explicitly locked Cursor's identity as Primary Engineering Super Agent wired live to Cursor Native CLI (`cursor.cmd agent`), ACP (Agent Client Protocol), and `anti-hermes-mcp-proof` MCP tools.
   (2) Grounded Anti MEMORY.md and SOUL.md: updated with full awareness of Cursor's live CLI, ACP, and MCP tools, plus Anti's unrestricted authority over specialist profiles (Harbor, Keystone, Quill, Atelier, Mosaic).
   (3) Purged stale "clerk" and "unconnected" descriptions across all profiles so both Telegram bots reflect active, fully-wired reality to Leo.
-
-
-
+- [2026-09-22 13:27:00 EDT] [Anti & Cursor & Leo Peralta] HERMES ENGINE UNIFICATION COMPLETE — SINGLE ENGINE ON HP NODE:
+  (1) **Root cause of two-instance drift identified:** HQ Hermes Desktop was spawning its own local backend, creating a separate engine with its own hermes-state DB. HP Node had the intended engine on :9119 but they were never sharing a live brain.
+  (2) **Architecture locked to original intent:** HP Compute Node (MININT-VLESCGA) runs the sole `hermes serve` process on `127.0.0.1:9119`. Alienware HQ Desktop app is a **glass cockpit only** — zero local backend, zero local engine.
+  (3) **Connectivity chain:** HP Node `hermes serve :9119` → `tailscale serve --bg 9119` → `https://minint-vlescga.tailf79969.ts.net/` (tailnet-only HTTPS proxy) → HQ Desktop reads `connections.json` with `kind: remote`, `url: https://minint-vlescga.tailf79969.ts.net`.
+  (4) **Auth:** Shared `HERMES_DASHBOARD_SESSION_TOKEN` set on HP Node env and in HQ `connections.json` token field. Desktop sends token via `X-Hermes-Session-Token` header; web_server.py validates via HMAC compare.
+  (5) **Verified LIVE:** HQ Desktop connected successfully showing full bot roster (Anti, Mosaic, Cursor Coding Agent, Atelier, Rowan, Quill, Scout, Aura, Keystone, Harbor, Apex Mail) all served from the single HP Node engine.
+  (6) **Files changed:** `%APPDATA%\Hermes\connections.json` (HQ), `config.yaml` (HP Node — `dashboard.public_url` set to MagicDNS URL).
 
 
 
