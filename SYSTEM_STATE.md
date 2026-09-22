@@ -170,3 +170,40 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
 
 
 
+
+- [2026-09-22 15:02:00 EDT] [Anti, Cursor & Leo Peralta] HP COMPUTE NODE ROSTER RPC VERIFIED LIVE:
+  (1) Cursor on HP Node registered profiles.list WS RPC on the live port 9119 wrapper with Tailscale serve.
+  (2) HQ Desktop client v0.21.0 refreshed cleanly with zero errors (stale notice and roster refresh banner completely cleared).
+  (3) Multi-source union roster displays all 8 profiles under 'HP COMPUTE NODE (8)' (default, nti-cos, telier, cursor, harbor, keystone, mosaic, quill) alongside 'ALIENWARE HQ (7)'.
+  (4) Active Gateway connected to HP engine (backend v0.19.0).
+
+- [2026-09-22 15:15:00 EDT] [Anti -> Cursor Handoff Receipt] CRITICAL QUOTA & SINGLE-ENGINE LOCK HANDOFF:
+  (1) **State & Architecture:**
+      - HQ %APPDATA%\Hermes\connections.json has been updated to ONLY hold hp-node (remote gateway: https://minint-vlescga.tailf79969.ts.net).
+      - Local HQ hsi21 Python backends terminated (zero local kernels).
+      - Background Electron instances and lockfiles purged.
+      - HP Compute Node (MININT-VLESCGA) is running the sole hermes serve engine on port 9119 with Tailscale Serve active and profiles.list WS RPC registered by Cursor.
+  (2) **Current Handoff Status:**
+      - Anti (HQ) at 6% 5-hour Claude/GPT quota. Handing over execution to Cursor on HP Node.
+      - Next immediate action: Leo launches Hermes Desktop on HQ to verify the single-source roster (HP COMPUTE NODE (8) only).
+
+- [2026-09-22 16:25:00 EDT] [Anti & Cursor & Leo Peralta] ANTI IDENTITY & REMOTE MCP WIRING VERIFIED:
+  (1) **Anti SOUL.md Deployed to HP:** Updated `C:\LEO-LAB-ANTIGRAVITY\hermes-state\SOUL.md` and `profiles\anti-cos\SOUL.md` on HP Node with Anti's authoritative identity (Primary Engineering Super Agent, Lead Architect, and Workforce Orchestrator). Updated `profile.yaml` description & display_name on HP Node.
+  (2) **Remote FastMCP Server Live on HQ:** Launched `apex_core/anti_mcp_server.py` on Alienware HQ (`0.0.0.0:8799`, SSE transport at `http://100.67.249.106:8799/sse`).
+  (3) **HP Configuration Wired:** Updated `C:\LEO-LAB-ANTIGRAVITY\hermes-state\config.yaml` and `profiles\anti-cos\config.yaml` on HP Node registering `anti-hermes-mcp-proof` (`http://100.67.249.106:8799/sse`) and `hermes-sandbox-adapter` (HP Node local stdio). Verified via `POST /api/mcp/servers/{name}/test` returning `{"ok": true, "tools": [...]}` from HP.
+  (4) **Empirical Proof of Live Turn:** Initiated new session on **HP Compute Node** bot (`default` profile) over live WebSocket (`wss://minint-vlescga.tailf79969.ts.net/api/ws`). Bot identified as: "Anti — Primary Engineering Super Agent, Lead Architect, and Workforce Orchestrator for Apex Luxury AI". Tool call reached Anti IDE remote MCP server over Tailscale, logged receipt in `evidence/anti_mcp_receipts.jsonl`, and returned live operational proof.
+- [2026-09-22 19:07:00 EDT] [Anti & Leo Peralta] HOUSE CLEANING & CLI HERMES GATEWAY REFRESH VERIFIED:
+  (1) Purged orphaned HQ Hermes Desktop processes (PIDs 30252, 31444, 29792, 11548, 29684), enforcing zero-engine policy on Alienware HQ.
+  (2) Stashed repository state, pulled upstream hermes update on HQ, and reconciled git status on main branch.
+  (3) Recharged HP Compute Node live Telegram gateway via POST /api/gateway/restart (PID 22452); confirmed Telegram state is 'connected' with zero errors.
+- [2026-09-22 19:09:00 EDT] [Anti & Leo Peralta] REMOTE MCP SERVER RESTORED & HEALTH VERIFIED:
+  (1) Launched apex_core/anti_mcp_server.py on Alienware HQ (:8799, SSE transport at http://100.67.249.106:8799/sse, PID 19196).
+  (2) Executed POST /api/mcp/servers/anti-hermes-mcp-proof/test from HP Compute Node: returned {"ok": true} discovering all 4 tools (get_status, get_assignment, submit_result, get_workspace_sync_status).
+- [2026-09-22 19:10:00 EDT] [Anti -> Cursor Handoff Receipt] CO-ENGINEERING HANDOFF TO CURSOR (HP NODE):
+  (1) Transferred primary building, test execution, subagent supervision, and code auditing responsibilities to Cursor on HP Compute Node (`MININT-VLESCGA` / `This PC`).
+  (2) Staged operational brief in `CURSOR_HANDOFF.md`.
+- [2026-09-22 19:13:00 EDT] [Anti, Cursor & Leo Peralta] CURSOR HANDOFF SECTION 11 GROUND-TRUTH LOCKED:
+  (1) Reconciled CURSOR_HANDOFF.md Section 11 to match authoritative SYSTEM_STATE.md ledger over older legacy notes.
+  (2) Confirmed engine is serve_with_public_host.py (PID 5900) on 127.0.0.1:9119, published via Tailscale Serve to minint-vlescga.tailf79969.ts.net.
+  (3) Confirmed Anti IDE bridge on 100.67.249.106:8799; Telegram gateways: default (PID 4472), cursor (PID 6736).
+  (4) Seated profiles on disk: Anti, Atelier, Aura, Cursor, Harbor, Keystone, Mosaic, Quill, Rowan, Scout; Hermes is the runtime under the Anti seat.
