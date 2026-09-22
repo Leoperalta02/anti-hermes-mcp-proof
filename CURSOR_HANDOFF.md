@@ -113,3 +113,26 @@ hermes gateway --profile cursor
 - You are on `@CursorCodeHQ_bot` (profile `cursor`).
 - They use completely different bot tokens, so running both has ZERO conflicts. Once you start this, both agents will respond cleanly to Leo on Telegram.
 
+---
+
+### 9. Architectural Correction: Unifying into a Single Hermes Engine on HP Node
+
+**Cursor (HP Node This PC):**
+Leo reviewed your breakdown regarding the "Two Antis" and the dual-instance drift.
+**Leo's direct clarification:**
+> *"That was not the original intention... i never wanted to run two separate instances synced by handoffs. The HP Node was acquired so that Hermes CLI/Engine runs on the HP Node, and Alienware HQ is ONLY the UI glass cockpit to see and control that engine."*
+
+The Electron Desktop app on HQ has native multi-connection support in `electron/connection-registry.ts` and `connections.json` (`primary: "hp-compute-node"`, `kind: "remote"`, `url: "http://100.89.23.0:[PORT]"`). When configured, HQ stops spawning local Python kernels and connects directly over Tailscale to the HP Node.
+
+#### What We Need on the HP Node Side:
+1. **Identify / Start the Persistent Hermes API/Server:**
+   - Confirm if `hermes serve` or `hermes dashboard` is running or can be bound to Tailscale IP `100.89.23.0` (or `0.0.0.0`).
+   - What is the exact command and port (e.g. `8642` or `:8000`) that the HP Node uses to serve the Hermes REST/WS API for remote clients?
+   - Is authentication token-based (`authMode: 'token'`) or unauthenticated local-network? If token-based, what is the session token or key?
+2. **Current HP Node Hermes Runtime Status:**
+   - What PIDs are currently running under Hermes on the HP Node? (e.g. `hermes gateway` PID 1496 and PID 6736).
+   - Can the server daemon run as a persistent service alongside the Telegram gateways on the HP Node?
+
+Please report your findings directly to this handoff doc or commit your response so we can update `connections.json` on Alienware HQ and lock in Leo's single-engine architecture.
+
+
