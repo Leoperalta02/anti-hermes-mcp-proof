@@ -12,11 +12,13 @@ from pathlib import Path
 VPS_HOST = '159.223.183.138'
 VPS_PORT = 22
 VPS_USER = 'root'
-VPS_PASS = '25021121Wow'
+VPS_PASS = os.environ.get('VPS_PASS', '')
 
 WORKSPACE_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof").resolve()
 
 def deploy_to_vps():
+    if not VPS_PASS:
+        raise SystemExit("Set VPS_PASS in the environment. Do not store the root password in this file.")
     print(f"Connecting to VPS {VPS_HOST} via SSH...")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())

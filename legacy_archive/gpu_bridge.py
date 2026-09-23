@@ -2,6 +2,7 @@ import paramiko
 import threading
 import select
 import socket
+import os
 import sys
 import time
 
@@ -11,7 +12,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 VPS_HOST = '159.223.183.138'
 VPS_PORT = 22
 VPS_USER = 'root'
-VPS_PASS = '25021121Wow'
+VPS_PASS = os.environ.get('VPS_PASS', '')
 
 REMOTE_PORT = 11434
 LOCAL_HOST = '127.0.0.1'

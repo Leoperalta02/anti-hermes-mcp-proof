@@ -16,7 +16,7 @@ BACKUP_DIR = WORKSPACE_ROOT / "vault_backup"
 VPS_HOST = '159.223.183.138'
 VPS_PORT = 22
 VPS_USER = 'root'
-VPS_PASS = '25021121Wow'
+VPS_PASS = os.environ.get('VPS_PASS', '')
 
 def create_backup():
     print("=== STARTING SAFE VAULT BACKUP ===")
