@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -5,7 +6,10 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parent.parent
-ROSIE = ROOT / "public_sites" / "rosie" / "index.html"
+ROSIE_DIR = ROOT / "public_sites" / "rosie"
+ROSIE = ROSIE_DIR / "index.html"
+ROSIE_MANIFEST = ROSIE_DIR / "manifest.json"
+PROTOTYPE_ROUTES = {"portal.html", "portal-hermes.html"}
 
 
 def _page():
@@ -30,9 +34,19 @@ def test_estate_filter_counts_are_derived_from_cards_and_handlers_are_wired():
     assert 'btn.addEventListener(\'click\'' in page
 
 
-def test_production_index_does_not_expose_prototype_portal_surface():
+def test_production_manifest_starts_at_public_entry_point():
+    manifest = json.loads(ROSIE_MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["start_url"] == "index.html"
+    assert manifest.get("scope") == "./"
+    assert not any(route in manifest["start_url"].lower() for route in PROTOTYPE_ROUTES)
+    assert all(not (ROSIE_DIR / route).exists() for route in PROTOTYPE_ROUTES)
+
+
+def test_production_index_does_not_expose_prototype_portal_routes():
     page = _page()
-    assert not re.search(r'href=["\'](?:\./)?portal\.html(?:["\'#?])', page, re.IGNORECASE)
+    assert not re.search(r"(?:href|src|action)=[\"'][^\"']*(?:portal|portal-hermes)\.html(?:[\"'#?])", page, re.IGNORECASE)
+    assert not any(route in page.lower() for route in PROTOTYPE_ROUTES)
+    assert not any((ROSIE_DIR / route).exists() for route in PROTOTYPE_ROUTES)
     assert "Executive Client Portal" not in page
 
 

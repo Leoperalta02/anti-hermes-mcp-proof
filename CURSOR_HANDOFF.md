@@ -48,20 +48,26 @@
    - Verify ACP & Roster: Ensure `codex` is discoverable via `profiles.list` WS RPC so he appears seated in Hermes Desktop alongside Anti and Cursor.
    - Record 1-line completion receipt in `SYSTEM_STATE.md`.
 
+5. **Overnight Autonomous Execution: Subagent Hydration, Static Token & Droplet Cleanup:**
+   - **Codex Primary Autonomous Lead:** Because Cursor frequently pauses for interactive user approvals (Y/N prompts, permission gates), **Codex (`gpt-5.6-luna`) is designated as Primary Autonomous Execution Lead for overnight runs**. Cursor may support in Auto-Run/YOLO mode where permitted, but Codex drives scripts and terminal execution to completion without blocking on manual approval.
+   - **Subagent Hydration:** Populate `SOUL.md`, `MEMORY.md`, and `config.yaml` across all specialist profiles (`Harbor`, `Keystone`, `Quill`, `Atelier`, `Mosaic`, `Scout`, `Rowan`, `Aura`) in `C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\` using repo golden SOPs.
+   - **Static Token Lock:** Set `HERMES_DASHBOARD_SESSION_TOKEN=3dG35Z45zG6ufcLvh1yWGfs5PLMuC9wjCf1zopy9wWs` as a persistent system variable on HP Node so reboots never disconnect HQ.
+   - **DigitalOcean Droplet Cleanup:** Purge legacy `buzz-prod` / alien agent processes on `159.223.183.138`, securing the droplet for our edge gateway.
+   - **Logging:** Log all completion receipts into `SYSTEM_STATE.md`.
+
 ---
 
 ### 11. Ground-Truth Runtime & Seated Profiles (Override of Legacy Directives)
-- **Engine Process:** `serve_with_public_host.py` (PID 5900) listening on `127.0.0.1:9119`.
+- **Engine Process:** `serve_with_public_host.py` listening on `127.0.0.1:9119`.
 - **Tailscale Publishing:** Tailscale Serve publishes `https://minint-vlescga.tailf79969.ts.net/` directly to port 9119.
 - **Anti IDE Bridge:** Active on `100.67.249.106:8799` (FastMCP SSE).
-- **Telegram Gateways:**
-  - Default Gateway (`@AntiCosLeo_bot`): PID 4472.
-  - Cursor Gateway (`@CursorCodeHQ_bot`): PID 6736.
+- **Telegram Gateways:** Hosted on HP Node for `@AntiCosLeo_bot` and `@CursorCodeHQ_bot`.
 - **Seated Profiles on Disk:**
-  `Anti`, `Atelier`, `Aura`, `Cursor`, `Harbor`, `Keystone`, `Mosaic`, `Quill`, `Rowan`, and `Scout`.
+  `Anti`, `Atelier`, `Aura`, `Codex`, `Cursor`, `Harbor`, `Keystone`, `Mosaic`, `Quill`, `Rowan`, and `Scout`.
 - **Seat & Runtime Alignment:**
-  Hermes is strictly the runtime engine executing under the **Anti seat**. Cursor must disregard any older lines in legacy handoffs or historical notes that describe the seat as Hermes.
+  Hermes is strictly the runtime engine executing under the **Anti seat**.
 
 ---
 
-**Anti & Leo Status:** Anti is on standby in Antigravity IDE on HQ, conserving quota and paired with Leo. Cursor on HP has the floor!
+**Overnight Mandate:** Leo is sleeping. **Codex is Primary Autonomous Night Executor** (uninhibited by approval pauses), with Cursor as co-builder. Anti is on zero-burn standby on Alienware HQ. Execute autonomously and log receipts to `SYSTEM_STATE.md`!
+

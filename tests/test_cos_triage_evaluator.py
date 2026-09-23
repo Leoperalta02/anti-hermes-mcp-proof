@@ -189,7 +189,7 @@ class TestCosTriageEvaluator(unittest.TestCase):
         self.assertIn("SOP §12 violation", str(ctx.exception))
 
     def test_live_cos_profile_status(self):
-        """Verify live Alienware hermes-state anti-cos SOUL.md profile is verified if path exists."""
+        """Verify live Alienware active CoS SOUL.md profile is verified if path exists."""
         if DEFAULT_COS_PROFILE_PATH.exists():
             live_eval = CosTriageEvaluator()
             is_valid, missing = live_eval.verify_cos_prompt_block()

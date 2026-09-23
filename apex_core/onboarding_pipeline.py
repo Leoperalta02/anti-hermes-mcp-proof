@@ -71,6 +71,7 @@ class RealtorOnboardingPipeline:
         # 2. INGESTION & DISCOVERY BRIEF ARCHIVE
         # ----------------------------------------------------
         brief_filename = f"{datetime.now().strftime('%Y%m%dT%H%M%SZ')}-{slug}.json"
+        os.makedirs(BRIEFS_DIR, exist_ok=True)
         brief_path = os.path.join(BRIEFS_DIR, brief_filename)
         brief_payload = {
             "client_name": name,

@@ -1,89 +1,110 @@
 {
-  "timestamp": "2026-08-26T14:23:02.337528",
+  "timestamp": "2026-09-05T12:23:14.335756",
   "sync_status": "SYNCHRONIZED",
   "antigravity_2_0_active": true,
   "git_state": {
-    "is_repo": false,
-    "branch": "unknown",
-    "latest_commit": "none",
-    "modified_files": []
+    "is_repo": true,
+    "branch": "main",
+    "latest_commit": "a3822b4 - feat(onboarding): add /api/onboarding/provision endpoint to listing intake server (6 minutes ago)",
+    "modified_files": [
+      "M AGENTS.md",
+      "M apex_core/listing_intake_queue.json",
+      "M apex_core/office_listings.json",
+      "M data/tenants.json",
+      "M evidence/brief_telegram_alert.json",
+      "M evidence/brief_triage_log.jsonl",
+      "M evidence/onboarding_alert.json",
+      "M evidence/processed_briefs.json",
+      "M evidence/telegram_dispatch_latest.json",
+      "M evidence/telegram_dispatch_log.jsonl",
+      "M landing_page/app.js",
+      "M landing_page/brief_receiver.py",
+      "?? landing_page/assets/Leo_CEO.png.bak-gold-circuit",
+      "?? landing_page/onboarding.html",
+      "?? landing_page/rosy_demo.py",
+      "?? landing_page/workspace.css",
+      "?? landing_page/workspace.html",
+      "?? landing_page/workspace.js",
+      "?? onboarding.html",
+      "?? tests/test_rosy_demo.py"
+    ]
   },
   "recent_modifications": [
     {
-      "path": "real-estate-web\\index.html",
-      "mtime": 1787768572.055892,
-      "last_modified": "2026-08-26T14:22:52.055892"
+      "path": "evidence\\onboarding_alert.json",
+      "mtime": 1788624994.8969264,
+      "last_modified": "2026-09-05T12:16:34.896926"
     },
     {
-      "path": "evidence\\watchdog_report.json",
-      "mtime": 1787768369.474051,
-      "last_modified": "2026-08-26T14:19:29.474051"
+      "path": "evidence\\telegram_dispatch_latest.json",
+      "mtime": 1788624994.8969264,
+      "last_modified": "2026-09-05T12:16:34.896926"
     },
     {
-      "path": "evidence\\workspace_sync.json",
-      "mtime": 1787768369.472546,
-      "last_modified": "2026-08-26T14:19:29.472546"
+      "path": "evidence\\telegram_dispatch_log.jsonl",
+      "mtime": 1788624994.895928,
+      "last_modified": "2026-09-05T12:16:34.895928"
     },
     {
-      "path": "hq_watchdog.py",
-      "mtime": 1787768363.924203,
-      "last_modified": "2026-08-26T14:19:23.924203"
+      "path": "data\\tenants.json",
+      "mtime": 1788624994.7220633,
+      "last_modified": "2026-09-05T12:16:34.722063"
     },
     {
-      "path": "real-estate-web\\server.py",
-      "mtime": 1787768341.058792,
-      "last_modified": "2026-08-26T14:19:01.058792"
+      "path": "public_sites\\rosie\\icon-512.png",
+      "mtime": 1788624987.1997564,
+      "last_modified": "2026-09-05T12:16:27.199756"
     },
     {
-      "path": "server.py",
-      "mtime": 1787767429.3680687,
-      "last_modified": "2026-08-26T14:03:49.368069"
+      "path": "public_sites\\rosie\\icon-192.png",
+      "mtime": 1788624987.1307223,
+      "last_modified": "2026-09-05T12:16:27.130722"
     },
     {
-      "path": "state_sync_engine.py",
-      "mtime": 1787767419.1822467,
-      "last_modified": "2026-08-26T14:03:39.182247"
+      "path": "public_sites\\rosie\\icon.svg",
+      "mtime": 1788624987.1207175,
+      "last_modified": "2026-09-05T12:16:27.120718"
     },
     {
-      "path": "leo_hq_telegram_bot.py",
-      "mtime": 1787766880.1576793,
-      "last_modified": "2026-08-26T13:54:40.157679"
+      "path": "public_sites\\rosie\\manifest.json",
+      "mtime": 1788624987.1207175,
+      "last_modified": "2026-09-05T12:16:27.120718"
     },
     {
-      "path": "telegram_bot.py",
-      "mtime": 1787766872.0993662,
-      "last_modified": "2026-08-26T13:54:32.099366"
+      "path": "public_sites\\rosie\\portal.html",
+      "mtime": 1788624987.1197178,
+      "last_modified": "2026-09-05T12:16:27.119718"
     },
     {
-      "path": "evidence\\escalations.json",
-      "mtime": 1787766865.8482845,
-      "last_modified": "2026-08-26T13:54:25.848284"
+      "path": "public_sites\\rosie\\index.html",
+      "mtime": 1788624987.118719,
+      "last_modified": "2026-09-05T12:16:27.118719"
     },
     {
-      "path": "escalation_engine.py",
-      "mtime": 1787766862.2294674,
-      "last_modified": "2026-08-26T13:54:22.229467"
+      "path": "public_sites\\rosie\\assets\\headshot.png",
+      "mtime": 1788624987.1167188,
+      "last_modified": "2026-09-05T12:16:27.116719"
     },
     {
-      "path": "gpu_bridge.py",
-      "mtime": 1787676971.0545313,
-      "last_modified": "2026-08-25T12:56:11.054531"
+      "path": "landing_page\\onboarding.html",
+      "mtime": 1788624950.7409341,
+      "last_modified": "2026-09-05T12:15:50.740934"
     },
     {
-      "path": "NIKKI_CONVERSION_PLAYBOOK.md",
-      "mtime": 1787670270.5938773,
-      "last_modified": "2026-08-25T11:04:30.593877"
+      "path": "onboarding.html",
+      "mtime": 1788624920.1409118,
+      "last_modified": "2026-09-05T12:15:20.140912"
     },
     {
-      "path": "PROJECT_BLUEPRINT_NETWORK_SECURITY_MSP.md",
-      "mtime": 1787461369.3708737,
-      "last_modified": "2026-08-23T01:02:49.370874"
+      "path": "apex_core\\listing_intake_server.py",
+      "mtime": 1788624879.994336,
+      "last_modified": "2026-09-05T12:14:39.994336"
     },
     {
-      "path": "PROJECT_BLUEPRINT_AI_HIGHLEVEL.md",
-      "mtime": 1787461189.6913097,
-      "last_modified": "2026-08-23T00:59:49.691310"
+      "path": "AGENTS.md",
+      "mtime": 1788624570.1899662,
+      "last_modified": "2026-09-05T12:09:30.189966"
     }
   ],
-  "hermes_sandbox_last_active": "2026-08-21T00:08:42.827893"
+  "hermes_sandbox_last_active": "2026-09-05T10:51:55.727218"
 }

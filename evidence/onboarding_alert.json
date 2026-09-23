@@ -1,7 +1,7 @@
 {
   "channel": "telegram:8349762599",
   "brief_id": "onboarding-rosie",
-  "timestamp": "2026-09-04T22:25:01.137136+00:00",
+  "timestamp": "2026-09-21T06:42:05.078846+00:00",
   "event": "NEW_REALTOR_ONBOARDED_AND_DEPLOYED",
   "classification": "GATE:DRYRUN",
   "claims": {
@@ -12,9 +12,9 @@
     "voice_enabled": false,
     "calendar_synced": false
   },
-  "message": "\ud83d\ude80 [APEX ONBOARDING SUCCESS]\n\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83d\udcb3 Payment: $499/mo PAID (RCPT-20260904-ROSIE)\n\n\ud83c\udf10 Front Door: public_sites/rosie/index.html\n\ud83d\udd10 Back Door: public_sites/rosie/portal.html\n\ud83d\udce8 Welcome Dispatch: Staged for rosie@rosieriveraluxury.com\n\n\ud83d\udee1\ufe0f Posture (\u00a712): STAGED ONLY \u2014 specialist drafts await signoff.\nGate: DRYRUN",
+  "message": "\ud83d\ude80 [APEX ONBOARDING SUCCESS]\n\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83d\udcb3 Payment: $499/mo PAID (RCPT-20260921-ROSIE)\n\n\ud83c\udf10 Front Door: public_sites/rosie/index.html\n\ud83d\udd10 Back Door: public_sites/rosie/portal.html\n\ud83d\udce8 Welcome Dispatch: Staged for rosie@rosieriveraluxury.com\n\n\ud83d\udee1\ufe0f Posture (\u00a712): STAGED ONLY \u2014 specialist drafts await signoff.\nGate: DRYRUN",
   "dispatch": {
-    "timestamp": "2026-09-04T22:25:01.137136+00:00",
+    "timestamp": "2026-09-21T06:42:05.078846+00:00",
     "brief_id": "onboarding-rosie",
     "channel": "telegram:8349762599",
     "dispatch_status": "LIVE_BLOCKED_NO_TOKEN",
@@ -28,7 +28,7 @@
       "voice_enabled": false,
       "calendar_synced": false
     },
-    "message_preview": "\ud83d\ude80 [APEX ONBOARDING SUCCESS]\n\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83d\udcb3 Payment: $499/mo PAID (RCPT-20260904-ROSIE)\n\n\ud83c\udf10 Front Door: public_sites/rosie/index.html\n\ud83d\udd10 Back Door: public_s",
+    "message_preview": "\ud83d\ude80 [APEX ONBOARDING SUCCESS]\n\n\ud83d\udc64 Realtor: Rosie Rivera\n\ud83c\udfe2 Brokerage: Rosie Rivera Luxury Real Estate\n\ud83d\udccd Market: Estero & Naples, FL\n\ud83d\udcb3 Payment: $499/mo PAID (RCPT-20260921-ROSIE)\n\n\ud83c\udf10 Front Door: public_sites/rosie/index.html\n\ud83d\udd10 Back Door: public_s",
     "reason": "APEX_TELEGRAM_LIVE=1 but APEX_TELEGRAM_BOT_TOKEN missing"
   }
 }

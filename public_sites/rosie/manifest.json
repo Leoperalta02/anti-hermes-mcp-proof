@@ -2,7 +2,7 @@
   "name": "Rosie Rivera \u2022 Sovereign Realtor OS",
   "short_name": "Rosie OS",
   "description": "Private Sovereign Realtor Operating System for Rosie Rivera \u2014 Real-time CRM, Leads, Keystone CMA, and Listing Management.",
-  "start_url": "portal.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

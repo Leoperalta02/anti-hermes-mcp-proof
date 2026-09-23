@@ -220,3 +220,16 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Codex formally accepted role: Fallback Super Agent Engineer & Independent Validator.
   (2) Lane locked: Independent validation, code auditing, and failover engineering without collision with Anti's architectural authority or Cursor's primary build lane.
   (3) Verified seat on HP Node (`profiles/codex`), MCP/ACP bridges, and Rule 10 compliance accepted.
+- [2026-09-22 23:34:00 EDT] [Codex, Cursor & Leo Peralta] CURSOR RECOVERY VERIFIED & HP NODE REBOOT PENDING:
+  (1) Cursor 3.21.9 update hit file lock on resources directory; Codex executed automated rollback from updater backup.
+  (2) Cursor restored to working v3.20.10, successfully launched (PID 14356). All repository/project files verified intact.
+  (3) Planned action: Save open work and reboot HP Compute Node to clear Windows filesystem file locks before retrying update.
+- [2026-09-23 00:12:00 EDT] [Cursor, Anti & Leo Peralta] POST-REBOOT HP NODE FULL FLEET RESTORATION VERIFIED:
+  (1) Hermes Desktop re-attached to HP Node via live open WebSocket (`tailscaled` PID 8088 -> `127.0.0.1:9119` PID 10016) over Tailscale Serve (`https://minint-vlescga.tailf79969.ts.net`).
+  (2) HTTP endpoints healthy: `/api/status` HTTP 200, gateway state running, Telegram connected.
+  (3) Background daemons verified operational: Listing Intake on port 8765, Brief Receiver on port 8787.
+  (4) Telegram gateways active: Default (@AntiCosLeo_bot) and Cursor (@CursorCodeHQ_bot) polling cleanly with verified heartbeats.
+- [2026-09-23 00:21:00 EDT] [Cursor, Anti & Leo Peralta] DIGITALOCEAN DROPLET (VPS) LIVE AUDIT VERIFIED:
+  (1) Target: `159.223.183.138` (`ubuntu-s-1vcpu-1gb-nyc1`, NYC1).
+  (2) Ports: SSH (:22) open; HTTP (:80) open, HTTP 200 (26,886 bytes, uvicorn, title: 'ALIEN AGENTS Fleet Command').
+  (3) Perimeter: HTTPS (:443) closed; internal data ports (:5432, :6379, :9000) securely closed to external internet.

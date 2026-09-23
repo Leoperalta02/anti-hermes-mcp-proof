@@ -62,7 +62,10 @@ class TestMentionAgentToolGovernance(unittest.TestCase):
         set_active_round_seats({"grok 2"})
         # Tested at unit level: if event_id evaluates to unknown/none, returns [STOP — NO EVENT ID]
 
-    def test_send_managed_agent_blocked_in_alienware_hq(self):
+    from unittest.mock import patch
+
+    @patch("tools.managed_agent_tool._is_alienware_hq_hold_active", return_value=True)
+    def test_send_managed_agent_blocked_in_alienware_hq(self, _mock_hold):
         """Rule 6: HOLD Enforcement — send_managed_agent blocked on #Alienware-hq."""
         set_current_channel("alienware-hq", "alienware-hq-id")
         res = send_managed_agent({"target_agent": "Pollen", "content": "test"})

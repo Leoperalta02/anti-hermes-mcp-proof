@@ -1,1 +1,119 @@
-[]
+[
+  {
+    "listing_id": "central-corridor-9200-sw-42nd-street-miami-flori",
+    "queue_status": "APPROVED_FOR_SHOWCASE",
+    "listing": {
+      "listing_id": "central-corridor-9200-sw-42nd-street-miami-flori",
+      "title": "Central Corridor Coastal Estate",
+      "address": "9200 SW 42nd Street Miami Florida 33165",
+      "subdivision": "Central Corridor",
+      "price": 682000.0,
+      "status": "FOR_SALE",
+      "specs": {
+        "beds": 3,
+        "baths": "2.5",
+        "sqft": 2200,
+        "pool": true,
+        "view": "Resort Lanai \u2022 Flood Zone X"
+      },
+      "photos": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "video_url": null,
+      "tenant_slug": "rosie",
+      "submitted_at": "2026-09-05T15:34:29.933265+00:00"
+    },
+    "enrichment": {
+      "status": "ENRICHMENT_STAGED",
+      "listing_id": "central-corridor-9200-sw-42nd-street-miami-flori",
+      "keystone": {
+        "listing_id": "central-corridor-9200-sw-42nd-street-miami-flori",
+        "address": "9200 SW 42nd Street Miami Florida 33165",
+        "subdivision": "Central Corridor",
+        "list_price": 682000.0,
+        "sqft": 2200.0,
+        "price_per_sqft": 310.0,
+        "price_per_sqft_display": "$310/sqft",
+        "comp_spread": {
+          "low": 647900.0,
+          "high": 716100.0,
+          "display": "$647,900 - $716,100",
+          "tolerance_pct": 5
+        },
+        "subdivision_benchmark": {
+          "low_per_sqft": 310,
+          "high_per_sqft": 340,
+          "display": "$310 \u2013 $340 / sq.ft"
+        },
+        "status": "DRAFT_PENDING_APPROVAL",
+        "generated_at": "2026-09-05T15:34:29.933265+00:00",
+        "claims": {
+          "agent_deployed": false,
+          "portal_created": false,
+          "mls_connected": false,
+          "published_live": false,
+          "voice_enabled": false,
+          "calendar_synced": false
+        }
+      },
+      "quill_narrative": "**Central Corridor Coastal Estate** unfolds as a masterwork of Florida luxury living in Central Corridor. 3 bedrooms and 2.5 baths frame 2,200 square feet of refined indoor-outdoor flow \u2014 impact-glass sliders dissolve into an expansive lanai where resort-caliber heated pool and extended lanai, Southwest Florida golden-hour sunsets become part of daily life.\n\nKeystone benchmarks this residence at **$310/sqft**, positioned within a **\u00b15% comp corridor** of **$647,900 - $716,100**. Quill copy is staged for realtor approval before any MLS or public publish.",
+      "tagline": "Modern Florida luxury in Central Corridor with resort-caliber heated pool and extended lanai.",
+      "quill_path": "C:\\LEO-LAB-ANTIGRAVITY\\hermes-state\\profiles\\real-estate-copilot\\tenants\\rosie\\quill\\listings\\central-corridor-9200-sw-42nd-street-miami-flori.md",
+      "keystone_path": "C:\\LEO-LAB-ANTIGRAVITY\\hermes-state\\profiles\\real-estate-copilot\\tenants\\rosie\\keystone\\valuation_central-corridor-9200-sw-42nd-street-miami-flori.json",
+      "claims": {
+        "agent_deployed": false,
+        "portal_created": false,
+        "mls_connected": false,
+        "published_live": false,
+        "voice_enabled": false,
+        "calendar_synced": false
+      },
+      "timestamp": "2026-09-05T15:34:29.936262+00:00"
+    },
+    "keystone": {
+      "listing_id": "central-corridor-9200-sw-42nd-street-miami-flori",
+      "address": "9200 SW 42nd Street Miami Florida 33165",
+      "subdivision": "Central Corridor",
+      "list_price": 682000.0,
+      "sqft": 2200.0,
+      "price_per_sqft": 310.0,
+      "price_per_sqft_display": "$310/sqft",
+      "comp_spread": {
+        "low": 647900.0,
+        "high": 716100.0,
+        "display": "$647,900 - $716,100",
+        "tolerance_pct": 5
+      },
+      "subdivision_benchmark": {
+        "low_per_sqft": 310,
+        "high_per_sqft": 340,
+        "display": "$310 \u2013 $340 / sq.ft"
+      },
+      "status": "DRAFT_PENDING_APPROVAL",
+      "generated_at": "2026-09-05T15:34:29.933265+00:00",
+      "claims": {
+        "agent_deployed": false,
+        "portal_created": false,
+        "mls_connected": false,
+        "published_live": false,
+        "voice_enabled": false,
+        "calendar_synced": false
+      }
+    },
+    "claims": {
+      "agent_deployed": false,
+      "portal_created": false,
+      "mls_connected": false,
+      "published_live": false,
+      "voice_enabled": false,
+      "calendar_synced": false
+    },
+    "external_send_blocked": true,
+    "send_gate": "LEO_AND_REALTOR_APPROVAL_REQUIRED",
+    "submitted_at": "2026-09-05T15:34:29.933265+00:00",
+    "approved_at": "2026-09-05T15:34:51.120379+00:00"
+  }
+]

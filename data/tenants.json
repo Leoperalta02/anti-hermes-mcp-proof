@@ -93,5 +93,26 @@
     },
     "status": "ACTIVE",
     "created_at": "2026-09-04T00:00:00Z"
+  },
+  {
+    "id": "tenant_leo_test",
+    "name": "Leo Peralta Test",
+    "company_name": "Peralta Luxury",
+    "vertical": "LUXURY_REAL_ESTATE",
+    "phone_number": "239-555-0199",
+    "subdomain_slug": "leo_test",
+    "languages": [
+      "en",
+      "es"
+    ],
+    "tagline": "Private Client Luxury Real Estate Advisory",
+    "headshot_path": "landing_page\\assets\\Rosie.png",
+    "flyer_path": null,
+    "buzz_channel": null,
+    "vapi_assistant_id": null,
+    "google_drive_folder": null,
+    "custom_colors": null,
+    "status": "ACTIVE",
+    "created_at": null
   }
 ]

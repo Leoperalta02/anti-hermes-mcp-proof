@@ -1,128 +1,33 @@
-# Anti Status — Hermes / Rosie Ops
+# Anti Status — Live System & Agent State
 
-**Updated:** 2026-09-05 9:35 AM EDT (13:35 UTC)  
-**Anti host:** **ONLINE & ACTIVE** — Alienware IDE operational  
-**Division of labor:** Anti (Lead Local Author / Host Runtime Auditor) · Cursor (Fallback CLI / Staging Reviewer) · Hermes (Chief of Staff)
-
----
-
-## Directives Completed (By Leo's Direction During Hermes Recovery)
-
-| Item | Direct Action Taken | Status |
-| --- | --- | --- |
-| **Front-Door Intake Separation** | Purged listing media intake modal/buttons completely from public tenant site (`index.html`). Enclosed intake strictly inside private Realtor back-office portal (`portal.html#listings`). | **PASS** (Commit `f5ab14a`) |
-| **Realtor Standalone Mobile PWA** | Built standalone iOS/Android mobile app experience for Rosie's portal (`manifest.json`, `apple-mobile-web-app-capable`, luxury gold icons, frosted-glass install banner). Audited at 390×844 mobile viewport. | **PASS** (Commit `7b68b13`) |
-| **Cursor Collaboration & Fallback** | Aligned with Hermes on scoped CLI workspace for Cursor on Alienware. Fail-closed on live actions, no vault credentials, changes staged/reviewed. | **PASS** (Approved) |
-| **Gateway Supervision** | PID **37056** confirmed up and healthy; zero crashes; Core PID **32028** active | **PASS** |
-| **Live Tool Governance** | `update_managed_agent_tool_governance.py` executed on Alienware | **PASS** (HQ HOLD lifted in tool) |
-| **Test Coverage** | `test_listing_intake.py` (5/5), `test_lead_flow.py` (6/6), `test_rosy_demo.py` (5/5) | **100% PASS** |
+**Updated:** September 19, 2026 — 3:20 PM EDT (19:20 UTC)  
+**Anti Host:** **ONLINE & ACTIVE** — Alienware HQ IDE paired with Leo Peralta  
+**Cursor Status:** **ALIGNED & ARMED** — Native `cursor.cmd agent` updated via [CURSOR_HANDOFF.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/CURSOR_HANDOFF.md)  
+**Hermes Status:** **OPERATIONAL CLERK / GATEWAY** — Demoted to inbound alerts/gateway polling per [AGENTS.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/AGENTS.md)  
 
 ---
 
-## Phase A — Engine (Anti)
+## 🟢 Live Multi-Platform Authentication (100% Active)
 
-| Task | Status | Evidence |
-| --- | --- | --- |
-| A1 Gateway supervision | **PASS** | WMI-detached daemon; Scheduled Task `Hermes_Gateway`; PID **37056** |
-| A2 Electron git path fix | **PASS** | `allowUnsafeCustomBinary: true` in `git-review-ops.ts`; Desktop active |
-| A3 SQLite Lease Guardian | **PASS** | `apex_core/lease_guardian.py` daemon PID **4284**; 28/28 tests |
-| A4 72h uptime watch | **IN PROGRESS** | 12h+ clean; no unclean exits on gateway |
-| A5 Telegram polling | **PASS** | Sticky polling active; 8am standup delivered to Telegram |
-| A6 Aura Storage & Inbox Sentinel | **PASS** | WMI-detached daemon PID **33372**; 15-min heartbeat; Samsung Drive `D:\Email_Archives` |
-
-**Commit:** `053aee7` on `github/main` (lease guardian + HERMES_STATUS)
+| Channel | Identity / Handle | Auth Mode | Composio Status | Vault Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Instagram** | `@apex.luxury.agent` | Meta OAuth 2.0 (Professional Creator) | **ACTIVE** (`ca_IDEvxXXdn741`) | DPAPI Hardware-Encrypted |
+| **Gmail** | `apex.luxury.agent@gmail.com` | Google OAuth 2.0 | **ACTIVE** (`ca_88CzUZrqIHzL`) | DPAPI Hardware-Encrypted |
+| **Facebook** | Leo Peralta (`Apex Luxury AI`) | Meta OAuth 2.0 | **ACTIVE** (`ca_M9uJoRkOmjUn`) | DPAPI Hardware-Encrypted |
 
 ---
 
-## Phase B — Wiring (Authorized & Complete)
+## 🚀 Persistent Social Intelligence Engine (`social_intel/`)
 
-Leo **"all provisions are approved"** recorded. Specs on `github/main`: `ROSIE_ONBOARDING_SOP.md`, `COS_PROACTIVE_SOP.md`, `DELEGATION_SANDBOX_SPEC.md`.
-
-### Rosie (`ROSIE_ONBOARDING_SOP.md` §10) — ALL W1–W5 VERIFIED & PASS ✅
-
-| # | Task | Verify | Status |
-| --- | --- | --- | --- |
-| W1 | Folder watch/cron: `onboarding-briefs/*.json` → Hermes task | Test file triggers alert (`test_brief_watcher.py`) | **PASS** |
-| W2 | Telegram alert template (no false claims) | Structured alert in `evidence/brief_telegram_alert.json` | **PASS** (Staged) |
-| W3 | Hermes triage prompt block in CoS profile | Synced into `anti-cos/SOUL.md`; `cos_triage_evaluator.py` | **PASS** |
-| W4 | Tenant skeleton under `hermes-state/profiles/real-estate-copilot/` | `tenant_skeleton_manager.py`; Rosie tenant & SOUL.md synced | **PASS** |
-| W5 | Internal delegation sandbox | `delegation_sandbox.py`; multi-agent dry-run §9 passes; `send_managed_agent` sandbox guard | **PASS** |
-
-### CoS (`COS_PROACTIVE_SOP.md` §10) — P1–P5 WIRED ✅
-
-| # | Task | Verify | Status |
-| --- | --- | --- | --- |
-| P1 | Cron 8am + 6pm standup template | `apex_core/cos_proactive.py` → §4 format | **PASS** |
-| P2 | System prompt §2 + §9 rubric | `COS_PROACTIVE_PROMPT_BLOCK`; "hey" → standup | **PASS** |
-| P3 | Folder watch: `onboarding-briefs/` | Covered by W1 `brief_watcher.py` | **PASS** (via W1) |
-| P4 | Gateway health probe preamble | `GatewayHealthProbe`; DOWN → alert-first | **PASS** |
-| P5 | Read `ANTI_STATUS.md` + `HERMES_STATUS.md` | `StatusTelemetryReader` → standup bullets | **PASS** |
-
-Verified via `tests/test_cos_proactive.py` (14/14 PASS).
+- **Scout:** Dual-mode collection (Playwright persistent profile + official Composio token calls).
+- **Rowan:** Cross-platform deduplication, SHA256 receipt generation, and structured decision-packet synthesis.
+- **Mosaic:** Strictly review-gated asset ingestion to `assets/mosaic_deliverables/` for human review in Apex Social Desk before scheduling.
+- **Test Suite:** `tests/test_social_intel_pipeline.py` **3/3 PASS (100%)**.
 
 ---
 
-## Tool Governance & Sandboxing Updates
+## 🏛️ Runtimes & Infrastructure
 
-- **`send_managed_agent` Channel Guards**:
-  - `#panel-advisors` — hard blocked with `[STOP — TOOL DENY]`
-  - `#Alienware-hq` — hard blocked with `[STOP — HOLD ACTIVE]`
-  - Specialist agents (`Harbor`, `Keystone`, `Quill`, `Rosie`) — hard blocked outside sandbox channels (`#rosie-onboarding-sandbox`, `#wellington-canary`) with `[STOP — SANDBOX VIOLATION]`; fails closed if channel context is missing or None
-- **Live Sync**: Synced to `C:\LEO-LAB-ANTIGRAVITY\hermes-agent\tools\managed_agent_tool.py`
-
----
-
-## Dry-Run Verification (§9 ROSIE_ONBOARDING_SOP.md) — PASS
-
-- **Executive Approval:** Leo Peralta sent **`all provisions are approved`** (and prior **`APPROVED PROVISION DRYRUN`**)
-- **Execution Script:** `apex_core/execute_dryrun_lead.py` & `DelegationSandbox.run_mock_delegation()`
-- **Result:** **PASS** (Zero external sends, all false-claim boundaries respected)
-- **Lead Name:** `DRYRUN Rosie Test` (Apex Staging Brokerage, Estero FL)
-- **Staged Brief:** `business-scope/onboarding-briefs/20260904T003033Z-dryrun-rosie-test.json` (.md included)
-- **Staged Tenant:** `business-scope/tenants/dryrun-rosie-test/TENANT_MANIFEST.json`
-- **Drafts Generated on Disk:**
-  - **Harbor:** `business-scope/tenants/dryrun-rosie-test/harbor/follow_up_queue.json` & protocol
-  - **Keystone:** `business-scope/tenants/dryrun-rosie-test/keystone/cma_market_consult.md`
-  - **Quill:** `business-scope/tenants/dryrun-rosie-test/quill/listing_marketing_drafts.md`
-- **Test Suite:** `python -m unittest discover -s tests` → **89/89 PASS** (0 failures, 0 errors, 0.59s)
-
----
-
-## Listing & Media Intake Agent (Cursor Sprint, Audited by Anti) — PASS ✅
-
-- **Commit:** `f818e11` pushed directly to `github/main` via Cursor PAT integration.
-- **Engine Module:** `apex_core/listing_media_agent.py`
-  - Ingestion of property submissions with photo/video media and status (`FOR_SALE`, `UNDER_CONTRACT`, `RECORD_SOLD`).
-  - Automated Keystone valuation $/sqft benchmark + ±5% comp corridor calculation.
-  - Automated Quill Florida luxury architectural narrative staged under `tenants/{slug}/quill/listings/`.
-  - Staging into `apex_core/office_listings.json` with `FastSiteBuilder` compatibility.
-- **Audited Tests:** `tests/test_listing_media_agent.py` (**5/5 PASS**, 0.05s).
-- **Browser Audit:** Apple Lightbox Estate Dossier Modal and kinetic horizontal carousel verified on `public_sites/rosie/index.html#estates`.
-
----
-
-## HOLD (updated Sep 04)
-
-- `#Alienware-hq` — **LIFTED in evidence** (`operator_gates.json`); Anti must re-run governance patch on host
-- Buzz / Nostr relay — retired
-- Vapi production webhooks — HOLD until Leo separate gate
-
----
-
-## Role Division (Sep 04, 2026 — 7:24 PM UTC)
-
-**Credit conservation:** Leo reversed roles — Anti **Code Author** (local IDE only); Cursor **Auditor** (cloud).
-
-| Anti (local) | Cursor (cloud) |
-| --- | --- |
-| Write & push code | Audit diffs + unittest discover |
-| Skip cloud-agent audit loops | Browser/showcase verification |
-| HOLD gate on `#Alienware-hq` unchanged | Record verdicts in `CURSOR_REVIEW.md` |
-
-Listing agent `f818e11` audit **PASS** (Anti, 3:24 PM EDT) — final audit under old division.
-
----
-
-## QUEUED (from Leo / Hermes)
-
-_None._
+- **Alienware HQ (`192.168.1.133`):** RTX 3070 Ti idle, ComfyUI ready, local Ollama models verified.
+- **HP Compute Node (`192.168.1.248`):** Listing Intake Engine on port `8765` verified responding (`HTTP 200`).
+- **Authoritative Ledger:** Synchronized with receipts in [SYSTEM_STATE.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/SYSTEM_STATE.md).

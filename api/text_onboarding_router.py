@@ -89,7 +89,7 @@ class TextOnboardingRouter:
         if asset_count > 0:
             return (
                 f"Got your {asset_count} image(s), {name}! 📸✨ "
-                f"Fizz is adding them to your custom landing page right now. "
+                f"Hermes is staging them into your custom luxury showcase right now. "
                 f"We'll have your live preview ready in 2 minutes!"
             )
         else:

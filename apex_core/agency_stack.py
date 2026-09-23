@@ -35,23 +35,29 @@ class ComposioConnector:
     Connects AI agents to 250+ SaaS tools via managed OAuth & API keys.
     """
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("COMPOSIO_API_KEY", "ck_4P3BHpCXBhKp70Xa8dbz")
-        self.status = "INITIALIZED"
+        if not api_key:
+            try:
+                import aura_vault
+                api_key = aura_vault.get("COMPOSIO_API_KEY")
+            except Exception:
+                api_key = os.getenv("COMPOSIO_API_KEY")
+        self.api_key = api_key
+        self.status = "INITIALIZED" if self.api_key else "MISSING_KEY"
         self.connected_tools = [
             "gmail", "google_calendar", "slack", "notion", 
-            "hubspot", "salesforce", "twilio", "vapi"
+            "hubspot", "salesforce", "twilio", "vapi", "instagram", "facebook"
         ]
 
     def get_auth_link(self, app_name: str, redirect_uri: str = "http://localhost:8080/callback") -> Dict[str, Any]:
         """
-        Generates a 1-click mobile OAuth connection link for the specified app.
+        Generates a 1-click OAuth connection link for the specified app.
         """
         app_lower = app_name.lower().replace(" ", "_")
         return {
             "status": "success",
             "app": app_lower,
-            "auth_url": f"https://composio.dev/auth/connect/{app_lower}?client_id=apex_luxury_ai&redirect={redirect_uri}",
-            "message": f"Tap link on mobile to authorize {app_name} via OAuth 2.0."
+            "auth_url": f"https://dashboard.composio.dev/toolkits/{app_lower}",
+            "message": f"Connect {app_name} via Composio OAuth 2.0."
         }
 
     def list_available_actions(self, app_name: str) -> List[str]:

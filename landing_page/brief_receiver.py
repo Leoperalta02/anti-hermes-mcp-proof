@@ -261,7 +261,7 @@ class BriefHandler(BaseHTTPRequestHandler):
         except Exception as err:
             self.log_message("Hermes triage hook warning: %s", err)
 
-        workspace_url = '/workspace.html?tenant_id=' + workspace['tenant_id']
+        workspace_url = '/workspace?tenant_id=' + workspace['tenant_id']
         self._send(
             201,
             {

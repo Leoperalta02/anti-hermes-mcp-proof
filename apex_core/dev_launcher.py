@@ -7,7 +7,7 @@ Usage:
 
 Rosie quick links (default ports):
   Front door:  http://127.0.0.1:8000/public_sites/rosie/index.html
-  Portal:      http://127.0.0.1:8000/public_sites/rosie/portal.html#listings
+  Prototype portal (internal): http://127.0.0.1:8000/prototypes/rosie/portal.html#listings
   Intake form: http://127.0.0.1:8765/
 """
 
@@ -48,7 +48,8 @@ class ManagedServer:
 
     @property
     def url(self) -> str:
-        return f"http://{self.host}:{self.port}{self.health_path}"
+        check_host = "127.0.0.1" if self.host in ("0.0.0.0", "") else self.host
+        return f"http://{check_host}:{self.port}{self.health_path}"
 
 
 def port_available(host: str, port: int) -> bool:
@@ -106,7 +107,11 @@ def start_intake(host: str, port: int) -> ManagedServer:
     return managed
 
 
-def start_brief(host: str, port: int, brief_dir: Optional[Path] = None) -> ManagedServer:
+def start_brief(
+    host: str = DEFAULT_HOST,
+    port: int = DEFAULT_BRIEF_PORT,
+    brief_dir: Optional[Path] = None,
+) -> ManagedServer:
     from landing_page.brief_receiver import run_server
 
     managed = ManagedServer("brief", host, port, health_path="/health")
@@ -158,7 +163,7 @@ def print_banner(host: str, preview_port: int, intake_port: int, brief_port: int
     print("  Apex Sovereign Realtor OS — Unified Dev Stack")
     print("=" * 62)
     print(f"  Preview (static sites):  http://{host}:{preview_port}/public_sites/rosie/index.html")
-    print(f"  Portal (Listings tab):   http://{host}:{preview_port}/public_sites/rosie/portal.html")
+    print(f"  Prototype portal (internal): http://{host}:{preview_port}/prototypes/rosie/portal.html")
     print(f"  Listing intake API:      http://{host}:{intake_port}/api/listing/queue")
     print(f"  Listing intake form:     http://{host}:{intake_port}/")
     print(f"  Front-door brief POST:   http://{host}:{brief_port}/brief")
@@ -173,7 +178,16 @@ def main() -> None:
     parser.add_argument("--intake-port", type=int, default=DEFAULT_INTAKE_PORT)
     parser.add_argument("--brief-port", type=int, default=DEFAULT_BRIEF_PORT)
     parser.add_argument("--brief-dir", default="", help="Override onboarding-briefs directory")
+    parser.add_argument("--no-wait", action="store_true", help="Skip waiting for local health checks")
     args = parser.parse_args()
+
+    # The public front door posts to this fixed loopback endpoint.  Do not
+    # let a launcher flag create a healthy receiver that the front door will
+    # silently bypass.
+    if args.brief_port != DEFAULT_BRIEF_PORT:
+        parser.error(
+            f"--brief-port must remain {DEFAULT_BRIEF_PORT}; the front door posts to 127.0.0.1:{DEFAULT_BRIEF_PORT}"
+        )
 
     brief_dir = Path(args.brief_dir) if args.brief_dir else None
     servers: List[ManagedServer] = []
@@ -192,6 +206,7 @@ def main() -> None:
         intake_port=args.intake_port,
         brief_port=args.brief_port,
         brief_dir=brief_dir,
+        wait_ready=not args.no_wait,
     )
     print_banner(args.host, args.preview_port, args.intake_port, args.brief_port)
     print("[DevLauncher] All services ready. Press Ctrl+C to stop.\n")

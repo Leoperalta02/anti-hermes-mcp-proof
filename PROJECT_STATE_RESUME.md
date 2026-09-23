@@ -1,49 +1,22 @@
-# 📱 APEX & BUZZ OS — MOBILE SYNCHRONIZATION & CONTINUITY DOSSIER
-**Primary Recipient:** Gemini / Antigravity 2.0 (Mobile Executive Link)  
-**Founder & Executive Operator:** Leo Peralta  
-**Updated:** August 31, 2026 — 11:55 AM EDT  
-**Single Source of Truth:** [BUZZ_HANDOFF.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/BUZZ_HANDOFF.md) & [AI_ADVISORY_PANEL_HANDOFF.md](file:///c:/LEO-LAB-ANTIGRAVITY/anti-hermes-mcp-proof/AI_ADVISORY_PANEL_HANDOFF.md)
+# Hermes / Apex Project State
 
----
+**Updated:** September 11, 2026 (EDT)
+**Canonical workspace:** `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof`
 
-## 🧭 1. Executive Briefing for Gemini / Antigravity 2.0
-Whenever Leo communicates with you on his phone, you are the **Direct Executive Mobile Bridge**. You maintain full situational awareness of the entire operating system, code status, and team alignment.
+## Operational baseline & Command Authority
 
-### Current Operating State:
-- **Production Status:** **LIVE & LOCKED (HOLD ACTIVE).**
-- **Production Binary:** `C:\Users\leope\AppData\Local\Buzz\buzz-acp.exe`  
-  *SHA256:* `9AA289DFF0AE6D47255688AE6968DEC801D577232BC6BA9A912DE620DDF59AC4`
-- **Backup Binary:** `C:\Users\leope\AppData\Local\Buzz\buzz-acp.exe.bak-95CDAAD0-20260829`  
-  *SHA256:* `95CDAAD04FAD8B2CAB1DF2BEA4D779B9C3963DAAB76DE57E78BF118DEA431D8C`
-- **Active Supervisors:** Exactly 6 live production supervisors on Desktop PID `37196`.
+- **Command Authority:** Leo Peralta is Founder & Executive Gate. **Anti (Antigravity IDE)** & **Cursor (Native CLI/IDE)** are the **Primary Engineering Super Agents & Workforce Orchestrators**.
+- **Hermes Role:** Demoted to Operational Clerk (Inbound 8 AM Telegram morning briefs and discovery notifications). Stripped of subagent spawning authority and barred from fake self-grading or declaring code readiness.
+- **Local Native Execution:** Real Cursor runs via `C:\Users\leope\AppData\Local\Programs\cursor\resources\app\bin\cursor.cmd`. Hermes's fake internal cursor profile is quarantined and disabled.
+- **MCP Infrastructure:** Anti and Cursor share `anti-hermes-mcp-proof` and `hermes-sandbox-adapter` via native project configs (`.cursor/mcp.json`).
+- **Rule 10 Enforced:** Zero synthetic test passes. Completion requires verifiable physical deliverables (GPU-rendered images, passing terminal tests).
 
----
+## Current limitations
 
-## 🏛️ 2. Dream Team Structure & Roles
+- Optional integrations remain unavailable when their credentials or dependencies are absent.
+- The Windows watchdog's Unix-socket liveness probe is intentionally unavailable on Windows; the watchdog falls back to heartbeat-file/process health checks. This is expected platform behavior, not a gateway failure.
+- Browser live probing requires the Playwright Python package and Chromium runtime in the active Hermes environment.
 
-### A) Command Authority
-- **Leo Peralta:** Founder & Executive Operator (*Sole authority holding the keys and lifting holds*).
+## Historical continuity
 
-### B) Personal Executive Inner Circle (Personal Operations)
-- **Orion:** **Personal Chief of Staff** (High-level strategic right-hand, founder priorities, agency alignment, personal executive navigation).
-- **Aura:** **Private Local Librarian & System Sentinel** (Runs 100% offline on **Local Qwen/Ollama**). Ingests local scans from the Epson scanner, manages client PII/tax/contract vaults off-cloud, and monitors background tasks/reaps unneeded processes.
-
-### C) Autonomous Business Mesh (Buzz & Client Execution)
-- **Hermes (v0.20.6):** Chief Operating Officer (Workforce delegation & multi-agent orchestrator).
-- **Pollen:** Luxury SEO, Market Research & Keyword Intelligence.
-- **Honey:** Luxury Brand Voice & Real Estate Copywriting.
-- **Fizz:** Technical Lead, Fast Web Scaffolding & Component Integrations.
-
-### D) Advisory & Review Board (Desktop & Strategy)
-- **Atlas / Codex (ChatGPT 5.6 Luna):** Advisory Board Chair, Architecture & Strategic Review.
-- **Grok 2:** Lead Red Team & Adversarial Security Verifier.
-- **Cursor Pro (GPT-5.6 Sol / Composer):** Deep Code Review & Static Analysis Audit.
-- **Anti IDE (Antigravity Gemini 3.7):** Single-Pen Builder, Compiler & Systems Engineer.
-- **Gemini / Antigravity 2.0:** Mobile Executive Continuity Link.
-
----
-
-## 🛡️ 3. Safety & Governance Rules
-1. **Strict HOLD:** `#Alienware-hq` remains on HOLD until Leo explicitly authorizes an action.
-2. **Zero Cloud Leaks for PII:** Aura handles scanner inputs and private files strictly on local Qwen offline.
-3. **Single Writer Policy:** Anti IDE writes code and builds infrastructure; the Advisory Board reviews; Leo approves.
+The former continuity dossier was archived as `PROJECT_STATE_RESUME.legacy-20260831.md`. It is not an active instruction source.

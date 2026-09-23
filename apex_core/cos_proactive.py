@@ -12,8 +12,10 @@ Provides:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
+import subprocess
 import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass, field
@@ -28,10 +30,32 @@ if str(WORKSPACE_ROOT) not in sys.path:
 
 DEFAULT_ANTI_STATUS = WORKSPACE_ROOT / "ANTI_STATUS.md"
 DEFAULT_HERMES_STATUS = WORKSPACE_ROOT / "HERMES_STATUS.md"
-DEFAULT_COS_PROFILE_PATH = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\anti-cos\SOUL.md")
-DEFAULT_GATEWAY_URL = "http://127.0.0.1:9119"
+HERMES_PROFILES_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles")
+ACTIVE_COS_PROFILE_CANDIDATES = ("Anti", "default", "anti-cos")
+DEFAULT_HEALTHCHECK_URL = os.getenv("APEX_HERMES_HEALTH_URL", "").strip() or None
 EVIDENCE_DIR = WORKSPACE_ROOT / "evidence"
 STANDUP_EVIDENCE = EVIDENCE_DIR / "cos_standup_latest.json"
+
+
+def resolve_cos_profile_path() -> Path:
+    explicit_path = os.getenv("APEX_COS_SOUL_PATH", "").strip()
+    if explicit_path:
+        return Path(explicit_path)
+
+    seen = set()
+    candidate_names = [os.getenv("HERMES_PROFILE", "").strip(), *ACTIVE_COS_PROFILE_CANDIDATES]
+    for name in candidate_names:
+        if not name:
+            continue
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        candidate = HERMES_PROFILES_ROOT / name / "SOUL.md"
+        if candidate.exists():
+            return candidate
+
+    return HERMES_PROFILES_ROOT / "Anti" / "SOUL.md"
 
 try:
     from zoneinfo import ZoneInfo
@@ -247,14 +271,16 @@ class GatewayHealthProbe:
 
     def __init__(
         self,
-        dashboard_url: str = DEFAULT_GATEWAY_URL,
+        dashboard_url: Optional[str] = DEFAULT_HEALTHCHECK_URL,
         timeout_sec: float = 2.0,
         probe_fn: Optional[Callable[[], GatewayHealth]] = None,
+        telegram_probe_fn: Optional[Callable[[], bool]] = None,
         telemetry: Optional[StatusTelemetryReader] = None,
     ):
         self.dashboard_url = dashboard_url
         self.timeout_sec = timeout_sec
         self.probe_fn = probe_fn
+        self.telegram_probe_fn = telegram_probe_fn
         self.telemetry = telemetry or StatusTelemetryReader()
 
     def probe(self) -> GatewayHealth:
@@ -265,15 +291,27 @@ class GatewayHealthProbe:
         pid = telemetry.gateway_pid
 
         desktop_ok = False
-        try:
-            req = urllib.request.Request(self.dashboard_url, method="GET")
-            with urllib.request.urlopen(req, timeout=self.timeout_sec) as resp:
-                desktop_ok = 200 <= resp.status < 300
-        except (urllib.error.URLError, TimeoutError, OSError):
-            desktop_ok = False
+        probe_source = "gateway_status_cli"
+        if self.dashboard_url:
+            probe_source = "http_probe"
+            try:
+                req = urllib.request.Request(self.dashboard_url, method="GET")
+                with urllib.request.urlopen(req, timeout=self.timeout_sec) as resp:
+                    desktop_ok = 200 <= resp.status < 300
+            except (urllib.error.URLError, TimeoutError, OSError):
+                desktop_ok = False
+        else:
+            desktop_ok = self._probe_gateway_status_cli()
 
-        gateway_up = desktop_ok or telemetry.gateway_status_line.lower() == "operational"
-        telegram_ok = gateway_up and telemetry.gateway_status_line.lower() == "operational"
+        # Status files are telemetry, not liveness evidence.  A stale
+        # "Operational" line must never override a failed live probe.
+        gateway_up = desktop_ok
+        telegram_ok = False
+        if gateway_up and self.telegram_probe_fn is not None:
+            try:
+                telegram_ok = bool(self.telegram_probe_fn())
+            except Exception:
+                telegram_ok = False
 
         if not gateway_up:
             return GatewayHealth(
@@ -283,7 +321,7 @@ class GatewayHealthProbe:
                 desktop_ok=desktop_ok,
                 last_incident="Gateway process not reachable",
                 alert_message="🚨 GATEWAY DOWN — Anti required\nGateway process not running. Standup paused until UP.",
-                probe_source="http_probe",
+                probe_source=probe_source,
             )
 
         return GatewayHealth(
@@ -293,8 +331,27 @@ class GatewayHealthProbe:
             desktop_ok=desktop_ok,
             last_incident=telemetry.last_incident,
             alert_message=None,
-            probe_source="http_probe",
+            probe_source=f"{probe_source}+telegram_canary",
         )
+
+    @staticmethod
+    def _probe_gateway_status_cli() -> bool:
+        try:
+            proc = subprocess.run(
+                ["hermes", "gateway", "status"],
+                capture_output=True,
+                text=True,
+                timeout=3.0,
+            )
+        except Exception:
+            return False
+
+        output = f"{proc.stdout}\n{proc.stderr}".lower()
+        if proc.returncode != 0:
+            return False
+        if "gateway process is not running" in output:
+            return False
+        return "gateway process is running" in output or "pid" in output
 
 
 class StandupComposer:
@@ -350,7 +407,7 @@ class StandupComposer:
         body = f"""HERMES STANDUP — {date_label} {time_label} ET
 
 ENGINE
-• Gateway: {gw_flag} PID {pid} | Telegram: {tg_flag} | Desktop :9119: {desk_flag}
+• Gateway: {gw_flag} PID {pid} | Telegram: {tg_flag} | Probe ({health.probe_source}): {desk_flag}
 • Last incident: {health.last_incident}
 
 ROSIE ONBOARDING
@@ -396,7 +453,7 @@ class CosProactiveEngine:
         self.telemetry_reader = StatusTelemetryReader(anti_status_path, hermes_status_path)
         self.health_probe = GatewayHealthProbe(probe_fn=gateway_probe_fn, telemetry=self.telemetry_reader)
         self.composer = StandupComposer()
-        self.cos_profile_path = Path(cos_profile_path or DEFAULT_COS_PROFILE_PATH)
+        self.cos_profile_path = Path(cos_profile_path or resolve_cos_profile_path())
         self.evidence_dir = Path(evidence_dir or EVIDENCE_DIR)
         self.standup_evidence = self.evidence_dir / "cos_standup_latest.json"
 

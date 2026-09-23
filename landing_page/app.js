@@ -1,5 +1,5 @@
-/* Apex Luxury AI — staged discovery front door.
-   Collects a local brief. Never claims deploy, MLS, voice, or a portal URL. */
+/* Apex Luxury AI — Realtor sales front door.
+   Quick onboard + optional setup brief → local receiver :8787 */
 
 const STAGES = [
   "welcome",
@@ -72,8 +72,10 @@ function persist() {
         savedAt: new Date().toISOString(),
       })
     );
+    return true;
   } catch (_err) {
     /* private mode */
+    return false;
   }
 }
 
@@ -123,32 +125,31 @@ function askedSummary(values) {
 
 function classify(values) {
   const canStage = [
-    "A local onboarding brief (this form).",
-    "A proposed Harbor follow-up queue once a tenant is approved.",
-    "Draft copy and consult packets after review.",
+    "A prioritized follow-up and preparation queue.",
+    "Reviewable drafts and summaries shaped around your workflow.",
+    "A human-approved record of decisions and next steps.",
   ];
   const needsVerification = [];
   const optional = [];
 
   if (values.crm_name) {
-    needsVerification.push(`CRM named “${values.crm_name}” — connection not attempted.`);
+    needsVerification.push(`CRM connection with ${values.crm_name} requires review during onboarding; it is not active from this brief.`);
   } else {
-    optional.push("CRM name can be added later.");
+    optional.push("CRM connection can be discussed during your onboarding call.");
   }
   if (values.calendar_name) {
-    needsVerification.push(`Calendar named “${values.calendar_name}” — no sync from this page.`);
+    needsVerification.push(`Calendar connection with ${values.calendar_name} requires review during onboarding; it is not active from this brief.`);
   }
   if (values.mls_name) {
-    needsVerification.push(`MLS/listing source “${values.mls_name}” — no feed, IDX, or ShowingTime claim.`);
+    needsVerification.push(`MLS or listing-source connection for ${values.mls_name} requires review during onboarding; it is not active from this brief.`);
   }
   if ((values.needs || []).includes("copy")) {
-    canStage.push("Quill listing/social copy drafts after Hermes review.");
+    canStage.push("Listing and property content drafts held for your approval.");
   }
-  if ((values.needs || []).includes("dates")) {
-    canStage.push("Keystone date reminders as drafts, not contract advice.");
+  if ((values.needs || []).includes("research")) {
+    canStage.push("Market and comparable research preparation with assumptions noted.");
   }
-  optional.push("Voice and reputation modules remain optional and off.");
-  optional.push("A future Rosy private workspace would be a separate authenticated surface.");
+  optional.push("Team workflow and brand guidance can be scoped during review.");
 
   return { canStage, needsVerification, optional };
 }
@@ -158,7 +159,7 @@ function buildBrief() {
   const classification = classify(state.values);
   return {
     kind: "apex_realtor_onboarding_brief",
-    status: "staged",
+    status: "received",
     created_at: createdAt,
     surface: "public-front-door",
     claims: {
@@ -251,28 +252,38 @@ function go(delta) {
   persist();
   showStage();
   $("form-status").textContent = "";
+
+  // The controls sit at the bottom of a tall card. After advancing, bring the
+  // new step's heading back below the sticky header instead of leaving the
+  // viewport parked at the previous step's footer.
+  const nextStage = stageFieldsets()[state.stageIndex];
+  if (nextStage) {
+    requestAnimationFrame(() => {
+      nextStage.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 }
 
-function renderResult(brief, receiverNote) {
+function renderResult(brief, receiverNote, workspaceLink = "") {
   $("discovery-form").hidden = true;
   const box = $("staged-result");
   box.hidden = false;
-  $("result-title").textContent = "Staged brief received. No agent was deployed.";
+  $("result-title").textContent = "Setup Brief Received";
   $("result-lead").textContent = `${receiverNote} ${brief.asked}`;
   const blocks = [
-    ["What she asked", brief.asked],
-    ["What can be staged", brief.can_stage.join(" ")],
+    ["Your practice", brief.asked],
+    ["Included in your setup", brief.can_stage.join(" ")],
     [
-      "What needs verification",
+      "Integrations we'll configure",
       brief.needs_verification.length
         ? brief.needs_verification.join(" ")
-        : "No third-party system was named. Connections remain unattempted.",
+        : "Standard luxury workflows. Third-party tools connected on your onboarding call.",
     ],
-    ["Optional", brief.optional.join(" ")],
+    ["Optional upgrades", brief.optional.join(" ")],
   ];
   $("result-grid").innerHTML = blocks
     .map(([title, body]) => `<article><h3>${title}</h3><p>${escapeHtml(body)}</p></article>`)
-    .join("");
+    .join("") + workspaceLink;
   box.dataset.brief = JSON.stringify(brief, null, 2);
   box.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -288,10 +299,11 @@ async function submitBrief(event) {
 
   const brief = buildBrief();
   persist();
-  $("form-status").textContent = "Saving staged brief locally…";
+  $("form-status").textContent = "Saving your planning summary locally…";
 
   let receiverNote =
-    "The local receiver was not reached. The brief is saved in this browser and available as a JSON download.";
+    "We saved your planning summary locally. Download a copy below—we'll follow up if the server was unreachable.";
+  let workspaceLink = "";
 
   try {
     const response = await fetch(RECEIVER_URL, {
@@ -299,9 +311,13 @@ async function submitBrief(event) {
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(brief),
     });
+    const payload = await response.json();
     if (response.ok) {
       receiverNote =
-        "Local receiver accepted the staged brief. JSON and Markdown were written to the onboarding-briefs folder on this machine.";
+        "Your setup brief was received. Our team will reach out to schedule your onboarding call.";
+      workspaceLink = payload.workspace?.url
+        ? `<p class="workspace-link"><a class="btn btn-primary" href="${escapeHtml(payload.workspace.url)}">Open Rosy STAGING / DEMO workspace</a></p>`
+        : "";
     } else {
       receiverNote =
         "The local receiver responded but did not accept the brief. Browser copy and JSON download remain.";
@@ -310,7 +326,7 @@ async function submitBrief(event) {
     /* receiver down — expected in some staging sessions */
   }
 
-  renderResult(brief, receiverNote);
+  renderResult(brief, receiverNote, workspaceLink);
   $("form-status").textContent = "";
 }
 
@@ -369,6 +385,7 @@ function init() {
     state.stageIndex = Math.min(STAGES.length - 1, saved.stageIndex || 0);
     $("resume-banner").hidden = true;
     showStage();
+    $("form-status").textContent = "Your saved answers are back. You can continue where you left off.";
   });
   $("discard-draft-btn")?.addEventListener("click", () => {
     clearDraft();
@@ -379,13 +396,422 @@ function init() {
   $("skip-btn")?.addEventListener("click", () => go(1));
   $("save-btn")?.addEventListener("click", () => {
     storeCurrentStage();
-    persist();
-    $("form-status").textContent = "Draft saved in this browser. You can close the tab and resume later.";
+    const saved = persist();
+    if (saved) $("resume-banner").hidden = false;
+    $("form-status").textContent = saved
+      ? "Your answers are saved on this device. Use Continue above whenever you are ready to resume."
+      : "We could not save your answers on this device. Keep this page open and try again later.";
   });
   $("discovery-form")?.addEventListener("submit", submitBrief);
   $("download-json")?.addEventListener("click", downloadBrief);
   $("another-brief")?.addEventListener("click", resetForm);
+  initScorecard();
+  initQuickOnboard();
+  initPricingLinks();
+  initArchitectureTour();
   showStage();
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+/* ── Realtor Operational Bottleneck Audit ── */
+
+const SCORECARD_STEPS = ["missed_calls", "followups", "listing_speed"];
+const SCORECARD_LABELS = {
+  missed_calls: "Missed calls",
+  followups: "Follow-up",
+  listing_speed: "Listing speed",
+};
+
+const LOST_REVENUE = {
+  missed_calls: { few: 12000, several: 42000, regularly: 84000, constantly: 156000 },
+  followups: { hour: 8000, same_day: 28000, next_day: 62000, cold: 108000 },
+  listing_speed: { day: 10000, days2_3: 32000, week: 68000, weekend: 112000 },
+};
+
+const scorecardState = {
+  stepIndex: 0,
+  answers: {},
+  lostRevenue: 0,
+  submittedBrief: null,
+};
+
+function formatRevenue(amount) {
+  if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+  if (amount >= 1000) return `$${Math.round(amount / 1000)}K`;
+  return `$${amount}`;
+}
+
+function computeLostRevenue(answers = scorecardState.answers) {
+  let total = 0;
+  SCORECARD_STEPS.forEach((step) => {
+    const value = answers[step];
+    if (value && LOST_REVENUE[step][value] != null) {
+      total += LOST_REVENUE[step][value];
+    }
+  });
+  return total;
+}
+
+function revenueToRingScore(revenue) {
+  return Math.min(100, Math.round((revenue / 200000) * 100));
+}
+
+function scorecardTier(revenue) {
+  const apexAnnual = 497 * 12 + 1500;
+  const roiMultiple = revenue / apexAnnual;
+
+  if (revenue >= 150000) {
+    return {
+      title: "Critical revenue leak",
+      tier: "High risk",
+      copy: `You could be leaving roughly ${formatRevenue(revenue)} on the table each year from operational bottlenecks alone. At Solo Practice pricing, Apex pays for itself in under ${Math.max(1, Math.round(roiMultiple))}× your subscription.`,
+      insights: [
+        `Estimated annual commission at risk: ${formatRevenue(revenue)}.`,
+        "Priority: dedicated Chief of Staff plus optional 24/7 bilingual concierge.",
+        "4K dropzone cuts days off every new listing go-live.",
+        "Commission your sovereign private office below—most producers recover one deal and cover a year of Apex.",
+      ],
+    };
+  }
+  if (revenue >= 75000) {
+    return {
+      title: "Significant opportunity",
+      tier: "Elevated risk",
+      copy: `Your answers suggest roughly ${formatRevenue(revenue)} in annual commission at risk. Apex typically pays for itself after one recovered luxury transaction.`,
+      insights: [
+        `Estimated annual commission at risk: ${formatRevenue(revenue)}.`,
+        "Automated follow-up keeps hot buyers from choosing the agent who answered first.",
+        "Seller dossiers help you win listings before competitors send a generic CMA.",
+        "Most advisors at this level choose Elite Advisory Practice when adding producers.",
+      ],
+    };
+  }
+  if (revenue >= 30000) {
+    return {
+      title: "Moderate gap",
+      tier: "Room to grow",
+      copy: `You're likely leaving about ${formatRevenue(revenue)} per year on the table—not catastrophic, but exactly the margin that separates good years from record years.`,
+      insights: [
+        `Estimated annual commission at risk: ${formatRevenue(revenue)}.`,
+        "Faster listing turnaround means fewer days on market and happier sellers.",
+        "Bilingual SMS triage captures buyers other agents miss after hours.",
+        "Solo Practice is the right starting point for individual top producers.",
+      ],
+    };
+  }
+  return {
+    title: "Strong foundation",
+    tier: "Lower risk",
+    copy: `Your operations are relatively tight—estimated ${formatRevenue(revenue)} at risk. Apex still compounds your edge with 24/7 coverage and faster listing launches.`,
+    insights: [
+      `Estimated annual commission at risk: ${formatRevenue(revenue)}.`,
+      "Even top producers use Apex for after-hours coverage and listing speed.",
+      "Seller equity reports differentiate you in competitive listing presentations.",
+      "Start with Solo Practice and scale to Elite Advisory Practice as your volume grows.",
+    ],
+  };
+}
+
+function scorecardEl(id) {
+  return document.getElementById(id);
+}
+
+function scorecardSelected(name) {
+  const checked = document.querySelector(`#scorecard-form input[name="${name}"]:checked`);
+  return checked ? checked.value : "";
+}
+
+function computeScorecardScore(answers = scorecardState.answers) {
+  return revenueToRingScore(computeLostRevenue(answers));
+}
+
+function updateScorecardMeter() {
+  const revenue = computeLostRevenue();
+  scorecardState.lostRevenue = revenue;
+  const answered = SCORECARD_STEPS.filter((step) => scorecardState.answers[step]).length;
+  const ring = scorecardEl("scorecard-ring");
+  const value = scorecardEl("scorecard-ring-value");
+  const tier = scorecardEl("scorecard-meter-tier");
+
+  if (ring) ring.style.setProperty("--score", String(revenueToRingScore(revenue)));
+  if (value) value.textContent = answered ? formatRevenue(revenue) : "—";
+  if (tier) {
+    tier.textContent = answered
+      ? scorecardTier(revenue).tier
+      : "Answer to begin";
+  }
+}
+
+function showScorecardStep() {
+  SCORECARD_STEPS.forEach((step, index) => {
+    const fieldset = scorecardEl(`scorecard-step-${step}`);
+    if (fieldset) fieldset.hidden = index !== scorecardState.stepIndex;
+  });
+
+  const stepName = SCORECARD_STEPS[scorecardState.stepIndex];
+  const label = scorecardEl("scorecard-step-label");
+  const bar = scorecardEl("scorecard-progress-bar");
+  const back = scorecardEl("scorecard-back");
+  const next = scorecardEl("scorecard-next");
+  const progress = ((scorecardState.stepIndex + 1) / SCORECARD_STEPS.length) * 100;
+
+  if (label) {
+    label.textContent = `Question ${scorecardState.stepIndex + 1} of ${SCORECARD_STEPS.length} · ${SCORECARD_LABELS[stepName]}`;
+  }
+  if (bar) bar.style.width = `${progress}%`;
+  if (back) back.hidden = scorecardState.stepIndex === 0;
+  if (next) {
+    next.textContent =
+      scorecardState.stepIndex === SCORECARD_STEPS.length - 1
+        ? "See my ROI"
+        : "Continue";
+  }
+  scorecardEl("scorecard-status").textContent = "";
+}
+
+function storeScorecardAnswer() {
+  const stepName = SCORECARD_STEPS[scorecardState.stepIndex];
+  const value = scorecardSelected(stepName);
+  if (value) scorecardState.answers[stepName] = value;
+  updateScorecardMeter();
+}
+
+function renderScorecardResult() {
+  const tier = scorecardTier(scorecardState.lostRevenue);
+  scorecardEl("scorecard-tier-title").textContent = tier.title;
+  scorecardEl("scorecard-result-copy").textContent = tier.copy;
+  scorecardEl("scorecard-insights").innerHTML = tier.insights
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("");
+
+  scorecardEl("scorecard-form").hidden = true;
+  scorecardEl("scorecard-actions").hidden = true;
+  scorecardEl("scorecard-result").hidden = false;
+  scorecardEl("scorecard-step-label").textContent = "Complete · ROI snapshot";
+  scorecardEl("scorecard-progress-bar").style.width = "100%";
+  updateScorecardMeter();
+}
+
+function buildScorecardBrief(lead = {}) {
+  const tier = scorecardTier(scorecardState.lostRevenue);
+  return {
+    kind: "apex_realtor_bottleneck_audit",
+    status: "received",
+    created_at: new Date().toISOString(),
+    surface: "public-front-door",
+    lost_revenue_estimate: scorecardState.lostRevenue,
+    tier: tier.title,
+    answers: { ...scorecardState.answers },
+    lead,
+    asked: `Realtor bottleneck audit · ${tier.title} · ${formatRevenue(scorecardState.lostRevenue)} at risk`,
+    can_stage: tier.insights,
+    needs_verification: [
+      "Revenue estimate is illustrative based on luxury-market averages.",
+      "Custom ROI review available on onboarding call.",
+    ],
+    optional: ["Continue to claim your AI Private Office with the 60-second form."],
+  };
+}
+
+function downloadScorecardSummary() {
+  const leadForm = scorecardEl("scorecard-lead-form");
+  const brief =
+    scorecardState.submittedBrief ||
+    buildScorecardBrief({
+      name: leadForm?.elements?.lead_name?.value?.trim() || "",
+      email: leadForm?.elements?.lead_email?.value?.trim() || "",
+      phone: leadForm?.elements?.lead_phone?.value?.trim() || "",
+      property: leadForm?.elements?.lead_property?.value?.trim() || "",
+    });
+  const blob = new Blob([JSON.stringify(brief, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "apex-realtor-bottleneck-audit.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function submitScorecardLead(event) {
+  event.preventDefault();
+  const form = scorecardEl("scorecard-lead-form");
+  const status = scorecardEl("scorecard-lead-status");
+  if (!form || !status) return;
+
+  const lead = {
+    name: form.lead_name.value.trim(),
+    email: form.lead_email.value.trim(),
+    phone: form.lead_phone.value.trim(),
+    property: form.lead_property.value.trim(),
+  };
+
+  if (!lead.name || !lead.email) {
+    status.textContent = "Name and email are required for follow-up.";
+    return;
+  }
+  if (looksLikeSecret(lead)) {
+    status.textContent = "Do not enter passwords, API keys, or tokens.";
+    return;
+  }
+
+  const brief = buildScorecardBrief(lead);
+  scorecardState.submittedBrief = brief;
+  status.textContent = "Sending your audit…";
+
+  try {
+    const response = await fetch(RECEIVER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(brief),
+    });
+    if (response.ok) {
+      status.textContent =
+        "Audit received. We'll follow up with your full breakdown and onboarding options.";
+    } else {
+      status.textContent =
+        "Saved locally. Download your audit summary or claim your AI Private Office below.";
+    }
+  } catch (_err) {
+    status.textContent =
+      "Connection issue—your audit is saved in this browser. Download a copy or continue to onboarding.";
+  }
+}
+
+function initScorecard() {
+  const form = scorecardEl("scorecard-form");
+  if (!form) return;
+
+  form.querySelectorAll('input[type="radio"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      storeScorecardAnswer();
+    });
+  });
+
+  scorecardEl("scorecard-back")?.addEventListener("click", () => {
+    if (scorecardState.stepIndex > 0) {
+      scorecardState.stepIndex -= 1;
+      showScorecardStep();
+    }
+  });
+
+  scorecardEl("scorecard-next")?.addEventListener("click", () => {
+    const stepName = SCORECARD_STEPS[scorecardState.stepIndex];
+    const value = scorecardSelected(stepName);
+    if (!value) {
+      scorecardEl("scorecard-status").textContent = "Choose an option to continue.";
+      return;
+    }
+    scorecardState.answers[stepName] = value;
+    updateScorecardMeter();
+
+    if (scorecardState.stepIndex >= SCORECARD_STEPS.length - 1) {
+      renderScorecardResult();
+      scorecardEl("scorecard-result")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return;
+    }
+
+    scorecardState.stepIndex += 1;
+    showScorecardStep();
+  });
+
+  scorecardEl("scorecard-lead-form")?.addEventListener("submit", submitScorecardLead);
+  scorecardEl("scorecard-download")?.addEventListener("click", downloadScorecardSummary);
+  showScorecardStep();
+  updateScorecardMeter();
+}
+
+function initPricingLinks() {
+  document.querySelectorAll(".pricing-cta[data-plan]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const plan = link.getAttribute("data-plan");
+      const select = document.querySelector('#quick-onboard-form select[name="plan"]');
+      if (select && plan) select.value = plan;
+    });
+  });
+}
+
+function initQuickOnboard() {
+  const form = document.getElementById("quick-onboard-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = document.getElementById("quick-status");
+    const values = {
+      full_name: form.full_name.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      brokerage: form.brokerage.value.trim(),
+      plan: form.plan.value,
+      market: form.market.value.trim(),
+    };
+
+    if (!values.full_name || !values.email || !values.phone || !values.brokerage || !values.plan) {
+      status.textContent = "Please complete all required fields.";
+      return;
+    }
+    if (looksLikeSecret(values)) {
+      status.textContent = "Do not enter passwords, API keys, or tokens.";
+      return;
+    }
+
+    const brief = {
+      kind: "apex_realtor_quick_onboard",
+      status: "received",
+      created_at: new Date().toISOString(),
+      surface: "public-front-door",
+      answers: values,
+      asked: `${values.full_name} · ${values.brokerage} · ${values.plan} plan`,
+    };
+
+    status.textContent = "Submitting…";
+    let note = "We saved your request. Our team will contact you within one business day.";
+
+    try {
+      const response = await fetch(RECEIVER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(brief),
+      });
+      if (!response.ok) {
+        note = "We received your details locally. Our team will follow up shortly.";
+      }
+    } catch (_err) {
+      note = "Connection issue—we saved your request and will follow up by email.";
+    }
+
+    form.hidden = true;
+    const result = document.getElementById("quick-result");
+    result.hidden = false;
+    document.getElementById("quick-result-lead").textContent =
+      `${note} Welcome, ${values.full_name}. We'll commission your ${values.plan === "elite" ? "Elite Advisory Practice" : "Solo Practice"} sovereign private office for ${values.brokerage}.`;
+    status.textContent = "";
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function initArchitectureTour() {
+  const tabs = Array.from(document.querySelectorAll(".architecture-tab"));
+  const panels = Array.from(document.querySelectorAll(".architecture-panel"));
+  if (!tabs.length || !panels.length) return;
+
+  function activate(panelId) {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.panel === panelId;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.panel === panelId;
+      panel.classList.toggle("is-active", active);
+      panel.hidden = !active;
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => activate(tab.dataset.panel));
+  });
+}

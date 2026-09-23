@@ -9,6 +9,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
@@ -73,7 +74,7 @@ SAMPLE_HERMES = """# Hermes Agent Operational Status
 
 | Agent / Component | Runtime & Model Route | Role & Status |
 | --- | --- | --- |
-| **Hermes Gateway** | Python 3.11 venv | Daemon PID 37056, Web Dashboard (`http://127.0.0.1:9119`) |
+| **Hermes Gateway** | Python 3.11 venv | Daemon PID 37056, health receipt required for live proof |
 
 7. **Test Suite Verification:**
    - `python -m unittest discover -s tests` → **67/67 PASS**
@@ -105,6 +106,15 @@ class TestCosProactive(unittest.TestCase):
             alert_message="🚨 GATEWAY DOWN — Anti required\nGateway process not running. Standup paused until UP.",
         )
 
+        self.evidence_dir.mkdir(parents=True, exist_ok=True)
+        self._orig_gates_file = os.environ.get("APEX_OPERATOR_GATES_FILE")
+        gates_path = self.evidence_dir / "operator_gates.json"
+        gates_path.write_text(json.dumps({
+            "version": 1,
+            "gates": {"alienware_hq_hold_active": True}
+        }), encoding="utf-8")
+        os.environ["APEX_OPERATOR_GATES_FILE"] = str(gates_path)
+
         self.engine = CosProactiveEngine(
             anti_status_path=self.anti_path,
             hermes_status_path=self.hermes_path,
@@ -113,6 +123,10 @@ class TestCosProactive(unittest.TestCase):
         )
 
     def tearDown(self):
+        if self._orig_gates_file is not None:
+            os.environ["APEX_OPERATOR_GATES_FILE"] = self._orig_gates_file
+        else:
+            os.environ.pop("APEX_OPERATOR_GATES_FILE", None)
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_p5_telemetry_reader_parses_status_files(self):
@@ -211,6 +225,48 @@ class TestCosProactive(unittest.TestCase):
         health = probe.probe()
         self.assertFalse(health.gateway_up)
         self.assertIsNotNone(health.alert_message)
+
+    def test_gateway_probe_does_not_trust_operational_status_when_http_is_down(self):
+        telemetry = StatusTelemetryReader(self.anti_path, self.hermes_path)
+        probe = GatewayHealthProbe(
+            telemetry=telemetry,
+            dashboard_url="http://127.0.0.1:9119",
+        )
+        with patch("apex_core.cos_proactive.urllib.request.urlopen", side_effect=OSError("offline")):
+            health = probe.probe()
+        self.assertFalse(health.gateway_up)
+        self.assertFalse(health.telegram_ok)
+        self.assertFalse(health.desktop_ok)
+
+    def test_gateway_probe_uses_independent_telegram_canary(self):
+        telemetry = StatusTelemetryReader(self.anti_path, self.hermes_path)
+        probe = GatewayHealthProbe(
+            telemetry=telemetry,
+            dashboard_url="http://127.0.0.1:9119",
+            telegram_probe_fn=lambda: False,
+        )
+        response = type("Response", (), {"status": 200})()
+        with patch("apex_core.cos_proactive.urllib.request.urlopen") as urlopen:
+            urlopen.return_value.__enter__.return_value = response
+            health = probe.probe()
+        self.assertTrue(health.gateway_up)
+        self.assertTrue(health.desktop_ok)
+        self.assertFalse(health.telegram_ok)
+
+    def test_gateway_probe_uses_cli_status_when_no_dashboard_url(self):
+        telemetry = StatusTelemetryReader(self.anti_path, self.hermes_path)
+        probe = GatewayHealthProbe(telemetry=telemetry, dashboard_url=None)
+
+        class ProcResult:
+            returncode = 0
+            stdout = "Gateway process is running (PID: 12345)"
+            stderr = ""
+
+        with patch("apex_core.cos_proactive.subprocess.run", return_value=ProcResult()):
+            health = probe.probe()
+        self.assertTrue(health.gateway_up)
+        self.assertTrue(health.desktop_ok)
+        self.assertIn("gateway_status_cli", health.probe_source)
 
 
 if __name__ == "__main__":

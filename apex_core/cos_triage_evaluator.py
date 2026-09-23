@@ -10,7 +10,7 @@ Provides:
    - Classify (STAGE:READY vs STAGE:DISCOVERY vs STAGE:DEFER vs STAGE:REJECTED_CREDENTIALS)
    - Surface (Structured alert with §12 zero false claims)
    - Gate (Strict wait for Leo executive approval before provisioning)
-3. Profile sync utility to wire prompt block into hermes-state/profiles/anti-cos/SOUL.md.
+3. Profile sync utility to wire prompt block into the active CoS profile SOUL.md.
 """
 
 from __future__ import annotations
@@ -36,7 +36,32 @@ from apex_core.brief_watcher import (
     utc_now_iso,
 )
 
-DEFAULT_COS_PROFILE_PATH = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\anti-cos\SOUL.md")
+HERMES_PROFILES_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles")
+ACTIVE_COS_PROFILE_CANDIDATES = ("Anti", "default", "anti-cos")
+
+
+def resolve_cos_profile_path() -> Path:
+    explicit_path = os.getenv("APEX_COS_SOUL_PATH", "").strip()
+    if explicit_path:
+        return Path(explicit_path)
+
+    seen = set()
+    candidate_names = [os.getenv("HERMES_PROFILE", "").strip(), *ACTIVE_COS_PROFILE_CANDIDATES]
+    for name in candidate_names:
+        if not name:
+            continue
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        candidate = HERMES_PROFILES_ROOT / name / "SOUL.md"
+        if candidate.exists():
+            return candidate
+
+    return HERMES_PROFILES_ROOT / "Anti" / "SOUL.md"
+
+
+DEFAULT_COS_PROFILE_PATH = resolve_cos_profile_path()
 
 COS_TRIAGE_PROMPT_BLOCK = """
 ## Onboarding Brief Triage Protocol (§6 ROSIE_ONBOARDING_SOP.md)
