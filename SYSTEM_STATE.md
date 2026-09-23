@@ -207,3 +207,12 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (2) Confirmed engine is serve_with_public_host.py (PID 5900) on 127.0.0.1:9119, published via Tailscale Serve to minint-vlescga.tailf79969.ts.net.
   (3) Confirmed Anti IDE bridge on 100.67.249.106:8799; Telegram gateways: default (PID 4472), cursor (PID 6736).
   (4) Seated profiles on disk: Anti, Atelier, Aura, Cursor, Harbor, Keystone, Mosaic, Quill, Rowan, Scout; Hermes is the runtime under the Anti seat.
+- [2026-09-22 19:25:30 EDT] [Cursor, Anti & Leo Peralta] CODEX SUPER AGENT SEATED & VERIFIED:
+  (1) Profile `codex` is seated on HP Compute Node at `C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\codex`.
+  (2) Configuration: `gpt-5.6-luna` via `openai-codex`, shared root `hermes-state\auth.json`, cwd `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof`.
+  (3) Remote FastMCP SSE handshake to `http://100.67.249.106:8799/sse` verified: tools `get_status`, `get_assignment`, `submit_result`, `get_workspace_sync_status` discovered.
+  (4) Live API `list_profiles` returns `codex`; seated in roster alongside Anti and Cursor with Hermes as the runtime engine.
+- [2026-09-22 20:08:00 EDT] [Codex, Cursor, Anti & Leo Peralta] CODEX MCP & ACP DUAL-CONNECTION LIVE VERIFIED:
+  (1) MCP Verified: Direct handshake to `http://100.67.249.106:8799/sse` negotiated protocol `2025-11-25`; `get_status` confirmed `anti_ide_bridge: LIVE_CONNECTED`. Hermes registered tools under `mcp__anti_hermes_mcp_proof__` (`get_status`, `get_assignment`, `submit_result`, `get_workspace_sync_status`).
+  (2) ACP Verified: Executed native stdio ACP (`hermes acp` with `HERMES_HOME=profiles\codex`); initialized `hermes-agent` v0.19.0, protocol v1 on `gpt-5.6-luna` (`openai-codex`) in `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof` with registered MCP tools.
+  (3) Architecture Grounded: Codex is fully operational as the Fallback Engineering Super Agent on HP Node via live MCP & ACP.
