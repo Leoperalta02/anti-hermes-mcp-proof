@@ -258,4 +258,9 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Authoritative Record: Cursor's internal GPT/Codex models operate strictly under Cursor's own subscription plan. Cursor IDE execution burns ZERO outside OpenAI API/Codex credits.
   (2) External Hermes Lane: Standalone `openai-codex` provider in Hermes references the ChatGPT subscription OAuth session via `auth.json` (unlimited flat chat quota), completely distinct from dedicated coding workspace API credit meters.
   (3) Rule Codified: Agents must not confuse Cursor's internal GPT capability with external credit-metered workspaces. No further explanations required across chat sessions.
+- [2026-09-23 17:44:00 EDT] [Cursor, Anti & Leo Peralta] PROFILE AUTH UNIFICATION VIA HARD LINKS VERIFIED:
+  (1) Architecture: `C:\LEO-LAB-ANTIGRAVITY\hermes-state\auth.json` (13,045 bytes) successfully hard-linked into all 9 specialist profiles (`codex`, `harbor`, `keystone`, `quill`, `atelier`, `mosaic`, `scout`, `rowan`, `aura`).
+  (2) Invariant: 1 single inode / 10 hard links. Any token refresh in root `auth.json` is instantaneously active across all 9 profiles without file drift.
+  (3) Operational State: Anti in Hermes Desktop is fully unblocked to wake and interact with all 9 seated profiles.
+
 
