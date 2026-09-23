@@ -254,3 +254,8 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Target: `159.223.183.138` (`ubuntu-s-1vcpu-1gb-nyc1`, NYC1).
   (2) Ports: SSH (:22) open; HTTP (:80) open, HTTP 200 (26,886 bytes, uvicorn, title: 'ALIEN AGENTS Fleet Command').
   (3) Perimeter: HTTPS (:443) closed; internal data ports (:5432, :6379, :9000) securely closed to external internet.
+- [2026-09-23 17:43:00 EDT] [Anti, Cursor & Leo Peralta] SUBSCRIPTION MODEL LANE CLARIFICATION & CREDIT BOUNDARY LOCKED:
+  (1) Authoritative Record: Cursor's internal GPT/Codex models operate strictly under Cursor's own subscription plan. Cursor IDE execution burns ZERO outside OpenAI API/Codex credits.
+  (2) External Hermes Lane: Standalone `openai-codex` provider in Hermes references the ChatGPT subscription OAuth session via `auth.json` (unlimited flat chat quota), completely distinct from dedicated coding workspace API credit meters.
+  (3) Rule Codified: Agents must not confuse Cursor's internal GPT capability with external credit-metered workspaces. No further explanations required across chat sessions.
+
