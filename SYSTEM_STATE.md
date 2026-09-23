@@ -216,3 +216,7 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) MCP Verified: Direct handshake to `http://100.67.249.106:8799/sse` negotiated protocol `2025-11-25`; `get_status` confirmed `anti_ide_bridge: LIVE_CONNECTED`. Hermes registered tools under `mcp__anti_hermes_mcp_proof__` (`get_status`, `get_assignment`, `submit_result`, `get_workspace_sync_status`).
   (2) ACP Verified: Executed native stdio ACP (`hermes acp` with `HERMES_HOME=profiles\codex`); initialized `hermes-agent` v0.19.0, protocol v1 on `gpt-5.6-luna` (`openai-codex`) in `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof` with registered MCP tools.
   (3) Architecture Grounded: Codex is fully operational as the Fallback Engineering Super Agent on HP Node via live MCP & ACP.
+- [2026-09-22 22:54:00 EDT] [Codex & Leo Peralta] CODEX FORMAL ALIGNMENT ACKNOWLEDGED:
+  (1) Codex formally accepted role: Fallback Super Agent Engineer & Independent Validator.
+  (2) Lane locked: Independent validation, code auditing, and failover engineering without collision with Anti's architectural authority or Cursor's primary build lane.
+  (3) Verified seat on HP Node (`profiles/codex`), MCP/ACP bridges, and Rule 10 compliance accepted.
