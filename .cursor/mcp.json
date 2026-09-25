@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "anti-hermes-mcp-proof": {
+      "command": "python",
+      "args": [
+        "C:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\legacy_archive\\server.py"
+      ]
+    },
+    "hermes-sandbox-adapter": {
+      "command": "python",
+      "args": [
+        "C:\\LEO-LAB-ANTIGRAVITY\\anti-hermes-mcp-proof\\legacy_archive\\hermes_sandbox_server.py"
+      ]
+    }
+  }
+}

@@ -7,7 +7,8 @@ Exposes exactly three tools for bounded workforce supervision proof.
 import sys
 import json
 import os
-from datetime import datetime
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof").resolve()
@@ -128,16 +129,133 @@ TOOLS_SCHEMA = [
             "required": ["provider", "prompt"],
             "additionalProperties": False
         }
+    },
+    {
+        "name": "get_anti_work_ledger",
+        "description": "Returns the latest authoritative state ledger receipts from SYSTEM_STATE.md and current git status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "description": "Number of recent ledger receipts to return (default 15)."
+                }
+            },
+            "additionalProperties": False
+        }
+    },
+    {
+        "name": "get_deliverables_status",
+        "description": "Returns current inventory of workforce sandbox deliverables, test files, and receipts.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": False
+        }
+    },
+    {
+        "name": "read_deliverable",
+        "description": "Reads the content of a deliverable file in the workspace (e.g. SYSTEM_STATE.md, sandbox/..., evidence/...).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "relative_path": {
+                    "type": "string",
+                    "description": "Relative path from workspace root (e.g. SYSTEM_STATE.md, sandbox/apex-workforce-sandbox/...)."
+                }
+            },
+            "required": ["relative_path"],
+            "additionalProperties": False
+        }
     }
 ]
 
+def _get_git_tip() -> str:
+    try:
+        res = subprocess.run(
+            ["git", "log", "-n", "1", "--oneline"],
+            cwd=str(WORKSPACE_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=3
+        )
+        return res.stdout.strip()
+    except Exception as e:
+        return f"git error: {e}"
+
+def _get_latest_state_entries(limit: int = 10) -> list:
+    state_file = WORKSPACE_ROOT / "SYSTEM_STATE.md"
+    if not state_file.exists():
+        return []
+    try:
+        raw = state_file.read_text(encoding="utf-8", errors="replace")
+        entries = [l.strip() for l in raw.splitlines() if l.strip().startswith("- [2026-")]
+        return entries[-limit:]
+    except Exception as e:
+        return [f"state read error: {e}"]
+
 def handle_get_status():
+    entries = _get_latest_state_entries(1)
     return {
         "service": "anti-hermes-mcp-proof",
         "environment": "sandbox",
         "ready": True,
-        "production_connected": False
+        "production_connected": False,
+        "latest_commit": _get_git_tip(),
+        "latest_system_receipt": entries[0] if entries else None,
+        "inspection_tools_available": [
+            "get_anti_work_ledger",
+            "get_deliverables_status",
+            "read_deliverable"
+        ]
     }
+
+def handle_get_anti_work_ledger(args):
+    limit = args.get("limit", 15)
+    entries = _get_latest_state_entries(limit)
+    return {
+        "latest_commit": _get_git_tip(),
+        "total_receipts_returned": len(entries),
+        "recent_ledger_entries": entries
+    }
+
+def handle_get_deliverables_status():
+    sandbox = WORKSPACE_ROOT / "sandbox" / "apex-workforce-sandbox"
+    inventory = []
+    if sandbox.exists():
+        for f in sorted(sandbox.rglob("*")):
+            if f.is_file() and not f.name.startswith(".") and not f.name.endswith(".pyc") and "__pycache__" not in str(f):
+                inventory.append({
+                    "path": str(f.relative_to(WORKSPACE_ROOT)).replace("\\", "/"),
+                    "size_bytes": f.stat().st_size,
+                    "modified_utc": datetime.fromtimestamp(f.stat().st_mtime, timezone.utc).isoformat()
+                })
+    return {
+        "deliverables_count": len(inventory),
+        "files": inventory
+    }
+
+def handle_read_deliverable(args):
+    rel_path = args.get("relative_path", "")
+    target = (WORKSPACE_ROOT / rel_path).resolve()
+    if not str(target).startswith(str(WORKSPACE_ROOT)):
+        return {"error": "Access denied: Path outside workspace"}
+    if not target.is_file():
+        return {"error": f"File not found: {rel_path}"}
+    try:
+        content = target.read_text(encoding="utf-8", errors="replace")
+        truncated = False
+        if len(content) > 12000:
+            content = content[:12000] + "\n...[truncated for MCP transport]"
+            truncated = True
+        return {
+            "file": str(target.relative_to(WORKSPACE_ROOT)).replace("\\", "/"),
+            "size_bytes": target.stat().st_size,
+            "truncated": truncated,
+            "content": content
+        }
+    except Exception as e:
+        return {"error": f"Read error: {e}"}
 
 def handle_get_assignment():
     return {
@@ -330,6 +448,36 @@ def process_request(request):
                 "result": {
                     "content": [{"type": "text", "text": json.dumps(res_summary, indent=2)}],
                     "isError": False
+                }
+            }
+        elif tool_name == "get_anti_work_ledger":
+            res = handle_get_anti_work_ledger(tool_args)
+            return {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": {
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}],
+                    "isError": False
+                }
+            }
+        elif tool_name == "get_deliverables_status":
+            res = handle_get_deliverables_status()
+            return {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": {
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}],
+                    "isError": False
+                }
+            }
+        elif tool_name == "read_deliverable":
+            res = handle_read_deliverable(tool_args)
+            return {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": {
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}],
+                    "isError": "error" in res
                 }
             }
         else:
