@@ -289,6 +289,16 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Commit Tip: `f292efb` (dispatcher commit `eedf34c`).
   (2) Process-Tree Exit Polling: Hardened timeout cleanup to actively poll tracked processes up to 2.0s at 100ms intervals. Bounded test on Harbor (PIDs 15096, 1424, 19292) confirmed `cleanup_confirmed: true` and `still_alive: []`.
   (3) Scope Qualification: This receipt verifies the bounded CLI-driven dispatcher for coordinator-to-specialist execution. It specifically qualifies that Desktop UI interaction, broad unattended fleet orchestration, and unverified specialists (including Aura) remain separate capabilities requiring future bounded validation.
+- [2026-09-25 13:47:00 EDT] [Cursor, Codex, Anti & Leo Peralta] PROFILE SESSION PERSISTENCE & REVIEW CORRECTION RECONCILED:
+  (1) Database Reconciliation: Root cause of Anti reporting 0 rows was a Windows SQLite URI pathing bug (`file:/c/...` resolving to `C:\c\...`). Reconciled against the real profile databases (`C:\LEO-LAB-ANTIGRAVITY\hermes-state\profiles\<name>\state.db`, 1.3–1.7 MB).
+  (2) Session Records Confirmed:
+      - Atelier: `20260925_133236_be77f1` (Marker `DISPATCH-4f6ec7bad213`, count: 11)
+      - Quill: `20260925_132308_5cc4ce` (Marker `DISPATCH-bc151bde9139`, count: 4)
+      - Keystone: `20260925_132924_3581a1` (Marker `DISPATCH-aaf243288c59`, count: 5)
+      All rows verified with `source=cli`, matching `profile_name`, and `end_reason=agent_close`.
+  (3) Closed Correction Loop: Quill session `20260925_134614_520fd8` (`DISPATCH-216f682516eb`) corrected the summary attribution to `atelier`. Keystone session `20260925_134655_9675cb` (`DISPATCH-2bc3a094e1bc`) formally verified and approved the correction.
+  (4) Usability Verified: Desktop chat maintained continuous responsiveness across all turns.
+
 
 
 
