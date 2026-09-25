@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosie Peralta | Sovereign Realtor OS — Gulf Pointe | eXp Realty</title>
+  <meta name="description" content="Rosie Peralta Sovereign Realtor OS — Command desk for inbound client briefs, Keystone CMA valuation engine, Follow Up Boss CRM sync, and active listings.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-canvas: #070709;
+      --bg-surface: #0f0f14;
+      --bg-card: rgba(22, 22, 28, 0.75);
+      --bg-card-hover: rgba(30, 30, 38, 0.9);
+      --text-primary: #f5f5f7;
+      --text-secondary: #8e8e93;
+      --gold-accent: #e5c890;
+      --gold-gradient: linear-gradient(135deg, #f7e7c4 0%, #e5c890 50%, #b89547 100%);
+      --emerald: #30d158;
+      --apple-blue: #2997ff;
+      --hairline: rgba(255, 255, 255, 0.08);
+      --hairline-gold: rgba(229, 200, 144, 0.3);
+      --pill-radius: 980px;
+      --card-radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Command Header */
+    .top-header {
+      background: rgba(10, 10, 14, 0.85);
+      -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--hairline);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .agent-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-accent);
+      object-fit: cover;
+    }
+    .brand-info h1 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .badge-live {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(48, 209, 88, 0.15);
+      color: var(--emerald);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--pill-radius);
+      font-weight: 600;
+    }
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--hairline);
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: var(--pill-radius);
+      font-size: 0.82rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--gold-accent);
+      color: #fff;
+    }
+    .btn-gold {
+      background: var(--gold-gradient);
+      color: #000;
+      font-weight: 600;
+      border: none;
+    }
+    .btn-gold:hover {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+
+    /* Main Dashboard Layout */
+    .dashboard-layout {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    /* Left Sidebar: Profile & Quick Stats */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .card-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .profile-hero {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .profile-img-lg {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      border: 3px solid var(--gold-accent);
+      margin: 0 auto 1rem auto;
+      display: block;
+      object-fit: cover;
+      box-shadow: 0 0 24px rgba(229, 200, 144, 0.2);
+    }
+    .profile-hero h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .profile-hero p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 0.85rem;
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: var(--text-secondary); }
+    .stat-val { font-weight: 500; color: var(--text-primary); }
+
+    /* Right Main Content */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Metric Banners */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .metric-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .metric-sub {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* Section Tabs */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Inbound Feed Table */
+    .lead-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+    .lead-table th {
+      color: var(--text-secondary);
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .lead-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--hairline);
+      vertical-align: middle;
+    }
+    .lead-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .lead-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .lead-contact {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--pill-radius);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-new {
+      background: rgba(41, 151, 255, 0.15);
+      color: var(--apple-blue);
+      border: 1px solid rgba(41, 151, 255, 0.3);
+    }
+    .status-synced {
+      background: rgba(48, 209, 88, 0.15);
+      color: var(--emerald);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+    }
+
+    /* Keystone CMA Quick Generator */
+    .cma-generator-box {
+      background: linear-gradient(145deg, rgba(22, 22, 28, 0.9), rgba(15, 15, 20, 0.95));
+      border: 1px solid var(--hairline-gold);
+      border-radius: var(--card-radius);
+      padding: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .input-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .portal-input, .portal-select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .portal-input:focus, .portal-select:focus {
+      border-color: var(--gold-accent);
+    }
+    .cma-preview-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cma-preview-val {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold-accent);
+      margin: 0.5rem 0;
+    }
+
+    /* Footer */
+    .portal-footer {
+      border-top: 1px solid var(--hairline);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .cma-generator-box { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Command Header -->
+  <header class="top-header">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <img src="assets/Rosie.png" alt="Rosie Peralta" class="agent-avatar">
+        <div class="brand-info">
+          <h1>Rosie Peralta <span class="badge-live">Live Sovereign OS</span></h1>
+          <div class="brand-sub">Gulf Pointe | eXp Realty • 9480 Corkscrew Palms Cir #4, Estero, FL</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="index.html" class="btn-action" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          View Public Front Door
+        </a>
+        <a href="tel:7865728222" class="btn-action">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          (786) 572-8222
+        </a>
+        <a href="#new-cma" class="btn-action btn-gold">
+          + Launch Keystone CMA
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main class="dashboard-layout">
+    
+    <!-- Sidebar: Identity & Channel Telemetry -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-title">Principal Realtor</div>
+        <div class="profile-hero">
+          <img src="assets/Rosie.png" alt="Rosie Peralta" class="profile-img-lg">
+          <h2>Rosie Peralta</h2>
+          <p>Luxury Real Estate Advisor<br>Bilingual: English / Español</p>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">Brokerage</span>
+          <span class="stat-val">Gulf Pointe | eXp</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Team Leader</span>
+          <span class="stat-val">Brad Dohack</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Direct Cell</span>
+          <span class="stat-val">(786) 572-8222</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Direct Email</span>
+          <span class="stat-val">rosie@liveswfl.com</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Market Focus</span>
+          <span class="stat-val">Estero, Bonita, Naples</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Active Plan</span>
+          <span class="stat-val" style="color: var(--gold-accent);">Smart Operations ($499/mo)</span>
+        </div>
+      </div>
+
+      <!-- CRM Telemetry -->
+      <div class="card">
+        <div class="card-title">Integration Pipeline</div>
+        <div class="stat-row">
+          <span class="stat-label">CRM Adapter</span>
+          <span class="stat-val" style="color: var(--emerald);">● Follow Up Boss (Live)</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Inbound Webhook</span>
+          <span class="stat-val">Active (:8787)</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Valuation Engine</span>
+          <span class="stat-val">Keystone Algorithmic</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Public Domain</span>
+          <span class="stat-val">liveswfl.com</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Command Body -->
+    <div class="main-content">
+      
+      <!-- Metrics Overview -->
+      <section class="metric-grid">
+        <div class="metric-card">
+          <span class="metric-sub">Active Inbound Briefs</span>
+          <div class="metric-num">3</div>
+          <span class="metric-sub" style="color: var(--emerald);">↑ 100% verified principal leads</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-sub">Avg. Submarket PPSF</span>
+          <div class="metric-num">$525</div>
+          <span class="metric-sub">Estero Core Corridor</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-sub">Keystone CMAs Staged</span>
+          <div class="metric-num">12</div>
+          <span class="metric-sub">Hyper-comp precision</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-sub">Follow Up Boss Sync</span>
+          <div class="metric-num">100%</div>
+          <span class="metric-sub" style="color: var(--emerald);">Zero lead loss latency</span>
+        </div>
+      </section>
+
+      <!-- Inbound Leads Desk -->
+      <section class="card">
+        <div class="section-head">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Inbound Principal Briefs Desk
+          </h2>
+          <span class="badge-live">Auto-Synced to FUB</span>
+        </div>
+
+        <table class="lead-table">
+          <thead>
+            <tr>
+              <th>Client / Inquirer</th>
+              <th>Interest / Property</th>
+              <th>Market Focus</th>
+              <th>Est. Value</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="lead-name">Carlos A. Mesa, Esq.</div>
+                <div class="lead-contact">carlos@mesalaw.com • (305) 555-0199</div>
+              </td>
+              <td>Pelican Landing Sanctuary</td>
+              <td>Estero / Spring Creek</td>
+              <td>$3,200,000</td>
+              <td><span class="status-badge status-synced">Synced FUB</span></td>
+              <td><a href="mailto:carlos@mesalaw.com" class="btn-action" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">Reply</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="lead-name">Dr. Elena Rostova</div>
+                <div class="lead-contact">elena.rostova@medfl.org • (239) 555-0142</div>
+              </td>
+              <td>West Bay Club Golf & Waterfront</td>
+              <td>Estero, FL</td>
+              <td>$2,450,000</td>
+              <td><span class="status-badge status-new">New Inbound</span></td>
+              <td><a href="mailto:elena.rostova@medfl.org" class="btn-action" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">Generate CMA</a></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="lead-name">Michael & Sarah Vance</div>
+                <div class="lead-contact">vance.family@private.net • (786) 555-0188</div>
+              </td>
+              <td>Port Royal & Bay Colony Coastal</td>
+              <td>Naples, FL</td>
+              <td>$4,800,000</td>
+              <td><span class="status-badge status-synced">Synced FUB</span></td>
+              <td><a href="mailto:vance.family@private.net" class="btn-action" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">Dossier Sent</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Keystone Quick CMA Generator Section -->
+      <section class="cma-generator-box" id="new-cma">
+        <div>
+          <div class="section-head" style="margin-bottom: 0.75rem;">
+            <h2 class="section-title" style="color: var(--gold-accent);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Keystone Algorithmic CMA Studio
+            </h2>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Instant hyper-comp valuation model adjusted for tile/metal roof permits, flood elevation (Zone X vs AE), and gated club amenity absorption speed.
+          </p>
+
+          <div class="input-group">
+            <label class="input-label">Property Address or Community</label>
+            <input type="text" class="portal-input" id="portal-cma-address" value="21450 Bella Terra Blvd, Estero, FL">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="input-group">
+              <label class="input-label">Interior Sq. Ft</label>
+              <input type="number" class="portal-input" id="portal-cma-sqft" value="3200" oninput="calcPortalCMA()">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Submarket Corridor</label>
+              <select class="portal-select" id="portal-cma-market" onchange="calcPortalCMA()">
+                <option value="525" selected>Estero Core / Bella Terra ($525/sqft)</option>
+                <option value="610">Bonita Springs / Bay Colony ($610/sqft)</option>
+                <option value="850">Naples / Port Royal ($850/sqft)</option>
+                <option value="465">Gulf Harbour / Cape Coral ($465/sqft)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Premium Adjustments</label>
+            <div style="display: flex; gap: 1rem; font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem;">
+              <label><input type="checkbox" id="cma-pool" checked onchange="calcPortalCMA()"> Heated Pool (+45k)</label>
+              <label><input type="checkbox" id="cma-roof" checked onchange="calcPortalCMA()"> Post-Ian Tile/Metal (+35k)</label>
+              <label><input type="checkbox" id="cma-flood" checked onchange="calcPortalCMA()"> Zone X High Ground (+25k)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="cma-preview-box">
+          <div>
+            <div class="card-title">Algorithmic Valuation Output</div>
+            <div class="cma-preview-val" id="portal-cma-display">$1,785,000</div>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);" id="portal-cma-breakdown">
+              Base: $1,680,000 (3,200 sqft @ $525) + $105,000 capital improvements adjustment.
+            </p>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button class="btn-action btn-gold" style="width: 100%; justify-content: center; padding: 0.75rem;" onclick="stageCMADossier()">
+              Generate Client PDF Dossier & Push to FUB
+            </button>
+            <div id="cma-feedback" style="display: none; color: var(--emerald); font-size: 0.8rem; text-align: center; margin-top: 0.75rem;">
+              ✓ Dossier compiled and staged for Rosie Peralta client delivery.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Portal Footer -->
+  <footer class="portal-footer">
+    Gulf Pointe | eXp Realty • 9480 Corkscrew Palms Cir #4, Estero, FL 33928 • Rosie Peralta Sovereign OS<br>
+    Powered by Apex Luxury Real Estate Workforce Core
+  </footer>
+
+  <script>
+    function calcPortalCMA() {
+      const sqft = parseFloat(document.getElementById('portal-cma-sqft').value) || 0;
+      const rate = parseFloat(document.getElementById('portal-cma-market').value) || 525;
+      let adjustments = 0;
+      if (document.getElementById('cma-pool').checked) adjustments += 45000;
+      if (document.getElementById('cma-roof').checked) adjustments += 35000;
+      if (document.getElementById('cma-flood').checked) adjustments += 25000;
+
+      const base = sqft * rate;
+      const total = base + adjustments;
+
+      document.getElementById('portal-cma-display').innerText = '$' + Math.round(total).toLocaleString();
+      document.getElementById('portal-cma-breakdown').innerText = 
+        `Base: $${Math.round(base).toLocaleString()} (${sqft.toLocaleString()} sqft @ $${rate}) + $${adjustments.toLocaleString()} capital improvements adjustment.`;
+    }
+
+    function stageCMADossier() {
+      const fb = document.getElementById('cma-feedback');
+      fb.style.display = 'block';
+      setTimeout(() => {
+        fb.style.display = 'none';
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

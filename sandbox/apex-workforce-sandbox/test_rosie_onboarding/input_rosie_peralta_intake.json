@@ -1,0 +1,20 @@
+{
+  "realtor_name": "Rosie Peralta",
+  "brokerage": "Gulf Pointe | eXp Realty",
+  "office_address": "9480 Corkscrew Palms Cir, Suite 4, Estero, FL 33928",
+  "parent_brokerage": "eXp Realty",
+  "market": "Estero, Bonita Springs, Fort Myers, Cape Coral & Naples, FL",
+  "direct_email": "rosie@liveswfl.com",
+  "direct_phone": "(786) 572-8222",
+  "team_leader": "Brad Dohack",
+  "brokerage_site": "https://liveswfl.com",
+  "portal_scope": "public_sites/rosie/portal.html",
+  "front_door_scope": "public_sites/rosie/index.html",
+  "tier_selected": "TIER_2_SMART_OPERATIONS_SUITE",
+  "tier_monthly_rate_usd": 499,
+  "payment_receipt": "RCPT-20260925-ROSIE-LIVE",
+  "crm_integration": "Follow Up Boss",
+  "crm_status": "CONFIGURED_BASIC_AUTH",
+  "has_ai_employee_subscription": false,
+  "timestamp": "2026-09-25T15:31:00-04:00"
+}
