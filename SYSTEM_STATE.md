@@ -310,6 +310,12 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Commit Tip: `46ae079` (`feat(sandbox): commit canonical Jane Doe intake file for workforce onboarding rerun`).
   (2) Ground Truth Synced: `sandbox/apex-workforce-sandbox/test_1_realtor_onboarding/input_jane_doe_intake.json` is now formally tracked and pushed to `github/main`.
   (3) Unblocked Rerun Condition: HP Node can now execute `git pull` to place the intake file into Scout's required execution path.
+- [2026-09-25 15:09:00 EDT] [Anti, Cursor, Codex & Leo Peralta] JANE DOE ONBOARDING RERUN VERIFIED — FAIL-CLOSED GATE HONORED:
+  (1) Sequence Executed on HP Node:
+      - Scout (`DISPATCH-97e1227efaf9`, session `20260925_150342_b7b088`): Updated `scout_intelligence_report.json` at 15:05 EDT. Verified DNS resolution failure on `janedoenapleshomes.com` (11001), Firecrawl unconfigured, zero invented metrics, status `STAGED_ONLY`.
+      - Rowan (`DISPATCH-2fe0fff3e0a1`, session `20260925_150617_22ddf0`, exit 0): Evaluated Scout's incomplete research. Gate explicitly set to **BLOCKED**. Reconciled tags to `['Apex-Luxury-Inbound', 'Naples-Marco-Waterfront', 'Prestige-Coastal']`.
+      - Quill (`DISPATCH-eb685adf589e`, session `20260925_150756_1243f4`, exit 0): Replaced previous hallucinated dossier with a verified **Staged Hold Notice**. Acknowledged Rowan's BLOCKED gate; omitted all unauthorized feature claims (FUB live sync, Rosie, voice avatars).
+  (2) Multi-Agent Governance Milestone: Proves end-to-end fail-closed discipline. Downstream builder (Quill) successfully conformed to upstream analyst (Rowan) without papering over blockers. Independent auditor (Codex) verified disk artifacts turn-by-turn.
 
 
 
