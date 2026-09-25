@@ -19,7 +19,18 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-HERMES_EXE = Path(r"C:\Program Files\Python312\Scripts\hermes.exe")
+def _find_hermes_exe() -> Path:
+    candidates = [
+        Path(r"C:\Program Files\Python312\Scripts\hermes.exe"),
+        Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state\hermes-agent\bin\hermes.exe"),
+        Path(r"C:\Users\leope\AppData\Local\Programs\Python\Python312\Scripts\hermes.exe"),
+    ]
+    for c in candidates:
+        if c.is_file():
+            return c
+    return candidates[0]
+
+HERMES_EXE = _find_hermes_exe()
 HERMES_ROOT = Path(r"C:\LEO-LAB-ANTIGRAVITY\hermes-state")
 WORK_DIR = Path(r"C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof")
 DIAG_LOG = HERMES_ROOT / "logs" / "dispatch_profile_task.log"
