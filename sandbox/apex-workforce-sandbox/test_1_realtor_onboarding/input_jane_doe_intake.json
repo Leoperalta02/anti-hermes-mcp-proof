@@ -1,0 +1,23 @@
+{
+  "client_name": "Jane Doe",
+  "email": "jane@prestigecoastalrealty.com",
+  "phone": "239-555-8821",
+  "brokerage": "Prestige Coastal Properties",
+  "market": "Naples & Marco Island, FL",
+  "license_number": "FL-BK3298411",
+  "package_tier": "smart_operations_tier2",
+  "monthly_price": 499,
+  "currency": "usd",
+  "payment_verified": true,
+  "transaction_id": "pi_stripe_jane_doe_99412",
+  "has_ai_employee_subscription": false,
+  "requested_services": [
+    "Apple-Grade Digital Front Door",
+    "Automated Lead Capture & Triage",
+    "Follow Up Boss CRM Direct Sync",
+    "MLS Listing Showcase"
+  ],
+  "stated_crm": "Follow Up Boss",
+  "current_website": "http://janedoenapleshomes.com (slow, non-responsive)",
+  "intake_timestamp": "2026-09-19T18:55:00Z"
+}
