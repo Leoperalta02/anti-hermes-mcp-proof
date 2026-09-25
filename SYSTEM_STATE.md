@@ -302,5 +302,10 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Upgrade Deployed: Extended `apex_core/anti_mcp_server.py` with 3 inspection tools for Codex and HP Node: `get_anti_work_ledger`, `get_deliverables_status`, and `read_deliverable`.
   (2) Enriched Status: `get_status` now returns latest git commit, latest system receipt, and declared inspection tools.
   (3) Reconnection Verified: Process restarted on port 8799 (PID 10260); HP Node (`100.89.23.0`) auto-reconnected via SSE and executed `ListToolsRequest` within 8 seconds.
+- [2026-09-25 14:46:00 EDT] [Anti, Codex & Leo Peralta] CODEX APP NATIVE CONFIG.TOML MCP REGISTRATION VERIFIED:
+  (1) Client Architecture Identified: User conversation runs in native Codex app (ChatGPT desktop), not Cursor IDE. Cursor .cursor/mcp.json does not control Codex app.
+  (2) Configuration Injected: Registered `[mcp_servers."anti-hermes-mcp-proof"]` and `[mcp_servers.anti_hermes_mcp_proof]` directly into `C:\Users\leope\.codex\config.toml` pointing to `legacy_archive/server.py` using active Python 3.12 (`startup_timeout_sec = 120`).
+  (3) Tool Suite Verified: Stdio server verified via JSON-RPC test (`tools/list` returns 11 tools; `get_anti_work_ledger`, `get_deliverables_status`, `read_deliverable` all confirmed operational).
+
 
 
