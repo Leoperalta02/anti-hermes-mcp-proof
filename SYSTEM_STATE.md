@@ -285,6 +285,11 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (3) Correlated State Persistence: Wrote discrete session row (`20260925_125807_1b72ae`) in `profiles\atelier\state.db` containing the exact marker and verified output (`# SYSTEM_STATE.md — Authoritative Infrastructure & Operations Ledger`).
   (4) Safeguards Verified: Aura rejected (`profile not allowed`), overlapping dispatches locked (`profile busy`), timeout process-tree termination confirmed (killed PIDs 4080, 10476, 14840).
   (5) Fleet Governance Milestone: Multi-agent coordinator-to-specialist delegation is empirically OPERATIONAL and secured.
+- [2026-09-25 13:17:00 EDT] [Codex, Cursor, Anti & Leo Peralta] BOUNDED DISPATCHER HARDENING & SCOPE QUALIFICATION VERIFIED:
+  (1) Commit Tip: `f292efb` (dispatcher commit `eedf34c`).
+  (2) Process-Tree Exit Polling: Hardened timeout cleanup to actively poll tracked processes up to 2.0s at 100ms intervals. Bounded test on Harbor (PIDs 15096, 1424, 19292) confirmed `cleanup_confirmed: true` and `still_alive: []`.
+  (3) Scope Qualification: This receipt verifies the bounded CLI-driven dispatcher for coordinator-to-specialist execution. It specifically qualifies that Desktop UI interaction, broad unattended fleet orchestration, and unverified specialists (including Aura) remain separate capabilities requiring future bounded validation.
+
 
 
 
