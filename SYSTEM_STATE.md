@@ -262,5 +262,12 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (1) Architecture: `C:\LEO-LAB-ANTIGRAVITY\hermes-state\auth.json` (13,045 bytes) successfully hard-linked into all 9 specialist profiles (`codex`, `harbor`, `keystone`, `quill`, `atelier`, `mosaic`, `scout`, `rowan`, `aura`).
   (2) Invariant: 1 single inode / 10 hard links. Any token refresh in root `auth.json` is instantaneously active across all 9 profiles without file drift.
   (3) Operational State: Anti in Hermes Desktop is fully unblocked to wake and interact with all 9 seated profiles.
+- [2026-09-25 12:30:00 EDT] [Cursor, Codex, Anti & Leo Peralta] PROFILE-SPECIFIC DISPATCH PATH EMPIRICALLY VERIFIED:
+  (1) Dispatch Proof: Executed `hermes -p atelier -z "<prompt>"` on HP Compute Node with unique test token `CURSOR-VERIFY-7F3C`.
+  (2) State Persistence Verified: Wrote discrete session row (`20260925_122922_87a682`, source `cli`, end_reason `agent_close`) into `profiles\atelier\state.db`. Exit code 0.
+  (3) Deterministic Read: Output correctly quoted Alienware HQ hardware row from `SYSTEM_STATE.md` (taxcoreamerica, RTX 3070 Ti, 100.67.249.106).
+  (4) Desktop Concurrency Confirmed: Backend on port 9119 maintained HTTP 200 health throughout execution without socket disruption.
+  (5) Architectural Gate Cleared: Validates building a bounded `dispatch_profile_task` tool bridging coordinator instructions directly into specialist profile environments.
+
 
 
