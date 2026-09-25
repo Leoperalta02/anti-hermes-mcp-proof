@@ -298,10 +298,9 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
       All rows verified with `source=cli`, matching `profile_name`, and `end_reason=agent_close`.
   (3) Closed Correction Loop: Quill session `20260925_134614_520fd8` (`DISPATCH-216f682516eb`) corrected the summary attribution to `atelier`. Keystone session `20260925_134655_9675cb` (`DISPATCH-2bc3a094e1bc`) formally verified and approved the correction.
   (4) Usability Verified: Desktop chat maintained continuous responsiveness across all turns.
-
-
-
-
-
+- [2026-09-25 14:35:00 EDT] [Anti, Codex & Leo Peralta] FASTMCP REMOTE WORKFORCE INSPECTION TOOLS OPERATIONAL (:8799):
+  (1) Upgrade Deployed: Extended `apex_core/anti_mcp_server.py` with 3 inspection tools for Codex and HP Node: `get_anti_work_ledger`, `get_deliverables_status`, and `read_deliverable`.
+  (2) Enriched Status: `get_status` now returns latest git commit, latest system receipt, and declared inspection tools.
+  (3) Reconnection Verified: Process restarted on port 8799 (PID 10260); HP Node (`100.89.23.0`) auto-reconnected via SSE and executed `ListToolsRequest` within 8 seconds.
 
 
