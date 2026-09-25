@@ -273,6 +273,13 @@ All agents (Hermes, Anti, Cursor, and subagents) MUST record significant archite
   (2) Guardrails Enforced: 120s timeout, directory pinned to `C:\LEO-LAB-ANTIGRAVITY\anti-hermes-mcp-proof`, profile whitelist active (atelier, aura, codex, harbor, keystone, mosaic, quill, rowan, scout). Non-whitelisted profiles (e.g. anti) blocked.
   (3) MCP Bridge: `--mcp` exposes `dispatch_profile_task_tool`; stdio server `dispatch-profile-task` registered in `hermes-state\config.yaml`.
   (4) Validation Pass: Atelier dispatched via script, exit code 0, session `20260925_123838_d6fd86` recorded in `profiles\atelier\state.db`. Resolved relative path `SYSTEM_STATE.md` and returned authoritative header.
+- [2026-09-25 13:00:00 EDT] [Cursor, Codex, Anti & Leo Peralta] ANTI-TO-MCP-TO-SPECIALIST END-TO-END DELEGATION VERIFIED:
+  (1) Root Cause Remediated: Child Hermes process had inherited the parent MCP server's stdin (JSON-RPC pipe). Isolated via `stdin=DEVNULL`, `CREATE_NO_WINDOW`, and captured stdio streams in `ops/dispatch_profile_task.py`.
+  (2) Full Loop Execution: Anti CLI session `20260925_125756_94ccda` called `dispatch_profile_task_tool` with marker `DISPATCH-16001348a362`. Exit code 0.
+  (3) Correlated State Persistence: Wrote discrete session row (`20260925_125807_1b72ae`) in `profiles\atelier\state.db` containing the exact marker and verified output (`# SYSTEM_STATE.md — Authoritative Infrastructure & Operations Ledger`).
+  (4) Safeguards Verified: Aura rejected (`profile not allowed`), overlapping dispatches locked (`profile busy`), timeout process-tree termination confirmed (killed PIDs 4080, 10476, 14840).
+  (5) Fleet Governance Milestone: Multi-agent coordinator-to-specialist delegation is empirically OPERATIONAL and secured.
+
 
 
 
