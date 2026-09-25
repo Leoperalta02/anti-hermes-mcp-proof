@@ -1,0 +1,41 @@
+{
+  "integration_id": "harbor_fub_rosie_peralta_01",
+  "target_crm": "Follow Up Boss",
+  "auth_type": "API_KEY_BASIC_AUTH (Brokered via Aura DPAPI Vault)",
+  "vault_key_alias": "fub_api_gulf_pointe_rosie",
+  "api": {
+    "method": "POST",
+    "endpoint": "https://api.followupboss.com/v1/events",
+    "credential_scope": "server_only",
+    "browser_exposure": false
+  },
+  "webhook_listener_endpoint": "/api/v1/tenants/rosie-peralta/inbound-lead",
+  "payload_mapping": {
+    "source": "Apex Luxury Digital Front Door",
+    "system": "Apex-OS",
+    "type": "General Inquiry",
+    "person": {
+      "firstName": "{{form.first_name}}",
+      "lastName": "{{form.last_name}}",
+      "emails": [{"value": "{{form.email}}", "type": "primary"}],
+      "phones": [{"value": "{{form.phone}}", "type": "mobile"}],
+      "tags": ["Apex-Luxury-Inbound", "Estero-Naples-Corridor", "Gulf-Pointe-eXp"],
+      "assignedTo": "Rosie Peralta"
+    },
+    "note": {
+      "body": "Inquiry submitted via Rosie Peralta Apex Front Door.\nProperty Interest: {{form.property_interest}}\nDirect Cell: (786) 572-8222"
+    }
+  },
+  "instant_notification": {
+    "sms_alert_to_agent": true,
+    "target_number": "(786) 572-8222",
+    "target_email": "rosie@liveswfl.com",
+    "message_template": "🚨 [Apex Lead Alert] New luxury inquiry from {{form.first_name}} {{form.last_name}} (Property: {{form.property_interest}}). Injected into Follow Up Boss."
+  },
+  "verification": {
+    "local_contract_verified": true,
+    "schema_standard_verified": "POST /events nested person compliant with FUB API v1",
+    "status": "APPROVED_FOR_STAGING"
+  },
+  "tested_at": "2026-09-25T15:35:00-04:00"
+}

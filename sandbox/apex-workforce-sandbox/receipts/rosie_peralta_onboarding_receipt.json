@@ -1,0 +1,14 @@
+{
+  "test": "Rosie Peralta Live Onboarding Simulation",
+  "client": "Rosie Peralta",
+  "brokerage": "Gulf Pointe | eXp Realty",
+  "direct_contact": {
+    "phone": "(786) 572-8222",
+    "email": "rosie@liveswfl.com"
+  },
+  "verdict": "APPROVED_FOR_TIER_2_STAGING",
+  "live_front_door": "http://127.0.0.1:8000/public_sites/rosie/index.html",
+  "live_portal": "http://127.0.0.1:8000/public_sites/rosie/portal.html",
+  "crm_bridge": "Follow Up Boss",
+  "timestamp": "2026-09-25T19:35:15.037082+00:00"
+}

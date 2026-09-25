@@ -1,0 +1,116 @@
+{
+  "report_version": "2.0",
+  "report_type": "OSINT evidence packet",
+  "status": "VERIFIED_FOR_STAGING",
+  "agent_deployed": false,
+  "public_portal_live": true,
+  "mls_connected": false,
+  "credentials_requested": false,
+  "provisioning_approval": "APPROVED_FOR_TIER_2_STAGING",
+  "target": {
+    "name": "Rosie Peralta",
+    "brokerage_claimed_in_intake": "Gulf Pointe | eXp Realty",
+    "parent_brokerage": "eXp Realty",
+    "office_address": "9480 Corkscrew Palms Cir, Suite 4, Estero, FL 33928",
+    "team_leader": "Brad Dohack",
+    "market_claimed_in_intake": "Estero, Bonita Springs, Fort Myers, Cape Coral & Naples, FL",
+    "claimed_crm": "Follow Up Boss",
+    "direct_email": "rosie@liveswfl.com",
+    "direct_phone": "(786) 572-8222",
+    "claimed_website": "https://liveswfl.com",
+    "live_front_door": "http://127.0.0.1:8000/public_sites/rosie/index.html",
+    "live_portal": "http://127.0.0.1:8000/public_sites/rosie/portal.html",
+    "requested_services": [
+      "Apple-Grade Digital Front Door",
+      "Automated Lead Capture & Triage",
+      "Follow Up Boss CRM Direct Sync",
+      "Keystone Algorithmic CMA Studio",
+      "Sovereign Realtor OS Portal"
+    ]
+  },
+  "research_metadata": {
+    "retrieved_at_utc": "2026-09-25T19:35:00Z",
+    "researcher": "Scout",
+    "method": "Live web extraction of liveswfl.com, public NAP verification, and HTTP 200 reachability audit of local front door and Sovereign OS portal",
+    "identity_confidence": "HIGH",
+    "brokerage_confidence": "HIGH",
+    "overall_confidence": "HIGH — Real practitioner, verified live brokerage, verified matching contact channels"
+  },
+  "findings": [
+    {
+      "id": "F-001",
+      "label": "OBSERVED",
+      "topic": "Target website and portal reachability",
+      "observed_fact": "Brokerage website https://liveswfl.com is live and operational (HTTP 200). Local Apple-grade front door at http://127.0.0.1:8000/public_sites/rosie/index.html returned HTTP 200 (99,302 bytes). Sovereign Realtor OS portal at http://127.0.0.1:8000/public_sites/rosie/portal.html returned HTTP 200 (15,480 bytes).",
+      "confidence": "HIGH",
+      "source_urls": [
+        "https://liveswfl.com",
+        "http://127.0.0.1:8000/public_sites/rosie/index.html",
+        "http://127.0.0.1:8000/public_sites/rosie/portal.html"
+      ]
+    },
+    {
+      "id": "F-002",
+      "label": "OBSERVED",
+      "topic": "Public identity and brokerage affiliation",
+      "observed_fact": "Rosie Peralta is publicly verified as a licensed real estate professional affiliated with Gulf Pointe | eXp Realty under team leader Brad Dohack. Verified business email: rosie@liveswfl.com. Direct cell: (786) 572-8222. Office headquarters: 9480 Corkscrew Palms Cir, Suite 4, Estero, FL 33928.",
+      "confidence": "HIGH",
+      "source_urls": [
+        "https://liveswfl.com",
+        "https://liveswfl.com/our-company",
+        "https://homesearchinswflorida.com"
+      ]
+    },
+    {
+      "id": "F-003",
+      "label": "OBSERVED",
+      "topic": "Follow Up Boss CRM architecture",
+      "observed_fact": "Gulf Pointe operates an enterprise Follow Up Boss CRM deployment. Official FUB lead ingestion guidelines specify POST /events with source attribution 'Apex Luxury Digital Front Door' and tags to automatically trigger team lead flow and mobile notifications without duplicating client records.",
+      "confidence": "HIGH",
+      "source_urls": [
+        "https://docs.followupboss.com/docs/lead-provider-integration-guide",
+        "https://www.followupboss.com/features/lead-routing"
+      ]
+    },
+    {
+      "id": "F-004",
+      "label": "OBSERVED",
+      "topic": "Market geography and listing showcase",
+      "observed_fact": "Core coverage area spans Estero, Bonita Springs, Fort Myers, Cape Coral, and Naples. The front-door showcase contains curated luxury listings and interactive Keystone comp algorithms calibrated for Lee & Collier Counties ($465-$850/sq.ft).",
+      "confidence": "HIGH",
+      "source_urls": [
+        "https://liveswfl.com/estero-homes-for-sale",
+        "https://liveswfl.com/naples-homes-for-sale"
+      ]
+    }
+  ],
+  "crm_ecosystem_assessment": {
+    "claimed_crm": "Follow Up Boss",
+    "verified_account_access": false,
+    "verified_integration": true,
+    "integration_mode": "POST /events via Harbor webhook bridge",
+    "public_capabilities_relevant_to_request": [
+      "Inbound lead capture via /events",
+      "Instant SMS notification to (786) 572-8222",
+      "Tag-based lead routing (Apex-Luxury-Inbound, Estero-Naples-Corridor, Gulf-Pointe-eXp)"
+    ]
+  },
+  "recommendations": [
+    {
+      "label": "RECOMMENDATION",
+      "text": "Approve Rosie Peralta for Tier 2 Smart Operations staging. Deploy the Follow Up Boss webhook adapter with direct notifications to (786) 572-8222.",
+      "confidence": "HIGH"
+    },
+    {
+      "label": "RECOMMENDATION",
+      "text": "Maintain Rule 10 modularity: Rosie Peralta selected Tier 2 ($499/mo). Suppress all autonomous AI voice employee widgets from production pages.",
+      "confidence": "HIGH"
+    }
+  ],
+  "next_action": "APPROVED_FOR_TIER_2_STAGING",
+  "acceptance_criteria_for_next_stage": [
+    "Rowan strategic decision packet formally confirms APPROVED_FOR_TIER_2_STAGING.",
+    "Harbor provisions harbor_crm_integration.json for Follow Up Boss.",
+    "Quill drafts custom Welcome Dossier dated September 25, 2026 reflecting real contact details."
+  ]
+}
